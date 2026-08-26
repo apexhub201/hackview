@@ -872,9 +872,10 @@
 
       const API_BASE = 'https://api.mail.tm';
       const TIMER_DURATION = 600;
-      
-      // Domain cho email (mail.tm hoặc các domain khác)
       const DOMAIN = '@mail.tm';
+
+      // CORS Proxy
+      const CORS_PROXY = 'https://corsproxy.io/?';
 
       const emailAddressEl = document.getElementById('emailAddress');
       const timerEl = document.getElementById('timer');
@@ -888,6 +889,15 @@
       const modalMeta = document.getElementById('modalMeta');
       const modalBody = document.getElementById('modalBody');
       const toastContainer = document.getElementById('toastContainer');
+
+      async function apiFetch(endpoint, options = {}) {
+        const url = CORS_PROXY + encodeURIComponent(API_BASE + endpoint);
+        const response = await fetch(url, options);
+        if (!response.ok) {
+          throw new Error(`API error: ${response.status}`);
+        }
+        return await response.json();
+      }
 
       function sanitizeHtml(html) {
         if (!html) return '';
@@ -1036,18 +1046,12 @@
           const username = generateUsername();
           const password = generatePassword();
 
-          const response = await fetch(`${API_BASE}/accounts`, {
+          const account = await apiFetch('/accounts', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ address: `${username}${DOMAIN}`, password: password })
           });
 
-          if (!response.ok) {
-            const errorText = await response.text();
-            throw new Error(`Cannot create account: ${errorText}`);
-          }
-
-          const account = await response.json();
           currentAccount = account;
           await login(username, password);
         } catch (error) {
@@ -1070,17 +1074,12 @@
 
       async function login(username, password) {
         try {
-          const response = await fetch(`${API_BASE}/token`, {
+          const data = await apiFetch('/token', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ address: `${username}${DOMAIN}`, password: password })
           });
 
-          if (!response.ok) {
-            throw new Error('Login failed');
-          }
-
-          const data = await response.json();
           authToken = data.token;
           currentEmail = `${username}${DOMAIN}`;
           emailAddressEl.textContent = currentEmail;
@@ -1110,15 +1109,10 @@
       async function refreshInbox() {
         if (!authToken) return;
         try {
-          const response = await fetch(`${API_BASE}/messages`, {
+          const messages = await apiFetch('/messages', {
             headers: { 'Authorization': `Bearer ${authToken}` }
           });
 
-          if (!response.ok) {
-            throw new Error('Cannot fetch messages');
-          }
-
-          const messages = await response.json();
           displayEmails(messages);
         } catch (error) {
           console.error('Refresh inbox error:', error);
@@ -1183,15 +1177,9 @@
 
       async function openEmail(messageId) {
         try {
-          const response = await fetch(`${API_BASE}/messages/${messageId}`, {
+          const message = await apiFetch(`/messages/${messageId}`, {
             headers: { 'Authorization': `Bearer ${authToken}` }
           });
-
-          if (!response.ok) {
-            throw new Error('Cannot read email');
-          }
-
-          const message = await response.json();
 
           modalSubject.textContent = message.subject || 'No subject';
 
