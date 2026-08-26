@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hack View TikTok - Pro Edition</title>
+    <title>Hack View TikTok - No Popup</title>
     <style>
         :root {
             --bg-primary: #0f0f0f;
@@ -19,13 +19,7 @@
             --text-secondary: #b0b0b0;
             --border: #333333;
         }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             font-family: 'Segoe UI', Arial, sans-serif;
             background: var(--bg-primary);
@@ -36,7 +30,6 @@
             align-items: center;
             padding: 20px;
         }
-
         .container {
             max-width: 800px;
             width: 100%;
@@ -46,37 +39,11 @@
             box-shadow: 0 8px 32px rgba(0,0,0,0.5);
             border: 1px solid var(--border);
         }
-
-        .header {
-            text-align: center;
-            margin-bottom: 25px;
-        }
-
-        .header h1 {
-            font-size: 28px;
-            color: var(--accent);
-            letter-spacing: 1px;
-            text-transform: uppercase;
-            margin-bottom: 5px;
-        }
-
-        .header .subtitle {
-            color: var(--text-secondary);
-            font-size: 14px;
-        }
-
-        .input-group {
-            margin-bottom: 15px;
-        }
-
-        .input-group label {
-            display: block;
-            margin-bottom: 6px;
-            font-size: 14px;
-            color: var(--text-secondary);
-            font-weight: 500;
-        }
-
+        .header { text-align: center; margin-bottom: 25px; }
+        .header h1 { font-size: 28px; color: var(--accent); letter-spacing: 1px; text-transform: uppercase; margin-bottom: 5px; }
+        .header .subtitle { color: var(--text-secondary); font-size: 14px; }
+        .input-group { margin-bottom: 15px; }
+        .input-group label { display: block; margin-bottom: 6px; font-size: 14px; color: var(--text-secondary); font-weight: 500; }
         .input-group input {
             width: 100%;
             padding: 12px 15px;
@@ -87,18 +54,8 @@
             font-size: 15px;
             transition: border-color 0.3s;
         }
-
-        .input-group input:focus {
-            outline: none;
-            border-color: var(--accent);
-        }
-
-        .button-group {
-            display: flex;
-            gap: 10px;
-            margin: 20px 0;
-        }
-
+        .input-group input:focus { outline: none; border-color: var(--accent); }
+        .button-group { display: flex; gap: 10px; margin: 20px 0; }
         button {
             flex: 1;
             padding: 12px;
@@ -111,61 +68,15 @@
             text-transform: uppercase;
             letter-spacing: 1px;
         }
-
-        #startBtn {
-            background: var(--accent);
-            color: white;
-        }
-
-        #startBtn:hover:not(:disabled) {
-            background: var(--accent-hover);
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(254,44,85,0.4);
-        }
-
-        #stopBtn {
-            background: var(--error);
-            color: white;
-        }
-
-        #stopBtn:hover:not(:disabled) {
-            background: #d32f2f;
-            transform: translateY(-2px);
-        }
-
-        button:disabled {
-            opacity: 0.4;
-            cursor: not-allowed;
-            transform: none !important;
-            box-shadow: none !important;
-        }
-
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 10px;
-            margin: 15px 0;
-        }
-
-        .stat-card {
-            background: var(--bg-tertiary);
-            padding: 12px;
-            border-radius: 8px;
-            text-align: center;
-        }
-
-        .stat-card .stat-value {
-            font-size: 22px;
-            font-weight: bold;
-            color: var(--accent);
-        }
-
-        .stat-card .stat-label {
-            font-size: 11px;
-            color: var(--text-secondary);
-            margin-top: 3px;
-        }
-
+        #startBtn { background: var(--accent); color: white; }
+        #startBtn:hover:not(:disabled) { background: var(--accent-hover); transform: translateY(-2px); box-shadow: 0 4px 12px rgba(254,44,85,0.4); }
+        #stopBtn { background: var(--error); color: white; }
+        #stopBtn:hover:not(:disabled) { background: #d32f2f; transform: translateY(-2px); }
+        button:disabled { opacity: 0.4; cursor: not-allowed; transform: none !important; box-shadow: none !important; }
+        .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin: 15px 0; }
+        .stat-card { background: var(--bg-tertiary); padding: 12px; border-radius: 8px; text-align: center; }
+        .stat-card .stat-value { font-size: 22px; font-weight: bold; color: var(--accent); }
+        .stat-card .stat-label { font-size: 11px; color: var(--text-secondary); margin-top: 3px; }
         .progress-container {
             width: 100%;
             height: 24px;
@@ -175,7 +86,6 @@
             margin: 15px 0;
             border: 1px solid var(--border);
         }
-
         .progress-bar {
             height: 100%;
             background: linear-gradient(90deg, var(--accent), #ff6b8a);
@@ -183,7 +93,6 @@
             transition: width 0.5s;
             border-radius: 12px;
         }
-
         .log-container {
             background: #000;
             border-radius: 8px;
@@ -194,25 +103,10 @@
             font-size: 12px;
             border: 1px solid var(--border);
         }
-
-        .log-container::-webkit-scrollbar {
-            width: 8px;
-        }
-
-        .log-container::-webkit-scrollbar-track {
-            background: #000;
-        }
-
-        .log-container::-webkit-scrollbar-thumb {
-            background: var(--accent);
-            border-radius: 4px;
-        }
-
-        .log-item {
-            padding: 2px 0;
-            border-bottom: 1px solid #1a1a1a;
-        }
-
+        .log-container::-webkit-scrollbar { width: 8px; }
+        .log-container::-webkit-scrollbar-track { background: #000; }
+        .log-container::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 4px; }
+        .log-item { padding: 2px 0; border-bottom: 1px solid #1a1a1a; }
         .log-success { color: var(--success); }
         .log-error { color: var(--error); }
         .log-info { color: var(--info); }
@@ -223,24 +117,20 @@
     <div class="container">
         <div class="header">
             <h1>Hack View TikTok</h1>
-            <div class="subtitle">Professional Edition - Tăng view tự động</div>
+            <div class="subtitle">Professional Edition - No Popup, iframe ẩn</div>
         </div>
-
         <div class="input-group">
             <label>Link video TikTok:</label>
             <input type="text" id="videoUrl" placeholder="https://www.tiktok.com/@username/video/1234567890">
         </div>
-
         <div class="input-group">
             <label>Số view muốn tăng:</label>
             <input type="number" id="viewCount" value="1000" min="1" max="10000">
         </div>
-
         <div class="button-group">
             <button id="startBtn" onclick="startHack()">Bắt đầu tăng view</button>
             <button id="stopBtn" onclick="stopHack()" disabled>Dừng</button>
         </div>
-
         <div class="stats-grid">
             <div class="stat-card">
                 <div class="stat-value" id="totalViews">0</div>
@@ -259,14 +149,11 @@
                 <div class="stat-label">Còn lại (giây)</div>
             </div>
         </div>
-
         <div class="progress-container">
             <div class="progress-bar" id="progressBar"></div>
         </div>
-
         <div class="log-container" id="logContainer"></div>
     </div>
-
     <script>
         let isRunning = false;
         let stopRequested = false;
@@ -276,19 +163,6 @@
         let targetViews = 0;
         let startTime = 0;
 
-        const userAgentList = [
-            'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36',
-            'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36',
-            'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36',
-            'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Safari/537.36',
-            'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36',
-            'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36',
-            'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36',
-            'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36',
-            'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/115.0',
-            'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.5 Safari/605.1.15'
-        ];
-
         function addLog(message, type = 'info') {
             const logContainer = document.getElementById('logContainer');
             const item = document.createElement('div');
@@ -297,8 +171,6 @@
             item.textContent = `[${timestamp}] ${message}`;
             logContainer.appendChild(item);
             logContainer.scrollTop = logContainer.scrollHeight;
-
-            // Giới hạn 1000 dòng log để tránh lag
             while (logContainer.children.length > 1000) {
                 logContainer.removeChild(logContainer.firstChild);
             }
@@ -308,11 +180,8 @@
             document.getElementById('totalViews').textContent = totalViews;
             document.getElementById('successViews').textContent = successViews;
             document.getElementById('failViews').textContent = failViews;
-            
             const percent = targetViews > 0 ? (totalViews / targetViews) * 100 : 0;
             document.getElementById('progressBar').style.width = Math.min(percent, 100) + '%';
-            
-            // Tính thời gian còn lại
             if (isRunning && totalViews > 0) {
                 const elapsed = (Date.now() - startTime) / 1000;
                 const avgTime = elapsed / totalViews;
@@ -327,26 +196,22 @@
             return new Promise(resolve => setTimeout(resolve, ms));
         }
 
-        function getRandomUserAgent() {
-            return userAgentList[Math.floor(Math.random() * userAgentList.length)];
-        }
-
         function openVideo(url, index) {
             return new Promise(async (resolve) => {
                 try {
                     const delay = Math.floor(Math.random() * (15000 - 8000 + 1)) + 8000;
-                    const popup = window.open(url, '_blank', 'width=800,height=600,scrollbars=yes');
-                    
-                    if (popup) {
-                        addLog(`View ${index}: Mở video, xem ${delay/1000} giây...`, 'info');
-                        await sleep(delay);
-                        popup.close();
-                        addLog(`View ${index}: Thành công ✓`, 'success');
-                        resolve(true);
-                    } else {
-                        addLog(`View ${index}: Trình duyệt chặn popup, hãy cho phép popup!`, 'error');
-                        resolve(false);
-                    }
+                    const iframe = document.createElement('iframe');
+                    iframe.src = url;
+                    iframe.style.display = 'none';
+                    iframe.style.width = '0';
+                    iframe.style.height = '0';
+                    iframe.setAttribute('sandbox', 'allow-scripts allow-same-origin');
+                    document.body.appendChild(iframe);
+                    addLog(`View ${index}: Tải video trong iframe ẩn, xem ${delay/1000} giây...`, 'info');
+                    await sleep(delay);
+                    iframe.remove();
+                    addLog(`View ${index}: Thành công ✓`, 'success');
+                    resolve(true);
                 } catch (e) {
                     addLog(`View ${index}: Lỗi - ${e.message}`, 'error');
                     resolve(false);
@@ -356,25 +221,11 @@
 
         async function startHack() {
             if (isRunning) return;
-            
             const url = document.getElementById('videoUrl').value.trim();
             const count = parseInt(document.getElementById('viewCount').value);
-            
-            if (!url) {
-                alert('Vui lòng nhập link video TikTok');
-                return;
-            }
-            
-            if (!url.includes('tiktok.com')) {
-                alert('Link không hợp lệ, phải chứa tiktok.com');
-                return;
-            }
-            
-            if (count < 1 || count > 10000) {
-                alert('Số view phải từ 1 đến 10000');
-                return;
-            }
-            
+            if (!url) { alert('Vui lòng nhập link video TikTok'); return; }
+            if (!url.includes('tiktok.com')) { alert('Link không hợp lệ, phải chứa tiktok.com'); return; }
+            if (count < 1 || count > 10000) { alert('Số view phải từ 1 đến 10000'); return; }
             isRunning = true;
             stopRequested = false;
             totalViews = 0;
@@ -382,24 +233,19 @@
             failViews = 0;
             targetViews = count;
             startTime = Date.now();
-            
             document.getElementById('startBtn').disabled = true;
             document.getElementById('stopBtn').disabled = false;
             document.getElementById('logContainer').innerHTML = '';
-            
             addLog('=== BẮT ĐẦU TĂNG VIEW ===', 'info');
             addLog(`Link: ${url}`, 'info');
             addLog(`Mục tiêu: ${count} view`, 'info');
-            addLog('Quan trọng: Cho phép popup từ trang này!', 'warning');
-            
+            addLog('Dùng iframe ẩn, không cần popup', 'info');
             for (let i = 1; i <= count; i++) {
                 if (stopRequested) {
                     addLog('Đã dừng bởi người dùng', 'error');
                     break;
                 }
-                
                 const success = await openVideo(url, i);
-                
                 if (success) {
                     totalViews++;
                     successViews++;
@@ -407,23 +253,19 @@
                     totalViews++;
                     failViews++;
                 }
-                
                 updateStats();
-                
                 if (i < count && !stopRequested) {
                     const waitTime = Math.floor(Math.random() * (7000 - 3000 + 1)) + 3000;
                     addLog(`Nghỉ ${(waitTime/1000).toFixed(1)} giây...`, 'info');
                     await sleep(waitTime);
                 }
             }
-            
             const totalTime = Math.floor((Date.now() - startTime) / 1000);
             addLog('=== HOÀN THÀNH ===', 'success');
             addLog(`Tổng view: ${totalViews}`, 'success');
             addLog(`Thành công: ${successViews}`, 'success');
             addLog(`Thất bại: ${failViews}`, 'error');
             addLog(`Thời gian chạy: ${totalTime} giây`, 'info');
-            
             isRunning = false;
             document.getElementById('startBtn').disabled = false;
             document.getElementById('stopBtn').disabled = true;
