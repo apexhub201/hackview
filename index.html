@@ -620,14 +620,6 @@
       color: var(--text-primary);
     }
 
-    .modal-body iframe {
-      width: 100%;
-      min-height: 280px;
-      border: 1px solid var(--border);
-      border-radius: var(--radius-sm);
-      background: #fff;
-    }
-
     .toast-container {
       position: fixed;
       bottom: 24px;
@@ -773,16 +765,6 @@
 
       .toast {
         max-width: 100%;
-      }
-    }
-
-    @media (min-width: 641px) and (max-width: 1024px) {
-      .email-card {
-        padding: 24px 24px;
-      }
-
-      .inbox-section {
-        padding: 20px 22px;
       }
     }
   </style>
@@ -1030,7 +1012,6 @@
           emailAddressEl.textContent = currentEmail;
           lastSeenMessageIds.clear();
           
-          // Check inbox immediately
           await refreshInbox();
           showToast('Email created', 'success');
         } catch (error) {
