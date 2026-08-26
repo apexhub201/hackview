@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hack View TikTok - No Popup</title>
+    <title>Hack View TikTok - Popup Edition</title>
     <style>
         :root {
             --bg-primary: #0f0f0f;
@@ -117,10 +117,10 @@
     <div class="container">
         <div class="header">
             <h1>Hack View TikTok</h1>
-            <div class="subtitle">Professional Edition - No Popup, iframe ẩn</div>
+            <div class="subtitle">Popup Edition - Tăng view bằng tab mới thật</div>
         </div>
         <div class="input-group">
-            <label>Link video TikTok:</label>
+            <label>Link video TikTok (đầy đủ):</label>
             <input type="text" id="videoUrl" placeholder="https://www.tiktok.com/@username/video/1234567890">
         </div>
         <div class="input-group">
@@ -200,18 +200,17 @@
             return new Promise(async (resolve) => {
                 try {
                     const delay = Math.floor(Math.random() * (15000 - 8000 + 1)) + 8000;
-                    const iframe = document.createElement('iframe');
-                    iframe.src = url;
-                    iframe.style.display = 'none';
-                    iframe.style.width = '0';
-                    iframe.style.height = '0';
-                    iframe.setAttribute('sandbox', 'allow-scripts allow-same-origin');
-                    document.body.appendChild(iframe);
-                    addLog(`View ${index}: Tải video trong iframe ẩn, xem ${delay/1000} giây...`, 'info');
-                    await sleep(delay);
-                    iframe.remove();
-                    addLog(`View ${index}: Thành công ✓`, 'success');
-                    resolve(true);
+                    const popup = window.open(url, '_blank', 'width=800,height=600,scrollbars=yes');
+                    if (popup) {
+                        addLog(`View ${index}: Mở video trong tab mới, xem ${delay/1000} giây...`, 'info');
+                        await sleep(delay);
+                        popup.close();
+                        addLog(`View ${index}: Thành công ✓`, 'success');
+                        resolve(true);
+                    } else {
+                        addLog(`View ${index}: Trình duyệt chặn popup, hãy cho phép popup!`, 'error');
+                        resolve(false);
+                    }
                 } catch (e) {
                     addLog(`View ${index}: Lỗi - ${e.message}`, 'error');
                     resolve(false);
@@ -239,7 +238,7 @@
             addLog('=== BẮT ĐẦU TĂNG VIEW ===', 'info');
             addLog(`Link: ${url}`, 'info');
             addLog(`Mục tiêu: ${count} view`, 'info');
-            addLog('Dùng iframe ẩn, không cần popup', 'info');
+            addLog('Quan trọng: Cho phép popup từ trang này!', 'warning');
             for (let i = 1; i <= count; i++) {
                 if (stopRequested) {
                     addLog('Đã dừng bởi người dùng', 'error');
