@@ -1,281 +1,1421 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hack View TikTok - Popup Edition</title>
-    <style>
-        :root {
-            --bg-primary: #0f0f0f;
-            --bg-secondary: #1a1a1a;
-            --bg-tertiary: #252525;
-            --accent: #fe2c55;
-            --accent-hover: #ff4d6a;
-            --success: #4caf50;
-            --error: #f44336;
-            --warning: #ff9800;
-            --info: #2196f3;
-            --text-primary: #ffffff;
-            --text-secondary: #b0b0b0;
-            --border: #333333;
-        }
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body {
-            font-family: 'Segoe UI', Arial, sans-serif;
-            background: var(--bg-primary);
-            color: var(--text-primary);
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-        }
-        .container {
-            max-width: 800px;
-            width: 100%;
-            background: var(--bg-secondary);
-            border-radius: 16px;
-            padding: 30px;
-            box-shadow: 0 8px 32px rgba(0,0,0,0.5);
-            border: 1px solid var(--border);
-        }
-        .header { text-align: center; margin-bottom: 25px; }
-        .header h1 { font-size: 28px; color: var(--accent); letter-spacing: 1px; text-transform: uppercase; margin-bottom: 5px; }
-        .header .subtitle { color: var(--text-secondary); font-size: 14px; }
-        .input-group { margin-bottom: 15px; }
-        .input-group label { display: block; margin-bottom: 6px; font-size: 14px; color: var(--text-secondary); font-weight: 500; }
-        .input-group input {
-            width: 100%;
-            padding: 12px 15px;
-            background: var(--bg-tertiary);
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            color: var(--text-primary);
-            font-size: 15px;
-            transition: border-color 0.3s;
-        }
-        .input-group input:focus { outline: none; border-color: var(--accent); }
-        .button-group { display: flex; gap: 10px; margin: 20px 0; }
-        button {
-            flex: 1;
-            padding: 12px;
-            border: none;
-            border-radius: 8px;
-            font-size: 16px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.3s;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-        #startBtn { background: var(--accent); color: white; }
-        #startBtn:hover:not(:disabled) { background: var(--accent-hover); transform: translateY(-2px); box-shadow: 0 4px 12px rgba(254,44,85,0.4); }
-        #stopBtn { background: var(--error); color: white; }
-        #stopBtn:hover:not(:disabled) { background: #d32f2f; transform: translateY(-2px); }
-        button:disabled { opacity: 0.4; cursor: not-allowed; transform: none !important; box-shadow: none !important; }
-        .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin: 15px 0; }
-        .stat-card { background: var(--bg-tertiary); padding: 12px; border-radius: 8px; text-align: center; }
-        .stat-card .stat-value { font-size: 22px; font-weight: bold; color: var(--accent); }
-        .stat-card .stat-label { font-size: 11px; color: var(--text-secondary); margin-top: 3px; }
-        .progress-container {
-            width: 100%;
-            height: 24px;
-            background: var(--bg-tertiary);
-            border-radius: 12px;
-            overflow: hidden;
-            margin: 15px 0;
-            border: 1px solid var(--border);
-        }
-        .progress-bar {
-            height: 100%;
-            background: linear-gradient(90deg, var(--accent), #ff6b8a);
-            width: 0%;
-            transition: width 0.5s;
-            border-radius: 12px;
-        }
-        .log-container {
-            background: #000;
-            border-radius: 8px;
-            padding: 10px;
-            height: 280px;
-            overflow-y: auto;
-            font-family: 'Consolas', 'Courier New', monospace;
-            font-size: 12px;
-            border: 1px solid var(--border);
-        }
-        .log-container::-webkit-scrollbar { width: 8px; }
-        .log-container::-webkit-scrollbar-track { background: #000; }
-        .log-container::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 4px; }
-        .log-item { padding: 2px 0; border-bottom: 1px solid #1a1a1a; }
-        .log-success { color: var(--success); }
-        .log-error { color: var(--error); }
-        .log-info { color: var(--info); }
-        .log-warning { color: var(--warning); }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+  <title>10 Phút Mail — Temporary email, made simple</title>
+  <style>
+    :root {
+      --bg: #F8FAFC;
+      --card: #ffffff;
+      --text-primary: #111827;
+      --text-secondary: #6B7280;
+      --text-tertiary: #9CA3AF;
+      --border: #E5E7EB;
+      --border-strong: #D1D5DB;
+      --accent: #4F46E5;
+      --accent-hover: #4338CA;
+      --accent-soft: #EEF2FF;
+      --accent-ring: rgba(79, 70, 229, 0.18);
+      --danger: #DC2626;
+      --danger-soft: #FEF2F2;
+      --warning: #D97706;
+      --warning-soft: #FFFBEB;
+      --success: #059669;
+      --success-soft: #ECFDF5;
+      --shadow-xs: 0 1px 2px rgba(16, 24, 40, 0.04);
+      --shadow-sm: 0 2px 8px rgba(16, 24, 40, 0.06);
+      --shadow-md: 0 8px 24px rgba(16, 24, 40, 0.07);
+      --shadow-lg: 0 16px 40px rgba(16, 24, 40, 0.08);
+      --radius-sm: 10px;
+      --radius-md: 14px;
+      --radius-lg: 18px;
+      --radius-xl: 22px;
+      --font: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      --transition-fast: 0.15s cubic-bezier(0.2, 0, 0, 1);
+      --transition-base: 0.25s cubic-bezier(0.2, 0, 0, 1);
+      --transition-slow: 0.35s cubic-bezier(0.2, 0, 0, 1);
+      --focus-ring: 0 0 0 3px var(--accent-ring);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      font-size: 16px;
+      scroll-behavior: smooth;
+      -webkit-text-size-adjust: 100%;
+    }
+
+    body {
+      font-family: var(--font);
+      background: var(--bg);
+      color: var(--text-primary);
+      line-height: 1.5;
+      min-height: 100vh;
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      padding: 32px 20px;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    /* Container */
+    .app {
+      width: 100%;
+      max-width: 960px;
+      margin: 0 auto;
+    }
+
+    /* Header */
+    .site-header {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 8px 16px;
+      margin-bottom: 32px;
+      padding: 0 2px;
+    }
+
+    .brand {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .brand-name {
+      font-size: 1.75rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      color: var(--text-primary);
+      line-height: 1.2;
+    }
+
+    .brand-tagline {
+      font-size: 0.9rem;
+      font-weight: 450;
+      color: var(--text-secondary);
+      letter-spacing: -0.01em;
+    }
+
+    .status-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--accent-soft);
+      color: var(--accent);
+      border-radius: 999px;
+      padding: 6px 14px;
+      font-size: 0.8rem;
+      font-weight: 550;
+      letter-spacing: -0.01em;
+      border: 1px solid rgba(79, 70, 229, 0.12);
+      transition: all var(--transition-fast);
+    }
+
+    .status-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--accent);
+      animation: pulse-dot 2.4s ease-in-out infinite;
+    }
+
+    @keyframes pulse-dot {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.55; transform: scale(0.85); }
+    }
+
+    /* Email card */
+    .email-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 28px 30px;
+      box-shadow: var(--shadow-sm);
+      margin-bottom: 28px;
+      transition: box-shadow var(--transition-base), border-color var(--transition-base);
+    }
+
+    .email-card:hover {
+      box-shadow: var(--shadow-md);
+      border-color: var(--border-strong);
+    }
+
+    .email-label {
+      font-size: 0.85rem;
+      font-weight: 550;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-secondary);
+      margin-bottom: 12px;
+    }
+
+    .email-row {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 12px 16px;
+      margin-bottom: 20px;
+    }
+
+    .email-address-display {
+      font-family: 'SF Mono', 'Cascadia Code', 'Roboto Mono', 'Menlo', monospace;
+      font-size: 1.15rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      word-break: break-all;
+      flex: 1 1 260px;
+      letter-spacing: -0.01em;
+      background: var(--bg);
+      padding: 10px 16px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border);
+      min-width: 0;
+    }
+
+    .email-actions {
+      display: flex;
+      gap: 10px;
+      flex-shrink: 0;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 10px 18px;
+      font-size: 0.9rem;
+      font-weight: 550;
+      font-family: var(--font);
+      border-radius: var(--radius-sm);
+      border: 1px solid transparent;
+      cursor: pointer;
+      transition: all var(--transition-fast);
+      white-space: nowrap;
+      text-decoration: none;
+      letter-spacing: -0.01em;
+      outline: none;
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+    }
+
+    .btn:focus-visible {
+      box-shadow: var(--focus-ring);
+      outline: none;
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      color: #fff;
+      border-color: var(--accent);
+    }
+
+    .btn-primary:hover {
+      background: var(--accent-hover);
+      border-color: var(--accent-hover);
+    }
+
+    .btn-primary:disabled {
+      background: var(--border-strong);
+      border-color: var(--border-strong);
+      cursor: not-allowed;
+      opacity: 0.7;
+    }
+
+    .btn-secondary {
+      background: var(--card);
+      color: var(--text-primary);
+      border-color: var(--border);
+      box-shadow: var(--shadow-xs);
+    }
+
+    .btn-secondary:hover {
+      background: var(--bg);
+      border-color: var(--border-strong);
+    }
+
+    .btn-secondary:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    .btn-danger {
+      background: var(--danger);
+      color: #fff;
+      border-color: var(--danger);
+    }
+
+    .btn-danger:hover {
+      background: #B91C1C;
+      border-color: #B91C1C;
+    }
+
+    .btn-icon {
+      padding: 10px 12px;
+    }
+
+    .btn-icon svg {
+      width: 16px;
+      height: 16px;
+      stroke: currentColor;
+      stroke-width: 2;
+      fill: none;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .divider {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin: 18px 0 16px;
+    }
+
+    .timer-section {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+
+    .timer-label {
+      font-size: 0.8rem;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--text-secondary);
+    }
+
+    .timer-value {
+      font-family: 'SF Mono', 'Cascadia Code', 'Roboto Mono', monospace;
+      font-size: 1.5rem;
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      color: var(--text-primary);
+      transition: color var(--transition-base);
+    }
+
+    .timer-value.warning {
+      color: var(--warning);
+    }
+
+    .timer-value.danger {
+      color: var(--danger);
+    }
+
+    .timer-bar {
+      width: 100%;
+      height: 4px;
+      background: var(--border);
+      border-radius: 999px;
+      overflow: hidden;
+      margin-top: 4px;
+    }
+
+    .timer-bar-fill {
+      height: 100%;
+      background: var(--accent);
+      border-radius: 999px;
+      transition: width 1s linear, background var(--transition-base);
+    }
+
+    .timer-bar-fill.warning {
+      background: var(--warning);
+    }
+
+    .timer-bar-fill.danger {
+      background: var(--danger);
+    }
+
+    .generate-row {
+      display: flex;
+      justify-content: flex-end;
+      margin-top: 8px;
+    }
+
+    /* Inbox */
+    .inbox-section {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-sm);
+      padding: 24px 28px;
+      min-height: 260px;
+      transition: box-shadow var(--transition-base), border-color var(--transition-base);
+    }
+
+    .inbox-section:hover {
+      box-shadow: var(--shadow-md);
+      border-color: var(--border-strong);
+    }
+
+    .inbox-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 20px;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .inbox-title {
+      font-size: 1.15rem;
+      font-weight: 650;
+      letter-spacing: -0.01em;
+      color: var(--text-primary);
+    }
+
+    .inbox-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .email-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      padding: 14px 16px;
+      background: var(--bg);
+      border-radius: var(--radius-sm);
+      border: 1px solid transparent;
+      cursor: pointer;
+      transition: all var(--transition-fast);
+      position: relative;
+    }
+
+    .email-item:hover {
+      background: var(--accent-soft);
+      border-color: var(--accent-ring);
+    }
+
+    .email-item:focus-visible {
+      outline: none;
+      box-shadow: var(--focus-ring);
+      border-color: var(--accent);
+    }
+
+    .unread-indicator {
+      flex-shrink: 0;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--accent);
+      margin-top: 6px;
+      opacity: 0.9;
+    }
+
+    .email-item:not(.unread) .unread-indicator {
+      opacity: 0;
+    }
+
+    .email-item-content {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .email-item-sender {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      letter-spacing: -0.01em;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .email-item-subject {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      margin-top: 2px;
+    }
+
+    .email-item-time {
+      font-size: 0.75rem;
+      color: var(--text-tertiary);
+      flex-shrink: 0;
+      margin-top: 2px;
+      white-space: nowrap;
+    }
+
+    .email-item.unread .email-item-sender {
+      font-weight: 700;
+    }
+
+    .email-item.unread .email-item-subject {
+      font-weight: 500;
+      color: var(--text-primary);
+    }
+
+    .empty-state {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 48px 24px;
+      text-align: center;
+      gap: 8px;
+    }
+
+    .empty-state svg {
+      width: 40px;
+      height: 40px;
+      stroke: var(--text-tertiary);
+      stroke-width: 1.2;
+      fill: none;
+      margin-bottom: 8px;
+    }
+
+    .empty-state-title {
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      letter-spacing: -0.01em;
+    }
+
+    .empty-state-text {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      max-width: 340px;
+    }
+
+    .error-state {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 40px 24px;
+      text-align: center;
+      gap: 10px;
+    }
+
+    .error-state-title {
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: var(--danger);
+    }
+
+    .error-state-text {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+    }
+
+    /* Skeleton loading */
+    .skeleton {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      padding: 8px 0;
+    }
+
+    .skeleton-item {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 14px 16px;
+      background: var(--bg);
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border);
+    }
+
+    .skeleton-avatar {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: var(--border);
+      flex-shrink: 0;
+      animation: shimmer 1.8s infinite;
+    }
+
+    .skeleton-lines {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .skeleton-line {
+      height: 10px;
+      border-radius: 4px;
+      background: var(--border);
+      animation: shimmer 1.8s infinite;
+    }
+
+    .skeleton-line.short {
+      width: 40%;
+    }
+
+    .skeleton-line.medium {
+      width: 75%;
+    }
+
+    @keyframes shimmer {
+      0% { background-color: var(--border); }
+      50% { background-color: #F3F4F6; }
+      100% { background-color: var(--border); }
+    }
+
+    /* Modal */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(17, 24, 39, 0.55);
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+      z-index: 2000;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      animation: fadeIn 0.2s ease;
+    }
+
+    .modal-overlay.active {
+      display: flex;
+    }
+
+    .modal-container {
+      background: var(--card);
+      border-radius: var(--radius-xl);
+      width: 100%;
+      max-width: 680px;
+      max-height: 85vh;
+      display: flex;
+      flex-direction: column;
+      box-shadow: var(--shadow-lg);
+      animation: scaleIn 0.22s ease;
+      overflow: hidden;
+      border: 1px solid var(--border);
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    @keyframes scaleIn {
+      from { opacity: 0; transform: scale(0.96); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    .modal-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      padding: 20px 24px 14px;
+      border-bottom: 1px solid var(--border);
+      gap: 16px;
+      flex-shrink: 0;
+    }
+
+    .modal-subject {
+      font-size: 1.1rem;
+      font-weight: 650;
+      letter-spacing: -0.01em;
+      line-height: 1.3;
+      color: var(--text-primary);
+      word-break: break-word;
+    }
+
+    .modal-close-btn {
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 8px;
+      border: none;
+      background: transparent;
+      cursor: pointer;
+      color: var(--text-secondary);
+      transition: all var(--transition-fast);
+      flex-shrink: 0;
+    }
+
+    .modal-close-btn:hover {
+      background: var(--bg);
+      color: var(--text-primary);
+    }
+
+    .modal-close-btn:focus-visible {
+      outline: none;
+      box-shadow: var(--focus-ring);
+    }
+
+    .modal-close-btn svg {
+      width: 18px;
+      height: 18px;
+      stroke: currentColor;
+      stroke-width: 2;
+      fill: none;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .modal-meta {
+      padding: 12px 24px;
+      border-bottom: 1px solid var(--border);
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      flex-shrink: 0;
+    }
+
+    .modal-meta-row {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .modal-meta-label {
+      font-weight: 550;
+      color: var(--text-primary);
+    }
+
+    .modal-body {
+      padding: 20px 24px;
+      overflow-y: auto;
+      flex: 1;
+      word-break: break-word;
+      font-size: 0.9rem;
+      line-height: 1.6;
+      color: var(--text-primary);
+    }
+
+    .modal-body iframe {
+      width: 100%;
+      min-height: 280px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      background: #fff;
+    }
+
+    /* Toast */
+    .toast-container {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      z-index: 3000;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      pointer-events: none;
+    }
+
+    .toast {
+      pointer-events: auto;
+      background: var(--text-primary);
+      color: #fff;
+      padding: 12px 18px;
+      border-radius: var(--radius-sm);
+      font-size: 0.85rem;
+      font-weight: 500;
+      letter-spacing: -0.01em;
+      box-shadow: var(--shadow-lg);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      animation: toastIn 0.3s ease;
+      max-width: 360px;
+      transition: opacity 0.25s ease, transform 0.25s ease;
+    }
+
+    .toast.removing {
+      opacity: 0;
+      transform: translateY(8px);
+    }
+
+    @keyframes toastIn {
+      from { opacity: 0; transform: translateY(16px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .toast-success {
+      background: #065F46;
+    }
+
+    .toast-error {
+      background: #991B1B;
+    }
+
+    .toast-info {
+      background: #1E3A8A;
+    }
+
+    /* Focus visible */
+    .btn:focus-visible,
+    .email-item:focus-visible {
+      outline: none;
+      box-shadow: var(--focus-ring);
+    }
+
+    /* Responsive */
+    @media (max-width: 640px) {
+      body {
+        padding: 16px 12px;
+      }
+
+      .site-header {
+        margin-bottom: 20px;
+      }
+
+      .brand-name {
+        font-size: 1.4rem;
+      }
+
+      .email-card {
+        padding: 20px 18px;
+        border-radius: var(--radius-md);
+      }
+
+      .email-row {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 12px;
+      }
+
+      .email-address-display {
+        font-size: 1rem;
+        padding: 10px 14px;
+      }
+
+      .email-actions {
+        width: 100%;
+        justify-content: stretch;
+      }
+
+      .email-actions .btn {
+        flex: 1;
+        justify-content: center;
+      }
+
+      .timer-section {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+      }
+
+      .timer-value {
+        font-size: 1.3rem;
+      }
+
+      .generate-row {
+        justify-content: stretch;
+      }
+
+      .generate-row .btn {
+        width: 100%;
+      }
+
+      .inbox-section {
+        padding: 18px 16px;
+        border-radius: var(--radius-md);
+      }
+
+      .inbox-header {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .email-item {
+        padding: 12px 12px;
+      }
+
+      .modal-container {
+        max-width: 100%;
+        max-height: 92vh;
+        border-radius: var(--radius-lg);
+      }
+
+      .modal-header {
+        padding: 16px 18px 12px;
+      }
+
+      .modal-meta {
+        padding: 10px 18px;
+      }
+
+      .modal-body {
+        padding: 16px 18px;
+      }
+
+      .toast-container {
+        bottom: 16px;
+        right: 12px;
+        left: 12px;
+        align-items: flex-end;
+      }
+
+      .toast {
+        max-width: 100%;
+      }
+    }
+
+    @media (min-width: 641px) and (max-width: 1024px) {
+      .email-card {
+        padding: 24px 24px;
+      }
+
+      .inbox-section {
+        padding: 20px 22px;
+      }
+    }
+  </style>
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <h1>Hack View TikTok</h1>
-            <div class="subtitle">Popup Edition - Tăng view bằng tab mới thật</div>
+  <div class="app">
+    <!-- Header -->
+    <header class="site-header">
+      <div class="brand">
+        <div class="brand-name">10 Phút Mail</div>
+        <div class="brand-tagline">Temporary email, made simple.</div>
+      </div>
+      <div class="status-pill">
+        <span class="status-dot" aria-hidden="true"></span>
+        Temporary inbox
+      </div>
+    </header>
+
+    <!-- Email card -->
+    <section class="email-card" aria-label="Temporary email">
+      <div class="email-label">Your temporary email</div>
+      <div class="email-row">
+        <div class="email-address-display" id="emailAddress" aria-live="polite">Đang tạo email...</div>
+        <div class="email-actions">
+          <button class="btn btn-secondary" id="copyBtn" onclick="copyEmail()" aria-label="Copy email address">
+            Copy
+          </button>
+          <button class="btn btn-secondary" id="refreshBtn" onclick="refreshInbox()" aria-label="Refresh inbox">
+            Refresh
+          </button>
         </div>
-        <div class="input-group">
-            <label>Link video TikTok (đầy đủ):</label>
-            <input type="text" id="videoUrl" placeholder="https://www.tiktok.com/@username/video/1234567890">
-        </div>
-        <div class="input-group">
-            <label>Số view muốn tăng:</label>
-            <input type="number" id="viewCount" value="1000" min="1" max="10000">
-        </div>
-        <div class="button-group">
-            <button id="startBtn" onclick="startHack()">Bắt đầu tăng view</button>
-            <button id="stopBtn" onclick="stopHack()" disabled>Dừng</button>
-        </div>
-        <div class="stats-grid">
-            <div class="stat-card">
-                <div class="stat-value" id="totalViews">0</div>
-                <div class="stat-label">Tổng view</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-value" id="successViews">0</div>
-                <div class="stat-label">Thành công</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-value" id="failViews">0</div>
-                <div class="stat-label">Thất bại</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-value" id="remainingTime">0</div>
-                <div class="stat-label">Còn lại (giây)</div>
-            </div>
-        </div>
-        <div class="progress-container">
-            <div class="progress-bar" id="progressBar"></div>
-        </div>
-        <div class="log-container" id="logContainer"></div>
+      </div>
+      <hr class="divider">
+      <div class="timer-section">
+        <div class="timer-label">Expires in</div>
+        <div class="timer-value" id="timer">10:00</div>
+      </div>
+      <div class="timer-bar" aria-hidden="true">
+        <div class="timer-bar-fill" id="timerBarFill"></div>
+      </div>
+      <div class="generate-row">
+        <button class="btn btn-primary" id="generateBtn" onclick="generateNewEmail()" aria-label="Generate new email">
+          Generate New Email
+        </button>
+      </div>
+    </section>
+
+    <!-- Inbox -->
+    <section class="inbox-section" aria-label="Inbox">
+      <div class="inbox-header">
+        <h2 class="inbox-title">Inbox</h2>
+        <button class="btn btn-secondary" onclick="refreshInbox()" aria-label="Refresh inbox">
+          Refresh
+        </button>
+      </div>
+      <div class="inbox-list" id="inboxList" aria-live="polite">
+        <!-- dynamic content -->
+      </div>
+    </section>
+  </div>
+
+  <!-- Modal for reading email -->
+  <div class="modal-overlay" id="emailModal" role="dialog" aria-modal="true" aria-labelledby="modalSubject">
+    <div class="modal-container">
+      <div class="modal-header">
+        <h3 class="modal-subject" id="modalSubject">Tiêu đề email</h3>
+        <button class="modal-close-btn" onclick="closeModal()" aria-label="Close email">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+      <div class="modal-meta" id="modalMeta"></div>
+      <div class="modal-body" id="modalBody"></div>
     </div>
-    <script>
-        let isRunning = false;
-        let stopRequested = false;
-        let totalViews = 0;
-        let successViews = 0;
-        let failViews = 0;
-        let targetViews = 0;
-        let startTime = 0;
+  </div>
 
-        function addLog(message, type = 'info') {
-            const logContainer = document.getElementById('logContainer');
-            const item = document.createElement('div');
-            item.className = `log-item log-${type}`;
-            const timestamp = new Date().toLocaleTimeString('vi-VN', { hour12: false });
-            item.textContent = `[${timestamp}] ${message}`;
-            logContainer.appendChild(item);
-            logContainer.scrollTop = logContainer.scrollHeight;
-            while (logContainer.children.length > 1000) {
-                logContainer.removeChild(logContainer.firstChild);
+  <!-- Toast container -->
+  <div class="toast-container" id="toastContainer" aria-live="polite" aria-atomic="true"></div>
+
+  <script>
+    (function() {
+      // ========== STATE ==========
+      let timerInterval = null;
+      let refreshInterval = null;
+      let timeLeft = 600; // 10 minutes in seconds
+      let currentEmail = '';
+      let currentAccount = null;
+      let authToken = null;
+      let lastSeenMessageIds = new Set();
+      let isGenerating = false;
+
+      const API_BASE = 'https://api.mail.tm';
+      const TIMER_DURATION = 600;
+
+      // DOM elements
+      const emailAddressEl = document.getElementById('emailAddress');
+      const timerEl = document.getElementById('timer');
+      const timerBarFill = document.getElementById('timerBarFill');
+      const inboxListEl = document.getElementById('inboxList');
+      const generateBtn = document.getElementById('generateBtn');
+      const copyBtn = document.getElementById('copyBtn');
+      const refreshBtn = document.getElementById('refreshBtn');
+      const modalOverlay = document.getElementById('emailModal');
+      const modalSubject = document.getElementById('modalSubject');
+      const modalMeta = document.getElementById('modalMeta');
+      const modalBody = document.getElementById('modalBody');
+      const toastContainer = document.getElementById('toastContainer');
+
+      // ========== UTILITY ==========
+      function sanitizeHtml(html) {
+        if (!html) return '';
+        // Remove script tags and their content
+        let cleaned = html.replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '');
+        // Remove event handlers, javascript: URLs, inline styles that might be dangerous
+        cleaned = cleaned.replace(/\son\w+\s*=\s*(?:"[^"]*"|'[^']*'|[^\s>]+)/gi, '');
+        cleaned = cleaned.replace(/javascript:[^"'\s]+/gi, '');
+        cleaned = cleaned.replace(/<iframe/gi, '<iframe sandbox');
+        cleaned = cleaned.replace(/<object/gi, '<object sandbox');
+        // Basic structural sanitization
+        return cleaned;
+      }
+
+      function formatDate(dateStr) {
+        try {
+          const d = new Date(dateStr);
+          if (isNaN(d.getTime())) return 'N/A';
+          const now = new Date();
+          const diffMs = now - d;
+          const diffMin = Math.floor(diffMs / 60000);
+          if (diffMin < 1) return 'Just now';
+          if (diffMin < 60) return diffMin + ' min ago';
+          const diffHr = Math.floor(diffMin / 60);
+          if (diffHr < 24) return diffHr + ' hr ago';
+          return d.toLocaleDateString('vi-VN', { day: '2-digit', month: '2-digit', year: 'numeric' });
+        } catch(e) {
+          return 'N/A';
+        }
+      }
+
+      function escapeHtml(text) {
+        if (!text) return '';
+        const div = document.createElement('div');
+        div.textContent = text;
+        return div.innerHTML;
+      }
+
+      // ========== TOAST ==========
+      function showToast(message, type = 'info') {
+        const toast = document.createElement('div');
+        toast.className = `toast toast-${type}`;
+        toast.textContent = message;
+        toastContainer.appendChild(toast);
+        setTimeout(() => {
+          toast.classList.add('removing');
+          setTimeout(() => {
+            if (toast.parentNode) toast.remove();
+          }, 260);
+        }, 2800);
+      }
+
+      // ========== NOTIFICATION (legacy, now mapped to toast) ==========
+      function showNotification(message, type = 'info') {
+        showToast(message, type);
+      }
+
+      // ========== LOADING ==========
+      function showLoading() {
+        emailAddressEl.textContent = 'Đang tạo email...';
+        inboxListEl.innerHTML = `
+          <div class="skeleton">
+            <div class="skeleton-item">
+              <div class="skeleton-avatar"></div>
+              <div class="skeleton-lines">
+                <div class="skeleton-line medium"></div>
+                <div class="skeleton-line short"></div>
+              </div>
+            </div>
+            <div class="skeleton-item">
+              <div class="skeleton-avatar"></div>
+              <div class="skeleton-lines">
+                <div class="skeleton-line medium"></div>
+                <div class="skeleton-line short"></div>
+              </div>
+            </div>
+          </div>
+        `;
+      }
+
+      function showInboxError(message = 'Unable to load inbox') {
+        inboxListEl.innerHTML = `
+          <div class="error-state">
+            <div class="error-state-title">Something went wrong</div>
+            <div class="error-state-text">${escapeHtml(message)}</div>
+          </div>
+        `;
+      }
+
+      // ========== TIMER ==========
+      function startTimer() {
+        if (timerInterval) clearInterval(timerInterval);
+        timeLeft = TIMER_DURATION;
+        updateTimerDisplay();
+        timerInterval = setInterval(() => {
+          timeLeft--;
+          updateTimerDisplay();
+          if (timeLeft <= 0) {
+            clearInterval(timerInterval);
+            timerInterval = null;
+            showToast('Email has expired. Generate a new one.', 'warning');
+            // Keep the email but show expired state
+          }
+        }, 1000);
+      }
+
+      function resetTimer() {
+        if (timerInterval) clearInterval(timerInterval);
+        startTimer();
+      }
+
+      function updateTimerDisplay() {
+        const minutes = Math.floor(timeLeft / 60);
+        const seconds = timeLeft % 60;
+        const timeStr = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        timerEl.textContent = timeStr;
+
+        const progress = Math.max(0, Math.min(100, (timeLeft / TIMER_DURATION) * 100));
+        timerBarFill.style.width = progress + '%';
+
+        // Update colors based on time left
+        timerEl.classList.remove('warning', 'danger');
+        timerBarFill.classList.remove('warning', 'danger');
+        if (timeLeft <= 60) {
+          timerEl.classList.add('danger');
+          timerBarFill.classList.add('danger');
+        } else if (timeLeft <= 180) {
+          timerEl.classList.add('warning');
+          timerBarFill.classList.add('warning');
+        }
+      }
+
+      // ========== AUTO REFRESH ==========
+      function startAutoRefresh() {
+        if (refreshInterval) clearInterval(refreshInterval);
+        refreshInterval = setInterval(() => {
+          if (!isGenerating) {
+            refreshInbox();
+          }
+        }, 10000);
+      }
+
+      // ========== ACCOUNT MANAGEMENT ==========
+      function generateUsername() {
+        const chars = 'abcdefghijklmnopqrstuvwxyz0123456789';
+        let result = '';
+        for (let i = 0; i < 10; i++) {
+          result += chars.charAt(Math.floor(Math.random() * chars.length));
+        }
+        return result;
+      }
+
+      function generatePassword() {
+        const chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+        let result = '';
+        for (let i = 0; i < 12; i++) {
+          result += chars.charAt(Math.floor(Math.random() * chars.length));
+        }
+        return result;
+      }
+
+      async function createNewAccount() {
+        try {
+          isGenerating = true;
+          generateBtn.disabled = true;
+          copyBtn.disabled = true;
+          refreshBtn.disabled = true;
+          showLoading();
+
+          const username = generateUsername();
+          const password = generatePassword();
+
+          const response = await fetch(`${API_BASE}/accounts`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ address: `${username}@mail.tm`, password: password })
+          });
+
+          if (!response.ok) {
+            throw new Error('Cannot create account');
+          }
+
+          const account = await response.json();
+          currentAccount = account;
+          await login(username, password);
+        } catch (error) {
+          console.error('Account creation error:', error);
+          showToast('Unable to create email. Please try again.', 'error');
+          emailAddressEl.textContent = 'Error creating email';
+          inboxListEl.innerHTML = `
+            <div class="error-state">
+              <div class="error-state-title">Connection error</div>
+              <div class="error-state-text">Check your internet connection and try again.</div>
+            </div>
+          `;
+        } finally {
+          isGenerating = false;
+          generateBtn.disabled = false;
+          copyBtn.disabled = false;
+          refreshBtn.disabled = false;
+        }
+      }
+
+      async function login(username, password) {
+        try {
+          const response = await fetch(`${API_BASE}/token`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ address: `${username}@mail.tm`, password: password })
+          });
+
+          if (!response.ok) {
+            throw new Error('Login failed');
+          }
+
+          const data = await response.json();
+          authToken = data.token;
+          currentEmail = `${username}@mail.tm`;
+          emailAddressEl.textContent = currentEmail;
+          lastSeenMessageIds.clear();
+          await refreshInbox();
+          showToast('Email created', 'success');
+        } catch (error) {
+          console.error('Login error:', error);
+          throw error;
+        }
+      }
+
+      async function generateNewEmail() {
+        if (isGenerating) return;
+        if (!confirm('Are you sure you want to generate a new email? The current inbox will be lost.')) {
+          return;
+        }
+        try {
+          await createNewAccount();
+          resetTimer();
+          startAutoRefresh();
+        } catch (error) {
+          console.error('Generate new email error:', error);
+        }
+      }
+
+      // ========== INBOX ==========
+      async function refreshInbox() {
+        if (!authToken) return;
+        try {
+          const response = await fetch(`${API_BASE}/messages`, {
+            headers: { 'Authorization': `Bearer ${authToken}` }
+          });
+
+          if (!response.ok) {
+            if (response.status === 401) {
+              // Token expired, need to re-authenticate
+              showToast('Session expired. Generating new email...', 'error');
+              await createNewAccount();
+              return;
             }
+            throw new Error('Cannot fetch messages');
+          }
+
+          const messages = await response.json();
+          displayEmails(messages);
+        } catch (error) {
+          console.error('Refresh inbox error:', error);
+          showInboxError('Unable to load inbox. Check your connection.');
+        }
+      }
+
+      function displayEmails(messages) {
+        if (!messages || messages.length === 0) {
+          inboxListEl.innerHTML = `
+            <div class="empty-state">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M22 12h-6l-2 3h-4l-2-3H2"></path>
+                <path d="M5.45 5.11L2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"></path>
+              </svg>
+              <div class="empty-state-title">Your inbox is empty</div>
+              <div class="empty-state-text">Emails sent to this address will appear here.</div>
+            </div>
+          `;
+          return;
         }
 
-        function updateStats() {
-            document.getElementById('totalViews').textContent = totalViews;
-            document.getElementById('successViews').textContent = successViews;
-            document.getElementById('failViews').textContent = failViews;
-            const percent = targetViews > 0 ? (totalViews / targetViews) * 100 : 0;
-            document.getElementById('progressBar').style.width = Math.min(percent, 100) + '%';
-            if (isRunning && totalViews > 0) {
-                const elapsed = (Date.now() - startTime) / 1000;
-                const avgTime = elapsed / totalViews;
-                const remaining = Math.ceil((targetViews - totalViews) * avgTime);
-                document.getElementById('remainingTime').textContent = remaining;
-            } else if (!isRunning) {
-                document.getElementById('remainingTime').textContent = 0;
+        // Sort by createdAt desc
+        messages.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+
+        let html = '';
+        messages.forEach(message => {
+          const from = message.from ? (message.from.name || message.from.address) : 'Unknown sender';
+          const subject = message.subject || 'No subject';
+          const time = formatDate(message.createdAt);
+          const isUnread = !lastSeenMessageIds.has(message.id);
+          const unreadClass = isUnread ? 'unread' : '';
+
+          html += `
+            <div class="email-item ${unreadClass}" tabindex="0" role="button" aria-label="Open email from ${escapeHtml(from)}" data-message-id="${message.id}">
+              <span class="unread-indicator" aria-hidden="true"></span>
+              <div class="email-item-content">
+                <div class="email-item-sender">${escapeHtml(from)}</div>
+                <div class="email-item-subject">${escapeHtml(subject)}</div>
+              </div>
+              <div class="email-item-time">${escapeHtml(time)}</div>
+            </div>
+          `;
+        });
+
+        inboxListEl.innerHTML = html;
+
+        // Attach click listeners
+        document.querySelectorAll('.email-item').forEach(item => {
+          item.addEventListener('click', function(e) {
+            const messageId = this.dataset.messageId;
+            lastSeenMessageIds.add(messageId);
+            this.classList.remove('unread');
+            openEmail(messageId);
+          });
+          item.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' || e.key === ' ') {
+              e.preventDefault();
+              this.click();
             }
-        }
+          });
+        });
+      }
 
-        function sleep(ms) {
-            return new Promise(resolve => setTimeout(resolve, ms));
-        }
+      // ========== OPEN EMAIL ==========
+      async function openEmail(messageId) {
+        try {
+          const response = await fetch(`${API_BASE}/messages/${messageId}`, {
+            headers: { 'Authorization': `Bearer ${authToken}` }
+          });
 
-        function openVideo(url, index) {
-            return new Promise(async (resolve) => {
-                try {
-                    const delay = Math.floor(Math.random() * (15000 - 8000 + 1)) + 8000;
-                    const popup = window.open(url, '_blank', 'width=800,height=600,scrollbars=yes');
-                    if (popup) {
-                        addLog(`View ${index}: Mở video trong tab mới, xem ${delay/1000} giây...`, 'info');
-                        await sleep(delay);
-                        popup.close();
-                        addLog(`View ${index}: Thành công ✓`, 'success');
-                        resolve(true);
-                    } else {
-                        addLog(`View ${index}: Trình duyệt chặn popup, hãy cho phép popup!`, 'error');
-                        resolve(false);
-                    }
-                } catch (e) {
-                    addLog(`View ${index}: Lỗi - ${e.message}`, 'error');
-                    resolve(false);
-                }
-            });
-        }
+          if (!response.ok) {
+            throw new Error('Cannot read email');
+          }
 
-        async function startHack() {
-            if (isRunning) return;
-            const url = document.getElementById('videoUrl').value.trim();
-            const count = parseInt(document.getElementById('viewCount').value);
-            if (!url) { alert('Vui lòng nhập link video TikTok'); return; }
-            if (!url.includes('tiktok.com')) { alert('Link không hợp lệ, phải chứa tiktok.com'); return; }
-            if (count < 1 || count > 10000) { alert('Số view phải từ 1 đến 10000'); return; }
-            isRunning = true;
-            stopRequested = false;
-            totalViews = 0;
-            successViews = 0;
-            failViews = 0;
-            targetViews = count;
-            startTime = Date.now();
-            document.getElementById('startBtn').disabled = true;
-            document.getElementById('stopBtn').disabled = false;
-            document.getElementById('logContainer').innerHTML = '';
-            addLog('=== BẮT ĐẦU TĂNG VIEW ===', 'info');
-            addLog(`Link: ${url}`, 'info');
-            addLog(`Mục tiêu: ${count} view`, 'info');
-            addLog('Quan trọng: Cho phép popup từ trang này!', 'warning');
-            for (let i = 1; i <= count; i++) {
-                if (stopRequested) {
-                    addLog('Đã dừng bởi người dùng', 'error');
-                    break;
-                }
-                const success = await openVideo(url, i);
-                if (success) {
-                    totalViews++;
-                    successViews++;
-                } else {
-                    totalViews++;
-                    failViews++;
-                }
-                updateStats();
-                if (i < count && !stopRequested) {
-                    const waitTime = Math.floor(Math.random() * (7000 - 3000 + 1)) + 3000;
-                    addLog(`Nghỉ ${(waitTime/1000).toFixed(1)} giây...`, 'info');
-                    await sleep(waitTime);
-                }
+          const message = await response.json();
+
+          modalSubject.textContent = message.subject || 'No subject';
+
+          const from = message.from ? (message.from.name || message.from.address) : 'Unknown';
+          const receivedAt = message.createdAt ? formatDate(message.createdAt) : 'N/A';
+
+          modalMeta.innerHTML = `
+            <div class="modal-meta-row"><span class="modal-meta-label">From:</span> ${escapeHtml(from)}</div>
+            <div class="modal-meta-row"><span class="modal-meta-label">Received:</span> ${escapeHtml(receivedAt)}</div>
+          `;
+
+          // Determine content type
+          let content = '';
+          if (message.html && message.html.length > 0) {
+            const sanitizedHtml = sanitizeHtml(message.html[0]);
+            // Use iframe sandbox for maximum safety
+            content = `<iframe sandbox="allow-same-origin" style="width:100%;min-height:280px;border:1px solid var(--border);border-radius:8px;background:#fff;"></iframe>`;
+            modalBody.innerHTML = content;
+            const iframe = modalBody.querySelector('iframe');
+            if (iframe) {
+              iframe.srcdoc = sanitizedHtml;
             }
-            const totalTime = Math.floor((Date.now() - startTime) / 1000);
-            addLog('=== HOÀN THÀNH ===', 'success');
-            addLog(`Tổng view: ${totalViews}`, 'success');
-            addLog(`Thành công: ${successViews}`, 'success');
-            addLog(`Thất bại: ${failViews}`, 'error');
-            addLog(`Thời gian chạy: ${totalTime} giây`, 'info');
-            isRunning = false;
-            document.getElementById('startBtn').disabled = false;
-            document.getElementById('stopBtn').disabled = true;
-            document.getElementById('remainingTime').textContent = 0;
+          } else if (message.text) {
+            content = `<pre style="white-space:pre-wrap;font-family:var(--font);font-size:0.9rem;line-height:1.6;">${escapeHtml(message.text)}</pre>`;
+            modalBody.innerHTML = content;
+          } else {
+            modalBody.innerHTML = '<p style="color:var(--text-secondary);">No content</p>';
+          }
+
+          modalOverlay.classList.add('active');
+          document.body.style.overflow = 'hidden';
+        } catch (error) {
+          console.error('Open email error:', error);
+          showToast('Unable to read email', 'error');
+        }
+      }
+
+      function closeModal() {
+        modalOverlay.classList.remove('active');
+        document.body.style.overflow = '';
+        modalBody.innerHTML = '';
+      }
+
+      // ========== COPY EMAIL ==========
+      function copyEmail() {
+        if (!currentEmail) return;
+        navigator.clipboard.writeText(currentEmail).then(() => {
+          showToast('Email copied', 'success');
+        }).catch(() => {
+          const textArea = document.createElement('textarea');
+          textArea.value = currentEmail;
+          document.body.appendChild(textArea);
+          textArea.select();
+          document.execCommand('copy');
+          textArea.remove();
+          showToast('Email copied', 'success');
+        });
+      }
+
+      // ========== INIT ==========
+      async function init() {
+        try {
+          await createNewAccount();
+          startTimer();
+          startAutoRefresh();
+        } catch (error) {
+          console.error('Init error:', error);
+          showToast('Unable to start. Please refresh the page.', 'error');
         }
 
-        function stopHack() {
-            stopRequested = true;
-            addLog('Đang dừng...', 'error');
-            document.getElementById('stopBtn').disabled = true;
-        }
-    </script>
+        // Close modal on overlay click
+        modalOverlay.addEventListener('click', function(e) {
+          if (e.target === modalOverlay) {
+            closeModal();
+          }
+        });
+
+        // Escape key closes modal
+        document.addEventListener('keydown', function(e) {
+          if (e.key === 'Escape' && modalOverlay.classList.contains('active')) {
+            closeModal();
+          }
+        });
+      }
+
+      // Expose functions to global scope for onclick attributes
+      window.copyEmail = copyEmail;
+      window.refreshInbox = refreshInbox;
+      window.generateNewEmail = generateNewEmail;
+      window.closeModal = closeModal;
+
+      // Start the app
+      init();
+    })();
+  </script>
 </body>
 </html>
