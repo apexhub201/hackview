@@ -865,17 +865,14 @@
       let refreshInterval = null;
       let timeLeft = 600;
       let currentEmail = '';
-      let currentAccount = null;
-      let authToken = null;
+      let emailLogin = '';
+      let emailDomain = '';
       let lastSeenMessageIds = new Set();
       let isGenerating = false;
 
-      const API_BASE = 'https://api.mail.tm';
       const TIMER_DURATION = 600;
-      const DOMAIN = '@mail.tm';
-
-      // CORS Proxy
-      const CORS_PROXY = 'https://corsproxy.io/?';
+      const API_BASE = 'https://www.1secmail.com/api/v1/';
+      const DOMAINS = ['1secmail.com', '1secmail.org', '1secmail.net', 'wwjmp.com', 'esiix.com', 'xojxa.com', 'yoggm.com'];
 
       const emailAddressEl = document.getElementById('emailAddress');
       const timerEl = document.getElementById('timer');
@@ -890,21 +887,13 @@
       const modalBody = document.getElementById('modalBody');
       const toastContainer = document.getElementById('toastContainer');
 
-      async function apiFetch(endpoint, options = {}) {
-        const url = CORS_PROXY + encodeURIComponent(API_BASE + endpoint);
-        const response = await fetch(url, options);
+      async function apiFetch(endpoint) {
+        const url = API_BASE + endpoint;
+        const response = await fetch(url);
         if (!response.ok) {
           throw new Error(`API error: ${response.status}`);
         }
         return await response.json();
-      }
-
-      function sanitizeHtml(html) {
-        if (!html) return '';
-        let cleaned = html.replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '');
-        cleaned = cleaned.replace(/\son\w+\s*=\s*(?:"[^"]*"|'[^']*'|[^\s>]+)/gi, '');
-        cleaned = cleaned.replace(/javascript:[^"'\s]+/gi, '');
-        return cleaned;
       }
 
       function formatDate(dateStr) {
@@ -1017,7 +1006,7 @@
         }, 10000);
       }
 
-      function generateUsername() {
+      function generateEmail() {
         const chars = 'abcdefghijklmnopqrstuvwxyz0123456789';
         let result = '';
         for (let i = 0; i < 10; i++) {
@@ -1026,16 +1015,7 @@
         return result;
       }
 
-      function generatePassword() {
-        const chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-        let result = '';
-        for (let i = 0; i < 12; i++) {
-          result += chars.charAt(Math.floor(Math.random() * chars.length));
-        }
-        return result;
-      }
-
-      async function createNewAccount() {
+      async function createNewEmail() {
         try {
           isGenerating = true;
           generateBtn.disabled = true;
@@ -1043,19 +1023,18 @@
           refreshBtn.disabled = true;
           showLoading();
 
-          const username = generateUsername();
-          const password = generatePassword();
-
-          const account = await apiFetch('/accounts', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ address: `${username}${DOMAIN}`, password: password })
-          });
-
-          currentAccount = account;
-          await login(username, password);
+          emailLogin = generateEmail();
+          emailDomain = DOMAINS[Math.floor(Math.random() * DOMAINS.length)];
+          currentEmail = `${emailLogin}@${emailDomain}`;
+          
+          emailAddressEl.textContent = currentEmail;
+          lastSeenMessageIds.clear();
+          
+          // Check inbox immediately
+          await refreshInbox();
+          showToast('Email created', 'success');
         } catch (error) {
-          console.error('Account creation error:', error);
+          console.error('Email creation error:', error);
           showToast('Unable to create email. Please try again.', 'error');
           emailAddressEl.textContent = 'Error creating email';
           inboxListEl.innerHTML = `
@@ -1072,33 +1051,13 @@
         }
       }
 
-      async function login(username, password) {
-        try {
-          const data = await apiFetch('/token', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ address: `${username}${DOMAIN}`, password: password })
-          });
-
-          authToken = data.token;
-          currentEmail = `${username}${DOMAIN}`;
-          emailAddressEl.textContent = currentEmail;
-          lastSeenMessageIds.clear();
-          await refreshInbox();
-          showToast('Email created', 'success');
-        } catch (error) {
-          console.error('Login error:', error);
-          throw error;
-        }
-      }
-
       async function generateNewEmail() {
         if (isGenerating) return;
         if (!confirm('Are you sure you want to generate a new email? The current inbox will be lost.')) {
           return;
         }
         try {
-          await createNewAccount();
+          await createNewEmail();
           resetTimer();
           startAutoRefresh();
         } catch (error) {
@@ -1107,13 +1066,15 @@
       }
 
       async function refreshInbox() {
-        if (!authToken) return;
+        if (!emailLogin || !emailDomain) return;
         try {
-          const messages = await apiFetch('/messages', {
-            headers: { 'Authorization': `Bearer ${authToken}` }
-          });
-
-          displayEmails(messages);
+          const messages = await apiFetch(`?action=getMessages&login=${emailLogin}&domain=${emailDomain}`);
+          
+          if (Array.isArray(messages)) {
+            displayEmails(messages);
+          } else {
+            displayEmails([]);
+          }
         } catch (error) {
           console.error('Refresh inbox error:', error);
           showInboxError('Unable to load inbox. Check your connection.');
@@ -1135,18 +1096,19 @@
           return;
         }
 
-        messages.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+        messages.sort((a, b) => new Date(b.date) - new Date(a.date));
 
         let html = '';
         messages.forEach(message => {
-          const from = message.from ? (message.from.name || message.from.address) : 'Unknown sender';
+          const from = message.from || 'Unknown sender';
           const subject = message.subject || 'No subject';
-          const time = formatDate(message.createdAt);
-          const isUnread = !lastSeenMessageIds.has(message.id);
+          const time = formatDate(message.date);
+          const messageId = message.id;
+          const isUnread = !lastSeenMessageIds.has(messageId);
           const unreadClass = isUnread ? 'unread' : '';
 
           html += `
-            <div class="email-item ${unreadClass}" tabindex="0" role="button" aria-label="Open email from ${escapeHtml(from)}" data-message-id="${message.id}">
+            <div class="email-item ${unreadClass}" tabindex="0" role="button" aria-label="Open email from ${escapeHtml(from)}" data-message-id="${messageId}">
               <span class="unread-indicator" aria-hidden="true"></span>
               <div class="email-item-content">
                 <div class="email-item-sender">${escapeHtml(from)}</div>
@@ -1177,14 +1139,12 @@
 
       async function openEmail(messageId) {
         try {
-          const message = await apiFetch(`/messages/${messageId}`, {
-            headers: { 'Authorization': `Bearer ${authToken}` }
-          });
+          const message = await apiFetch(`?action=readMessage&login=${emailLogin}&domain=${emailDomain}&id=${messageId}`);
 
           modalSubject.textContent = message.subject || 'No subject';
 
-          const from = message.from ? (message.from.name || message.from.address) : 'Unknown';
-          const receivedAt = message.createdAt ? formatDate(message.createdAt) : 'N/A';
+          const from = message.from || 'Unknown';
+          const receivedAt = message.date ? formatDate(message.date) : 'N/A';
 
           modalMeta.innerHTML = `
             <div class="modal-meta-row"><span class="modal-meta-label">From:</span> ${escapeHtml(from)}</div>
@@ -1192,21 +1152,15 @@
           `;
 
           let content = '';
-          if (message.html && message.html.length > 0) {
-            const sanitizedHtml = sanitizeHtml(message.html[0]);
-            content = `<iframe sandbox="allow-same-origin" style="width:100%;min-height:280px;border:1px solid var(--border);border-radius:8px;background:#fff;"></iframe>`;
-            modalBody.innerHTML = content;
-            const iframe = modalBody.querySelector('iframe');
-            if (iframe) {
-              iframe.srcdoc = sanitizedHtml;
-            }
-          } else if (message.text) {
-            content = `<pre style="white-space:pre-wrap;font-family:var(--font);font-size:0.9rem;line-height:1.6;">${escapeHtml(message.text)}</pre>`;
-            modalBody.innerHTML = content;
+          if (message.textBody) {
+            content = `<pre style="white-space:pre-wrap;font-family:var(--font);font-size:0.9rem;line-height:1.6;">${escapeHtml(message.textBody)}</pre>`;
+          } else if (message.body) {
+            content = `<pre style="white-space:pre-wrap;font-family:var(--font);font-size:0.9rem;line-height:1.6;">${escapeHtml(message.body)}</pre>`;
           } else {
-            modalBody.innerHTML = '<p style="color:var(--text-secondary);">No content</p>';
+            content = '<p style="color:var(--text-secondary);">No content</p>';
           }
 
+          modalBody.innerHTML = content;
           modalOverlay.classList.add('active');
           document.body.style.overflow = 'hidden';
         } catch (error) {
@@ -1238,7 +1192,7 @@
 
       async function init() {
         try {
-          await createNewAccount();
+          await createNewEmail();
           startTimer();
           startAutoRefresh();
         } catch (error) {
