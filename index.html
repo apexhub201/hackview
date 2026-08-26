@@ -64,14 +64,12 @@
       -moz-osx-font-smoothing: grayscale;
     }
 
-    /* Container */
     .app {
       width: 100%;
       max-width: 960px;
       margin: 0 auto;
     }
 
-    /* Header */
     .site-header {
       display: flex;
       align-items: baseline;
@@ -131,7 +129,6 @@
       50% { opacity: 0.55; transform: scale(0.85); }
     }
 
-    /* Email card */
     .email-card {
       background: var(--card);
       border: 1px solid var(--border);
@@ -247,31 +244,6 @@
       cursor: not-allowed;
     }
 
-    .btn-danger {
-      background: var(--danger);
-      color: #fff;
-      border-color: var(--danger);
-    }
-
-    .btn-danger:hover {
-      background: #B91C1C;
-      border-color: #B91C1C;
-    }
-
-    .btn-icon {
-      padding: 10px 12px;
-    }
-
-    .btn-icon svg {
-      width: 16px;
-      height: 16px;
-      stroke: currentColor;
-      stroke-width: 2;
-      fill: none;
-      stroke-linecap: round;
-      stroke-linejoin: round;
-    }
-
     .divider {
       border: none;
       border-top: 1px solid var(--border);
@@ -342,7 +314,6 @@
       margin-top: 8px;
     }
 
-    /* Inbox */
     .inbox-section {
       background: var(--card);
       border: 1px solid var(--border);
@@ -512,7 +483,6 @@
       color: var(--text-secondary);
     }
 
-    /* Skeleton loading */
     .skeleton {
       display: flex;
       flex-direction: column;
@@ -567,7 +537,6 @@
       100% { background-color: var(--border); }
     }
 
-    /* Modal */
     .modal-overlay {
       display: none;
       position: fixed;
@@ -707,7 +676,6 @@
       background: #fff;
     }
 
-    /* Toast */
     .toast-container {
       position: fixed;
       bottom: 24px;
@@ -759,14 +727,12 @@
       background: #1E3A8A;
     }
 
-    /* Focus visible */
     .btn:focus-visible,
     .email-item:focus-visible {
       outline: none;
       box-shadow: var(--focus-ring);
     }
 
-    /* Responsive */
     @media (max-width: 640px) {
       body {
         padding: 16px 12px;
@@ -881,7 +847,6 @@
 </head>
 <body>
   <div class="app">
-    <!-- Header -->
     <header class="site-header">
       <div class="brand">
         <div class="brand-name">10 Phút Mail</div>
@@ -893,7 +858,6 @@
       </div>
     </header>
 
-    <!-- Email card -->
     <section class="email-card" aria-label="Temporary email">
       <div class="email-label">Your temporary email</div>
       <div class="email-row">
@@ -922,7 +886,6 @@
       </div>
     </section>
 
-    <!-- Inbox -->
     <section class="inbox-section" aria-label="Inbox">
       <div class="inbox-header">
         <h2 class="inbox-title">Inbox</h2>
@@ -936,7 +899,6 @@
     </section>
   </div>
 
-  <!-- Modal for reading email -->
   <div class="modal-overlay" id="emailModal" role="dialog" aria-modal="true" aria-labelledby="modalSubject">
     <div class="modal-container">
       <div class="modal-header">
@@ -953,7 +915,6 @@
     </div>
   </div>
 
-  <!-- Toast container -->
   <div class="toast-container" id="toastContainer" aria-live="polite" aria-atomic="true"></div>
 
   <script>
@@ -961,7 +922,7 @@
       // ========== STATE ==========
       let timerInterval = null;
       let refreshInterval = null;
-      let timeLeft = 600; // 10 minutes in seconds
+      let timeLeft = 600;
       let currentEmail = '';
       let currentAccount = null;
       let authToken = null;
@@ -971,7 +932,16 @@
       const API_BASE = 'https://api.mail.tm';
       const TIMER_DURATION = 600;
 
-      // DOM elements
+      // CORS proxies to try in order
+      const CORS_PROXIES = [
+        '',
+        'https://cors-anywhere.herokuapp.com/',
+        'https://api.allorigins.win/raw?url=',
+        'https://corsproxy.io/?'
+      ];
+
+      let currentProxyIndex = 0;
+
       const emailAddressEl = document.getElementById('emailAddress');
       const timerEl = document.getElementById('timer');
       const timerBarFill = document.getElementById('timerBarFill');
@@ -985,17 +955,53 @@
       const modalBody = document.getElementById('modalBody');
       const toastContainer = document.getElementById('toastContainer');
 
+      // ========== API HELPER ==========
+      function getApiUrl(endpoint) {
+        const proxy = CORS_PROXIES[currentProxyIndex];
+        if (proxy === '') {
+          return `${API_BASE}${endpoint}`;
+        }
+        return `${proxy}${encodeURIComponent(API_BASE + endpoint)}`;
+      }
+
+      async function apiFetch(endpoint, options = {}) {
+        let lastError = null;
+        
+        for (let i = 0; i < CORS_PROXIES.length; i++) {
+          currentProxyIndex = i;
+          const url = getApiUrl(endpoint);
+          
+          try {
+            const response = await fetch(url, options);
+            
+            if (!response.ok) {
+              const errorText = await response.text();
+              throw new Error(`API error: ${response.status} ${errorText}`);
+            }
+            
+            return await response.json();
+          } catch (error) {
+            console.warn(`Proxy ${i} failed:`, error);
+            lastError = error;
+            
+            // If it's not a CORS error, don't try other proxies
+            if (error.message && error.message.includes('API error')) {
+              throw error;
+            }
+          }
+        }
+        
+        throw lastError || new Error('All proxies failed');
+      }
+
       // ========== UTILITY ==========
       function sanitizeHtml(html) {
         if (!html) return '';
-        // Remove script tags and their content
         let cleaned = html.replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '');
-        // Remove event handlers, javascript: URLs, inline styles that might be dangerous
         cleaned = cleaned.replace(/\son\w+\s*=\s*(?:"[^"]*"|'[^']*'|[^\s>]+)/gi, '');
         cleaned = cleaned.replace(/javascript:[^"'\s]+/gi, '');
         cleaned = cleaned.replace(/<iframe/gi, '<iframe sandbox');
         cleaned = cleaned.replace(/<object/gi, '<object sandbox');
-        // Basic structural sanitization
         return cleaned;
       }
 
@@ -1037,7 +1043,6 @@
         }, 2800);
       }
 
-      // ========== NOTIFICATION (legacy, now mapped to toast) ==========
       function showNotification(message, type = 'info') {
         showToast(message, type);
       }
@@ -1086,7 +1091,6 @@
             clearInterval(timerInterval);
             timerInterval = null;
             showToast('Email has expired. Generate a new one.', 'warning');
-            // Keep the email but show expired state
           }
         }, 1000);
       }
@@ -1105,7 +1109,6 @@
         const progress = Math.max(0, Math.min(100, (timeLeft / TIMER_DURATION) * 100));
         timerBarFill.style.width = progress + '%';
 
-        // Update colors based on time left
         timerEl.classList.remove('warning', 'danger');
         timerBarFill.classList.remove('warning', 'danger');
         if (timeLeft <= 60) {
@@ -1157,18 +1160,13 @@
           const username = generateUsername();
           const password = generatePassword();
 
-          const response = await fetch(`${API_BASE}/accounts`, {
+          const accountData = await apiFetch('/accounts', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ address: `${username}@mail.tm`, password: password })
           });
 
-          if (!response.ok) {
-            throw new Error('Cannot create account');
-          }
-
-          const account = await response.json();
-          currentAccount = account;
+          currentAccount = accountData;
           await login(username, password);
         } catch (error) {
           console.error('Account creation error:', error);
@@ -1190,18 +1188,13 @@
 
       async function login(username, password) {
         try {
-          const response = await fetch(`${API_BASE}/token`, {
+          const tokenData = await apiFetch('/token', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ address: `${username}@mail.tm`, password: password })
           });
 
-          if (!response.ok) {
-            throw new Error('Login failed');
-          }
-
-          const data = await response.json();
-          authToken = data.token;
+          authToken = tokenData.token;
           currentEmail = `${username}@mail.tm`;
           emailAddressEl.textContent = currentEmail;
           lastSeenMessageIds.clear();
@@ -1231,21 +1224,10 @@
       async function refreshInbox() {
         if (!authToken) return;
         try {
-          const response = await fetch(`${API_BASE}/messages`, {
+          const messages = await apiFetch('/messages', {
             headers: { 'Authorization': `Bearer ${authToken}` }
           });
 
-          if (!response.ok) {
-            if (response.status === 401) {
-              // Token expired, need to re-authenticate
-              showToast('Session expired. Generating new email...', 'error');
-              await createNewAccount();
-              return;
-            }
-            throw new Error('Cannot fetch messages');
-          }
-
-          const messages = await response.json();
           displayEmails(messages);
         } catch (error) {
           console.error('Refresh inbox error:', error);
@@ -1268,7 +1250,6 @@
           return;
         }
 
-        // Sort by createdAt desc
         messages.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
 
         let html = '';
@@ -1293,7 +1274,6 @@
 
         inboxListEl.innerHTML = html;
 
-        // Attach click listeners
         document.querySelectorAll('.email-item').forEach(item => {
           item.addEventListener('click', function(e) {
             const messageId = this.dataset.messageId;
@@ -1313,15 +1293,9 @@
       // ========== OPEN EMAIL ==========
       async function openEmail(messageId) {
         try {
-          const response = await fetch(`${API_BASE}/messages/${messageId}`, {
+          const message = await apiFetch(`/messages/${messageId}`, {
             headers: { 'Authorization': `Bearer ${authToken}` }
           });
-
-          if (!response.ok) {
-            throw new Error('Cannot read email');
-          }
-
-          const message = await response.json();
 
           modalSubject.textContent = message.subject || 'No subject';
 
@@ -1333,11 +1307,9 @@
             <div class="modal-meta-row"><span class="modal-meta-label">Received:</span> ${escapeHtml(receivedAt)}</div>
           `;
 
-          // Determine content type
           let content = '';
           if (message.html && message.html.length > 0) {
             const sanitizedHtml = sanitizeHtml(message.html[0]);
-            // Use iframe sandbox for maximum safety
             content = `<iframe sandbox="allow-same-origin" style="width:100%;min-height:280px;border:1px solid var(--border);border-radius:8px;background:#fff;"></iframe>`;
             modalBody.innerHTML = content;
             const iframe = modalBody.querySelector('iframe');
@@ -1392,14 +1364,12 @@
           showToast('Unable to start. Please refresh the page.', 'error');
         }
 
-        // Close modal on overlay click
         modalOverlay.addEventListener('click', function(e) {
           if (e.target === modalOverlay) {
             closeModal();
           }
         });
 
-        // Escape key closes modal
         document.addEventListener('keydown', function(e) {
           if (e.key === 'Escape' && modalOverlay.classList.contains('active')) {
             closeModal();
@@ -1407,13 +1377,11 @@
         });
       }
 
-      // Expose functions to global scope for onclick attributes
       window.copyEmail = copyEmail;
       window.refreshInbox = refreshInbox;
       window.generateNewEmail = generateNewEmail;
       window.closeModal = closeModal;
 
-      // Start the app
       init();
     })();
   </script>
