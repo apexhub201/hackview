@@ -908,8 +908,8 @@
 
         <div class="s1-hero-showcase anim">
           <!-- Main procedural brocade weave macro -->
-          <div class="photo-frame" data-photo-slot="2" title="Nhấn để đổi ảnh">
-            <img class="slot-img-2 crop-watermark" alt="Cận cảnh tấm thổ cẩm làng Teng trên khung cửi" />
+          <div class="photo-frame" data-photo-slot="4" title="Nhấn để đổi ảnh">
+            <img class="slot-img-4 crop-watermark" alt="Cận cảnh tấm thổ cẩm làng Teng trên khung cửi" />
             <div class="change-photo-hint">Đổi ảnh</div>
             <div class="photo-caption">
               <span>Cận cảnh mặt vải thổ cẩm làng Teng với 3 sắc Đen – Đỏ – Trắng</span>
@@ -1063,8 +1063,8 @@
           </div>
         </div>
 
-        <div class="photo-frame anim" data-photo-slot="2" title="Nhấn để đổi ảnh">
-          <img class="slot-img-2 crop-watermark" alt="Cận cảnh bàn tay và khung dệt bằng tre gỗ" />
+        <div class="photo-frame anim" data-photo-slot="4" title="Nhấn để đổi ảnh">
+          <img class="slot-img-4 crop-watermark" alt="Cận cảnh bàn tay và khung dệt bằng tre gỗ" />
           <div class="change-photo-hint">Đổi ảnh</div>
           <div class="photo-caption">
             <span>Cận cảnh kỹ thuật dệt cài hoa văn trên khung dệt tre gỗ mộc mạc</span>
@@ -1142,8 +1142,8 @@
 
       <div class="s6-grid">
         <div class="s6-visual-split anim">
-          <div class="photo-frame" data-photo-slot="2" title="Nhấn để đổi ảnh">
-            <img class="slot-img-2" style="object-position: left bottom; transform: scale(1.35);" alt="Chi tiết hoa văn trên mép tấm vải thổ cẩm" />
+          <div class="photo-frame" data-photo-slot="5" title="Nhấn để đổi ảnh">
+            <img class="slot-img-5" style="object-position: left bottom; transform: scale(1.35);" alt="Chi tiết hoa văn trên mép tấm vải thổ cẩm" />
             <div class="photo-caption">
               <span>Họa tiết dệt cài trực tiếp trên mặt vải thổ cẩm người H’rê</span>
               <span class="tag">Chi tiết thực tế</span>
@@ -1199,8 +1199,8 @@
         <div class="s7-columns anim">
           <!-- CHALLENGE -->
           <div class="contrast-card challenge">
-            <div class="photo-frame" data-photo-slot="3" style="border:none;">
-              <img class="slot-img-3" alt="Khung dệt truyền thống nhỏ lẻ" />
+            <div class="photo-frame" data-photo-slot="6" style="border:none;">
+              <img class="slot-img-6" alt="Khung dệt truyền thống nhỏ lẻ" />
             </div>
             <div class="contrast-body">
               <span class="badge-pill">THÁCH THỨC</span>
@@ -1213,8 +1213,8 @@
 
           <!-- OPPORTUNITY -->
           <div class="contrast-card opportunity">
-            <div class="photo-frame" data-photo-slot="4" style="border:none;">
-              <img class="slot-img-4" alt="Đa dạng hóa sản phẩm thổ cẩm ra thị trường" />
+            <div class="photo-frame" data-photo-slot="2" style="border:none;">
+              <img class="slot-img-2" alt="Đa dạng hóa sản phẩm thổ cẩm ra thị trường" />
             </div>
             <div class="contrast-body">
               <span class="badge-pill">CƠ HỘI</span>
@@ -1259,8 +1259,8 @@
           </ul>
         </div>
 
-        <div class="photo-frame anim" data-photo-slot="4" title="Nhấn để đổi ảnh">
-          <img class="slot-img-4" alt="Các sản phẩm thổ cẩm ứng dụng và quà lưu niệm du lịch" />
+        <div class="photo-frame anim" data-photo-slot="2" title="Nhấn để đổi ảnh">
+          <img class="slot-img-2" alt="Các sản phẩm thổ cẩm ứng dụng và quà lưu niệm du lịch" />
           <div class="change-photo-hint">Đổi ảnh</div>
           <div class="photo-caption">
             <span>Đa dạng hóa sản phẩm: Trang phục, túi xách, khăn choàng, quà lưu niệm</span>
@@ -1312,8 +1312,8 @@
               <span>Trao truyền thế hệ</span>
             </div>
           </div>
-          <div class="photo-frame" data-photo-slot="4">
-            <img class="slot-img-4" alt="Vươn ra thị trường" />
+          <div class="photo-frame" data-photo-slot="2">
+            <img class="slot-img-2" alt="Vươn ra thị trường" />
             <div class="photo-caption">
               <span>Tiếp nối tương lai</span>
             </div>
@@ -1347,9 +1347,6 @@
       </div>
 
       <div class="hud-group">
-        <button class="hud-btn highlight" id="batchUploadBtn" title="Chọn cùng lúc 4 bức ảnh từ máy của bạn (Phím I)">
-          <span>Nạp 4 ảnh</span> <span class="hide-sm">(I)</span>
-        </button>
         <button class="hud-btn" id="exportHtmlBtn" style="display:none;" title="Tải về 1 file HTML duy nhất đã nhúng sẵn cả 4 ảnh">
           <span>Tải HTML đã gộp ảnh</span>
         </button>
@@ -1389,56 +1386,33 @@
   ];
 
   /* =================================================================
-     2. HỆ THỐNG NẠP & HIỂN THỊ 4 BỨC ẢNH TƯ LIỆU CỦA BẠN
+     2. NẠP ẢNH TỪ URL CỐ ĐỊNH (6 ảnh từ CDN)
      ================================================================= */
-  // Danh sách tên file tự động dò tìm nếu để cùng thư mục với index.html
-  const candidateFilenames = {
-    1: ['image.png', 'image_1.png', '1.png', '1.jpg', 'anh1.png', 'anh1.jpg'],
-    2: ['image_2.png', '2.png', '2.jpg', 'anh2.png', 'anh2.jpg'],
-    3: ['image_3.png', '3.png', '3.jpg', 'anh3.png', 'anh3.jpg'],
-    4: ['image_4.png', '4.png', '4.jpg', 'anh4.png', 'anh4.jpg']
+  // Danh sách 6 URL ảnh đã cung cấp
+  const fixedImageUrls = [
+    'https://cdn.phototourl.com/member/2026-10-22-6e51bc47-d407-4010-8829-273af5971f28.jpg',
+    'https://cdn.phototourl.com/member/2026-10-22-b09d4875-474e-4973-9490-9ea7fe4d7ca2.jpg',
+    'https://cdn.phototourl.com/member/2026-10-22-f9ebcab0-1247-4b7c-b0e1-1ddb90c8401b.jpg',
+    'https://cdn.phototourl.com/member/2026-10-22-8874d9b6-83e0-4038-89bd-ad2a84e55bd4.jpg',
+    'https://cdn.phototourl.com/member/2026-10-22-e17acaf0-a334-4ab5-9a77-b9e8f870b95f.jpg',
+    'https://cdn.phototourl.com/member/2026-10-22-c9def535-7acc-4355-a0e3-4adef5a84c2a.jpg'
+  ];
+
+  // Ánh xạ slot ảnh (1-6) tương ứng với URL
+  // Slot 1 -> ảnh 1, slot 2 -> ảnh 2, ..., slot 6 -> ảnh 6
+  const slotMapping = {
+    1: fixedImageUrls[0], // ảnh 1
+    2: fixedImageUrls[1], // ảnh 2
+    3: fixedImageUrls[2], // ảnh 3
+    4: fixedImageUrls[3], // ảnh 4
+    5: fixedImageUrls[4], // ảnh 5
+    6: fixedImageUrls[5]  // ảnh 6
   };
 
-  // Lưu trữ dữ liệu ảnh đang dùng
-  const currentPhotoSources = { 1: null, 2: null, 3: null, 4: null };
+  // Lưu trữ dữ liệu ảnh đang dùng (có thể ghi đè bằng file local nếu người dùng muốn)
+  const currentPhotoSources = { 1: null, 2: null, 3: null, 4: null, 5: null, 6: null };
 
-  // Tạo ảnh đồ họa thổ cẩm dự phòng chất lượng cao nếu chưa tìm thấy file cục bộ
-  function generateFallbackDataUrl(slot) {
-    const c = document.createElement('canvas');
-    c.width = 960;
-    c.height = 720;
-    const ctx = c.getContext('2d');
-
-    ctx.fillStyle = '#171717';
-    ctx.fillRect(0, 0, c.width, c.height);
-
-    // Vẽ dải thổ cẩm Đỏ - Đen - Trắng
-    for (let y = 0; y < c.height; y += 120) {
-      ctx.fillStyle = '#A63D32';
-      ctx.fillRect(0, y + 18, c.width, 22);
-      ctx.fillRect(0, y + 80, c.width, 22);
-
-      ctx.fillStyle = '#F4F0E8';
-      ctx.fillRect(0, y + 12, c.width, 3);
-      ctx.fillRect(0, y + 44, c.width, 3);
-      ctx.fillRect(0, y + 74, c.width, 3);
-      ctx.fillRect(0, y + 106, c.width, 3);
-
-      for (let x = 0; x < c.width; x += 64) {
-        ctx.strokeStyle = '#F4F0E8';
-        ctx.lineWidth = 2.5;
-        ctx.beginPath();
-        ctx.moveTo(x + 32, y + 48);
-        ctx.lineTo(x + 54, y + 60);
-        ctx.lineTo(x + 32, y + 72);
-        ctx.lineTo(x + 10, y + 60);
-        ctx.closePath();
-        ctx.stroke();
-      }
-    }
-    return c.toDataURL('image/png');
-  }
-
+  // Hàm gán ảnh vào tất cả các thẻ img có class tương ứng
   function applyPhotoToSlot(slot, srcUrl, saveToStorage = false) {
     currentPhotoSources[slot] = srcUrl;
     document.querySelectorAll(`.slot-img-${slot}`).forEach(img => {
@@ -1452,39 +1426,22 @@
     }
   }
 
-  // Thử nạp lần lượt: 1. LocalStorage -> 2. File cùng thư mục (image.png, image_2.png...) -> 3. Đồ họa dự phòng
+  // Khởi tạo ảnh: ưu tiên URL cố định (bỏ qua localStorage để đảm bảo 6 ảnh mới luôn hiển thị)
   function initPhotos() {
-    [1, 2, 3, 4].forEach(slot => {
-      let saved = null;
-      try {
-        saved = localStorage.getItem(`langteng_photo_${slot}`);
-      } catch (e) {}
+    // Xóa localStorage cũ để tránh xung đột với 6 ảnh mới
+    try {
+      [1,2,3,4,5,6].forEach(slot => localStorage.removeItem(`langteng_photo_${slot}`));
+    } catch (e) {}
 
-      if (saved) {
-        applyPhotoToSlot(slot, saved, false);
-        document.getElementById('exportHtmlBtn').style.display = 'inline-flex';
-        return;
+    // Gán trực tiếp từ slotMapping
+    [1,2,3,4,5,6].forEach(slot => {
+      if (slotMapping[slot]) {
+        applyPhotoToSlot(slot, slotMapping[slot], false);
       }
-
-      const files = candidateFilenames[slot];
-      let idx = 0;
-
-      function tryNextFile() {
-        if (idx >= files.length) {
-          applyPhotoToSlot(slot, generateFallbackDataUrl(slot), false);
-          return;
-        }
-        const testImg = new Image();
-        const candidate = files[idx++];
-        testImg.onload = () => applyPhotoToSlot(slot, candidate, false);
-        testImg.onerror = tryNextFile;
-        testImg.src = candidate;
-      }
-      tryNextFile();
     });
   }
 
-  // Cho phép nhấn vào từng khung ảnh để đổi riêng ảnh đó
+  // Cho phép nhấn vào từng khung ảnh để đổi riêng ảnh đó (giữ nguyên tính năng cũ)
   let activeSlotToReplace = 1;
   const singleFileInput = document.getElementById('singleFileInput');
 
@@ -1504,9 +1461,9 @@
     singleFileInput.value = '';
   });
 
-  // Cho phép chọn cả 4 ảnh cùng lúc (hoặc kéo thả 4 ảnh vào màn hình)
+  // Cho phép chọn nhiều ảnh cùng lúc (tính năng cũ, vẫn giữ)
   const batchFileInput = document.getElementById('batchFileInput');
-  document.getElementById('batchUploadBtn').addEventListener('click', () => {
+  document.getElementById('batchUploadBtn')?.addEventListener('click', () => {
     batchFileInput.click();
   });
 
@@ -1514,15 +1471,17 @@
     const files = Array.from(fileList).filter(f => f.type.startsWith('image/'));
     if (!files.length) return;
 
-    // Sắp xếp theo tên file (image.png, image_2.png, image_3.png, image_4.png)
     files.sort((a, b) => a.name.localeCompare(b.name, undefined, { numeric: true }));
 
-    files.slice(0, 4).forEach((file, index) => {
+    files.slice(0, 6).forEach((file, index) => {
       let targetSlot = index + 1;
-      if (file.name.includes('2')) targetSlot = 2;
-      else if (file.name.includes('3')) targetSlot = 3;
+      // Cố gắng nhận diện số trong tên file
+      if (file.name.includes('6')) targetSlot = 6;
+      else if (file.name.includes('5')) targetSlot = 5;
       else if (file.name.includes('4')) targetSlot = 4;
-      else if (file.name.includes('1') || file.name === 'image.png') targetSlot = 1;
+      else if (file.name.includes('3')) targetSlot = 3;
+      else if (file.name.includes('2')) targetSlot = 2;
+      else if (file.name.includes('1')) targetSlot = 1;
 
       const reader = new FileReader();
       reader.onload = (ev) => applyPhotoToSlot(targetSlot, ev.target.result, true);
@@ -1535,7 +1494,7 @@
     batchFileInput.value = '';
   });
 
-  // Hỗ trợ Kéo - Thả (Drag & Drop) 4 ảnh trực tiếp vào trang web
+  // Hỗ trợ kéo thả ảnh
   window.addEventListener('dragover', (e) => e.preventDefault());
   window.addEventListener('drop', (e) => {
     e.preventDefault();
@@ -1544,7 +1503,7 @@
     }
   });
 
-  // Tính năng Xuất ra 1 file HTML duy nhất đã nhúng sẵn cả 4 ảnh
+  // Xuất HTML
   document.getElementById('exportHtmlBtn').addEventListener('click', () => {
     const cloneDoc = document.documentElement.cloneNode(true);
     const exportBtnInClone = cloneDoc.querySelector('#exportHtmlBtn');
