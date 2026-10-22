@@ -2,36 +2,23 @@
 <html lang="vi">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Đường Cầu Kiên Cường — Bài Thuyết Trình Tổ 1 & Tri Ân 20/10</title>
-  <!-- Google Fonts hỗ trợ đầy đủ tiếng Việt -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Sắc Màu Thổ Cẩm Làng Teng — Di Sản Văn Hóa Người H’rê</title>
+  <!-- Google Fonts: Be Vietnam Pro -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,600&family=Cormorant+Garamond:ital,wght@0,600;0,700;1,600&family=Oswald:wght@600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400&display=swap" rel="stylesheet">
 
   <style>
     :root {
-      --bg-deep: #071522;
-      --bg-navy: #102B3F;
-      --bg-card: rgba(16, 43, 63, 0.72);
-      --cyan: #35E0D0;
-      --cyan-glow: rgba(53, 224, 208, 0.35);
-      --white: #F4F8FC;
-      --text-muted: #A9C1D9;
-      --amber: #FFC857;
-      --amber-glow: rgba(255, 200, 87, 0.3);
-      --border-subtle: rgba(53, 224, 208, 0.22);
-      --transition-smooth: cubic-bezier(0.22, 1, 0.36, 1);
-
-      /* Bảng màu đặc biệt cho Slide 10 (20/10) */
-      --gift-cream: #FFFDF9;
-      --gift-blush: #F8E2E6;
-      --gift-rose: #D98A9C;
-      --gift-rose-deep: #9E475B;
-      --gift-gold: #C89B3C;
-      --gift-gold-light: #E6C77B;
-      --gift-text-dark: #4A2E35;
-      --gift-text-soft: #75525B;
+      --bg-dark: #171717;
+      --ivory: #F4F0E8;
+      --red-earth: #A63D32;
+      --gray-muted: #8C8983;
+      --line-light: rgba(244, 240, 232, 0.14);
+      --line-strong: rgba(244, 240, 232, 0.28);
+      --card-surface: rgba(244, 240, 232, 0.03);
+      --font-main: 'Be Vietnam Pro', -apple-system, BlinkMacSystemFont, sans-serif;
     }
 
     * {
@@ -41,3164 +28,1679 @@
     }
 
     html, body {
-      width: 100%;
-      height: 100%;
-      background-color: var(--bg-deep);
-      color: var(--white);
-      font-family: 'Be Vietnam Pro', sans-serif;
-      font-size: 18px; /* Cỡ chữ lớn tối ưu cho màn hình Tivi */
+      width: 100vw;
+      height: 100vh;
       overflow: hidden;
-      user-select: none;
+      background-color: #0d0d0d;
+      color: var(--ivory);
+      font-family: var(--font-main);
       -webkit-font-smoothing: antialiased;
-      transition: background-color 0.9s ease, color 0.6s ease;
+      -moz-osx-font-smoothing: grayscale;
+      user-select: none;
     }
 
-    /* Nền sân đấu điện ảnh & hiệu ứng ánh sáng (Slide 1 -> 9) */
-    .arena-bg {
-      position: fixed;
-      inset: 0;
-      z-index: 0;
-      background:
-        radial-gradient(circle at 80% 18%, rgba(53, 224, 208, 0.14) 0%, transparent 45%),
-        radial-gradient(circle at 18% 82%, rgba(255, 200, 87, 0.09) 0%, transparent 45%),
-        linear-gradient(145deg, #050f19 0%, var(--bg-deep) 50%, var(--bg-navy) 100%);
-      overflow: hidden;
-      pointer-events: none;
-      transition: opacity 1s ease;
-    }
-
-    body.gift-theme-active .arena-bg {
-      opacity: 0;
-    }
-
-    .court-lines {
-      position: absolute;
-      inset: 0;
-      opacity: 0.12;
-      background-image:
-        linear-gradient(to right, rgba(53, 224, 208, 0.3) 1px, transparent 1px),
-        linear-gradient(to bottom, rgba(53, 224, 208, 0.3) 1px, transparent 1px);
-      background-size: 120px 120px;
-      transform: perspective(700px) rotateX(55deg) translateY(120px) scale(1.4);
-      transform-origin: center bottom;
-    }
-
-    .ambient-trajectory {
-      position: absolute;
-      top: 10%;
-      left: -5%;
-      width: 110%;
-      height: 80%;
-      opacity: 0.22;
-      pointer-events: none;
-    }
-
-    .ambient-trajectory path {
-      stroke-dasharray: 12 8;
-      animation: dashMove 30s linear infinite;
-    }
-
-    @keyframes dashMove {
-      to {
-        stroke-dashoffset: -400;
-      }
-    }
-
-    /* Thanh Header điều hướng trên cùng */
-    .top-bar {
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      height: 68px;
-      padding: 0 32px;
+    /* 16:9 Cinema Stage Wrapper */
+    .stage-wrapper {
+      width: 100vw;
+      height: 100vh;
       display: flex;
       align-items: center;
-      justify-content: space-between;
-      z-index: 50;
-      background: linear-gradient(to bottom, rgba(7, 21, 34, 0.9), transparent);
-      transition: opacity 0.35s ease, transform 0.35s ease, background 0.8s ease;
-    }
-
-    body.gift-theme-active .top-bar {
-      background: linear-gradient(to bottom, rgba(251, 240, 242, 0.92), transparent);
-    }
-
-    body.minimal-ui .top-bar,
-    body.minimal-ui .bottom-bar {
-      opacity: 0;
-      pointer-events: none;
-    }
-
-    .restore-ui-btn {
-      position: fixed;
-      bottom: 16px;
-      right: 16px;
-      z-index: 60;
-      background: rgba(16, 43, 63, 0.85);
-      color: var(--cyan);
-      border: 1px solid var(--border-subtle);
-      padding: 10px 18px;
-      border-radius: 999px;
-      font-size: 1rem;
-      font-weight: 600;
-      cursor: pointer;
-      display: none;
-      align-items: center;
-      gap: 6px;
-      backdrop-filter: blur(8px);
-    }
-
-    body.minimal-ui .restore-ui-btn {
-      display: inline-flex;
-    }
-
-    .brand-badge {
-      display: flex;
-      align-items: center;
-      gap: 14px;
-    }
-
-    .team-pill {
-      background: linear-gradient(135deg, var(--cyan), #17b3a4);
-      color: var(--bg-deep);
-      font-weight: 800;
-      font-size: 1rem;
-      padding: 6px 14px;
-      border-radius: 6px;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      box-shadow: 0 0 15px var(--cyan-glow);
-      transition: all 0.5s ease;
-    }
-
-    body.gift-theme-active .top-bar .team-pill {
-      background: linear-gradient(135deg, var(--gift-gold), #b08226);
-      color: #fff;
-      box-shadow: 0 4px 14px rgba(200, 155, 60, 0.35);
-    }
-
-    .brand-title {
-      font-size: 1.1rem;
-      font-weight: 600;
-      color: var(--text-muted);
-      letter-spacing: 0.05em;
-      text-transform: uppercase;
-      transition: color 0.5s ease;
-    }
-
-    body.gift-theme-active .brand-title {
-      color: var(--gift-rose-deep);
-    }
-
-    .slide-dots {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .dot-btn {
-      width: 24px;
-      height: 6px;
-      border-radius: 99px;
-      background: rgba(244, 248, 252, 0.2);
-      border: none;
-      cursor: pointer;
-      transition: all 0.3s ease;
-    }
-
-    body.gift-theme-active .dot-btn {
-      background: rgba(158, 71, 91, 0.22);
-    }
-
-    .dot-btn:hover {
-      background: rgba(53, 224, 208, 0.55);
-    }
-
-    .dot-btn.active {
-      width: 40px;
-      background: var(--cyan);
-      box-shadow: 0 0 10px var(--cyan);
-    }
-
-    body.gift-theme-active .dot-btn.active {
-      background: var(--gift-gold);
-      box-shadow: 0 0 10px rgba(200, 155, 60, 0.5);
-    }
-
-    .top-actions {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .icon-btn {
-      background: rgba(16, 43, 63, 0.75);
-      color: var(--white);
-      border: 1px solid var(--border-subtle);
-      border-radius: 8px;
-      padding: 8px 14px;
-      font-size: 0.98rem;
-      font-family: inherit;
-      font-weight: 600;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      transition: all 0.25s ease;
-      backdrop-filter: blur(8px);
-    }
-
-    body.gift-theme-active .icon-btn {
-      background: rgba(255, 253, 249, 0.85);
-      color: var(--gift-text-dark);
-      border-color: rgba(200, 155, 60, 0.4);
-    }
-
-    .icon-btn:hover {
-      border-color: var(--cyan);
-      color: var(--cyan);
-      transform: translateY(-1px);
-    }
-
-    body.gift-theme-active .icon-btn:hover {
-      border-color: var(--gift-gold);
-      color: var(--gift-rose-deep);
-    }
-
-    /* Khu vực chứa các Slide */
-    .slides-viewport {
+      justify-content: center;
       position: relative;
+      background: radial-gradient(circle at center, #1d1b1a 0%, #0b0b0b 100%);
+    }
+
+    .deck {
       width: 100%;
       height: 100%;
+      max-width: 177.78vh;
+      max-height: 56.25vw;
+      background-color: var(--bg-dark);
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 30px 100px rgba(0, 0, 0, 0.85);
+      border: 1px solid var(--line-light);
+    }
+
+    /* Subtle Woven Fabric Grain Overlay across the entire deck */
+    .deck::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background-image:
+        repeating-linear-gradient(0deg, rgba(244, 240, 232, 0.012) 0px, rgba(244, 240, 232, 0.012) 1px, transparent 1px, transparent 4px),
+        repeating-linear-gradient(90deg, rgba(244, 240, 232, 0.01) 0px, rgba(244, 240, 232, 0.01) 1px, transparent 1px, transparent 4px);
+      pointer-events: none;
       z-index: 10;
     }
 
+    /* Decorative Top Brocade Thread Line */
+    .deck::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg,
+        var(--red-earth) 0%, var(--red-earth) 35%,
+        var(--ivory) 35%, var(--ivory) 37%,
+        var(--bg-dark) 37%, var(--bg-dark) 63%,
+        var(--ivory) 63%, var(--ivory) 65%,
+        var(--red-earth) 65%, var(--red-earth) 100%
+      );
+      z-index: 25;
+    }
+
+    @media (max-width: 1024px) {
+      .deck {
+        max-width: 100vw;
+        max-height: 100vh;
+        border: none;
+      }
+    }
+
+    /* Slide Base */
     .slide {
       position: absolute;
       inset: 0;
-      padding: 72px 4vw 72px 4vw;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
+      width: 100%;
+      height: 100%;
       opacity: 0;
       visibility: hidden;
-      transform: translateY(24px) scale(0.985);
-      transition:
-        opacity 0.55s var(--transition-smooth),
-        transform 0.55s var(--transition-smooth),
-        visibility 0.55s;
-      overflow-y: auto;
-      overflow-x: hidden;
+      transition: opacity 0.6s cubic-bezier(0.22, 1, 0.36, 1), visibility 0.6s;
+      padding: 4.8% 6% 6.2% 6%;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      z-index: 1;
     }
 
     .slide.active {
       opacity: 1;
       visibility: visible;
-      transform: translateY(0) scale(1);
-      z-index: 20;
-    }
-
-    .slide-inner {
-      width: 100%;
-      max-width: 1620px;
-      margin: auto;
-    }
-
-    /* Hiệu ứng xuất hiện lần lượt cho phần tử trong slide */
-    .reveal {
-      opacity: 0;
-      transform: translateY(22px);
-      transition: opacity 0.6s var(--transition-smooth), transform 0.6s var(--transition-smooth);
-    }
-
-    .slide.active .reveal {
-      opacity: 1;
-      transform: translateY(0);
-    }
-
-    .slide.active .delay-1 { transition-delay: 0.1s; }
-    .slide.active .delay-2 { transition-delay: 0.22s; }
-    .slide.active .delay-3 { transition-delay: 0.34s; }
-    .slide.active .delay-4 { transition-delay: 0.46s; }
-
-    /* Typography chung (Đã phóng to cho Tivi) */
-    .section-tag {
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-      font-size: 1.12rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.12em;
-      color: var(--cyan);
-      margin-bottom: 10px;
-    }
-
-    .section-tag::before {
-      content: "";
-      display: inline-block;
-      width: 28px;
-      height: 3px;
-      background: var(--cyan);
-      box-shadow: 0 0 8px var(--cyan);
-    }
-
-    .slide-title {
-      font-family: 'Oswald', sans-serif;
-      font-size: clamp(2.5rem, 4vw, 3.8rem);
-      font-weight: 700;
-      text-transform: uppercase;
-      line-height: 1.15;
-      letter-spacing: 0.02em;
-      margin-bottom: 16px;
-      color: var(--white);
-    }
-
-    .slide-title span.highlight-cyan {
-      color: var(--cyan);
-      text-shadow: 0 0 24px var(--cyan-glow);
-    }
-
-    .slide-title span.highlight-amber {
-      color: var(--amber);
-    }
-
-    .lead-text {
-      font-size: clamp(1.22rem, 1.55vw, 1.48rem);
-      line-height: 1.6;
-      color: var(--text-muted);
-      max-width: 1150px;
-    }
-
-    /* Nút CTA Chính */
-    .cta-btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 12px;
-      background: linear-gradient(135deg, var(--cyan) 0%, #1bc5b5 100%);
-      color: var(--bg-deep);
-      font-family: inherit;
-      font-size: 1.2rem;
-      font-weight: 800;
-      text-transform: uppercase;
-      letter-spacing: 0.06em;
-      padding: 16px 34px;
-      border-radius: 999px;
-      border: none;
-      cursor: pointer;
-      box-shadow: 0 8px 28px var(--cyan-glow);
-      transition: all 0.3s ease;
-    }
-
-    .cta-btn:hover {
-      transform: translateY(-3px) scale(1.02);
-      box-shadow: 0 12px 34px rgba(53, 224, 208, 0.55);
-      background: linear-gradient(135deg, #4df0e0 0%, var(--cyan) 100%);
-    }
-
-    .cta-btn.amber {
-      background: linear-gradient(135deg, var(--amber) 0%, #f5b027 100%);
-      box-shadow: 0 8px 28px var(--amber-glow);
-    }
-
-    /* Khung Hình Ảnh Điện Ảnh có Fallback an toàn */
-    .visual-frame {
-      position: relative;
-      border-radius: 18px;
-      overflow: hidden;
-      background: linear-gradient(135deg, #0d2538, #071522);
-      border: 1px solid var(--border-subtle);
-      box-shadow: 0 18px 45px rgba(0, 0, 0, 0.45);
-    }
-
-    .visual-frame img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      display: block;
-      transition: transform 0.6s ease;
-    }
-
-    .visual-frame:hover img {
-      transform: scale(1.04);
-    }
-
-    .visual-overlay {
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(to top, rgba(7, 21, 34, 0.9) 0%, rgba(7, 21, 34, 0.25) 55%, transparent 100%);
-      pointer-events: none;
-    }
-
-    /* =====================================================
-       SLIDE 1: TRANG BÌA ĐIỆN ẢNH
-       ===================================================== */
-    .hero-grid {
-      display: grid;
-      grid-template-columns: 1.15fr 0.85fr;
-      gap: 44px;
-      align-items: center;
-    }
-
-    .hero-main-title {
-      font-family: 'Oswald', sans-serif;
-      font-size: clamp(3.6rem, 6.2vw, 5.8rem);
-      line-height: 1.04;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.02em;
-      margin-bottom: 20px;
-    }
-
-    .hero-main-title .line-1 {
-      display: block;
-      color: var(--white);
-    }
-
-    .hero-main-title .line-2 {
-      display: inline-flex;
-      align-items: center;
-      gap: 16px;
-      color: var(--cyan);
-      text-shadow: 0 0 35px var(--cyan-glow);
-    }
-
-    .hero-subtitle {
-      font-size: clamp(1.4rem, 2.1vw, 1.9rem);
-      font-weight: 700;
-      color: var(--amber);
-      margin-bottom: 16px;
-      line-height: 1.4;
-    }
-
-    .hero-tagline {
-      font-size: clamp(1.2rem, 1.45vw, 1.4rem);
-      color: var(--text-muted);
-      padding-left: 16px;
-      border-left: 4px solid var(--cyan);
-      margin-bottom: 32px;
-      line-height: 1.6;
-    }
-
-    .hero-visual-box {
-      position: relative;
-      height: clamp(340px, 56vh, 520px);
-    }
-
-    .hero-badge-floating {
-      position: absolute;
-      bottom: 22px;
-      left: 22px;
-      right: 22px;
-      background: rgba(7, 21, 34, 0.82);
-      border: 1px solid var(--border-subtle);
-      backdrop-filter: blur(10px);
-      padding: 14px 18px;
-      border-radius: 12px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      z-index: 5;
-    }
-
-    /* =====================================================
-       SLIDE 2: MỞ ĐẦU — KHI TỐC ĐỘ GẶP BẢN LĨNH
-       ===================================================== */
-    .pillars-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 22px;
-      margin: 22px 0;
-    }
-
-    .pillar-card {
-      background: var(--bg-card);
-      border: 1px solid var(--border-subtle);
-      border-radius: 16px;
-      padding: 24px;
-      position: relative;
-      overflow: hidden;
-      transition: all 0.3s ease;
-      backdrop-filter: blur(10px);
-    }
-
-    .pillar-card:hover {
-      transform: translateY(-5px);
-      border-color: var(--cyan);
-      box-shadow: 0 12px 30px rgba(53, 224, 208, 0.16);
-    }
-
-    .pillar-icon {
-      width: 52px;
-      height: 52px;
-      border-radius: 12px;
-      background: rgba(53, 224, 208, 0.12);
-      border: 1px solid rgba(53, 224, 208, 0.3);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: var(--cyan);
-      margin-bottom: 16px;
-    }
-
-    .pillar-card h3 {
-      font-size: 1.55rem;
-      font-weight: 800;
-      margin-bottom: 10px;
-      color: var(--white);
-      text-transform: uppercase;
-    }
-
-    .pillar-card p {
-      font-size: 1.2rem;
-      color: var(--text-muted);
-      line-height: 1.55;
-    }
-
-    .question-spotlight {
-      background: linear-gradient(90deg, rgba(255, 200, 87, 0.14) 0%, rgba(16, 43, 63, 0.85) 100%);
-      border-left: 5px solid var(--amber);
-      border-radius: 12px;
-      padding: 20px 26px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 24px;
-    }
-
-    .question-spotlight .q-label {
-      font-size: 1.05rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      color: var(--amber);
-      letter-spacing: 0.08em;
-      margin-bottom: 6px;
-    }
-
-    .question-spotlight .q-main {
-      font-size: clamp(1.3rem, 1.75vw, 1.65rem);
-      font-weight: 700;
-      color: var(--white);
-      line-height: 1.45;
-    }
-
-    .bwf-note {
-      font-size: 1.08rem;
-      color: var(--text-muted);
-      margin-top: 8px;
-      line-height: 1.5;
-    }
-
-    /* =====================================================
-       SLIDE 3: SỰ TỰ CHỦ & Ý CHÍ VƯỢT KHÓ
-       ===================================================== */
-    .dual-power-layout {
-      display: grid;
-      grid-template-columns: 1fr auto 1fr;
-      gap: 22px;
-      align-items: stretch;
-      margin-top: 12px;
-    }
-
-    .power-panel {
-      background: var(--bg-card);
-      border: 1px solid var(--border-subtle);
-      border-radius: 18px;
-      padding: 24px;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      backdrop-filter: blur(10px);
-    }
-
-    .power-panel.panel-b {
-      border-color: rgba(255, 200, 87, 0.3);
-    }
-
-    .power-header {
-      display: flex;
-      align-items: center;
-      gap: 14px;
-      margin-bottom: 12px;
-    }
-
-    .power-header h3 {
-      font-family: 'Oswald', sans-serif;
-      font-size: 1.9rem;
-      text-transform: uppercase;
-      letter-spacing: 0.03em;
-    }
-
-    .power-desc {
-      font-size: 1.16rem;
-      color: var(--text-muted);
-      line-height: 1.55;
-      margin-bottom: 16px;
-      padding-bottom: 14px;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-    }
-
-    .power-list {
-      list-style: none;
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-      margin-bottom: 16px;
-    }
-
-    .power-list li {
-      display: flex;
-      align-items: flex-start;
-      gap: 12px;
-      font-size: 1.15rem;
-      line-height: 1.5;
-      color: var(--white);
-    }
-
-    .power-list .num-badge {
-      min-width: 30px;
-      height: 30px;
-      border-radius: 6px;
-      background: rgba(53, 224, 208, 0.18);
-      color: var(--cyan);
-      font-weight: 800;
-      font-size: 1rem;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      margin-top: 2px;
-    }
-
-    .panel-b .power-list .num-badge {
-      background: rgba(255, 200, 87, 0.2);
-      color: var(--amber);
-    }
-
-    .power-mini-img {
-      height: 120px;
-      border-radius: 12px;
-      overflow: hidden;
-      position: relative;
-      border: 1px solid rgba(255,255,255,0.1);
-    }
-
-    .power-mini-img img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-
-    .power-mini-caption {
-      position: absolute;
-      bottom: 8px;
-      left: 12px;
-      font-size: 1rem;
-      font-weight: 700;
-      color: var(--white);
-      background: rgba(7, 21, 34, 0.82);
-      padding: 4px 12px;
-      border-radius: 6px;
-    }
-
-    .center-synergy {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 12px;
-      padding: 0 4px;
-    }
-
-    .synergy-emblem {
-      width: 88px;
-      height: 88px;
-      border-radius: 50%;
-      background: radial-gradient(circle, rgba(53, 224, 208, 0.22), rgba(16, 43, 63, 0.95));
-      border: 2px solid var(--cyan);
-      box-shadow: 0 0 25px var(--cyan-glow);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      padding: 10px;
-    }
-
-    .synergy-pill {
-      writing-mode: horizontal-tb;
-      font-size: 0.98rem;
-      font-weight: 800;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      padding: 6px 14px;
-      border-radius: 99px;
-      background: rgba(255, 255, 255, 0.07);
-      border: 1px solid var(--border-subtle);
-      text-align: center;
-    }
-
-    /* =====================================================
-       SLIDE 4: NHỮNG RÀO CẢN TRÊN SÂN CẦU
-       ===================================================== */
-    .barriers-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 24px;
-      margin-top: 16px;
-    }
-
-    .barrier-card {
-      background: var(--bg-card);
-      border: 1px solid var(--border-subtle);
-      border-radius: 18px;
-      overflow: hidden;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      transition: all 0.35s ease;
-    }
-
-    .barrier-card:hover {
-      transform: translateY(-6px);
-      border-color: var(--cyan);
-      box-shadow: 0 16px 36px rgba(0, 0, 0, 0.45);
-    }
-
-    .barrier-img {
-      height: 135px;
-      position: relative;
-      overflow: hidden;
-      background: #0a1f30;
-    }
-
-    .barrier-img img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      transition: transform 0.5s ease;
-    }
-
-    .barrier-card:hover .barrier-img img {
-      transform: scale(1.06);
-    }
-
-    .barrier-tag {
-      position: absolute;
-      top: 12px;
-      left: 12px;
-      background: rgba(7, 21, 34, 0.88);
-      color: var(--cyan);
-      border: 1px solid var(--border-subtle);
-      padding: 5px 12px;
-      border-radius: 6px;
-      font-size: 0.98rem;
-      font-weight: 800;
-      text-transform: uppercase;
-    }
-
-    .barrier-body {
-      padding: 22px;
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-    }
-
-    .barrier-body h3 {
-      font-family: 'Oswald', sans-serif;
-      font-size: 1.7rem;
-      margin-bottom: 12px;
-      color: var(--white);
-      text-transform: uppercase;
-    }
-
-    .barrier-bullets {
-      list-style: none;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      margin-bottom: 18px;
-    }
-
-    .barrier-bullets li {
-      font-size: 1.15rem;
-      color: var(--text-muted);
-      line-height: 1.5;
-      padding-left: 18px;
-      position: relative;
-    }
-
-    .barrier-bullets li::before {
-      content: "";
-      position: absolute;
-      left: 0;
-      top: 10px;
-      width: 7px;
-      height: 7px;
-      border-radius: 50%;
-      background: var(--amber);
-    }
-
-    .barrier-msg {
-      background: rgba(53, 224, 208, 0.09);
-      border-left: 4px solid var(--cyan);
-      padding: 12px 14px;
-      border-radius: 0 8px 8px 0;
-      font-size: 1.12rem;
-      font-weight: 600;
-      color: var(--white);
-      line-height: 1.5;
-    }
-
-    /* =====================================================
-       SLIDE 5: HÀNH TRÌNH VƯỢT KHÓ (4 CHẶNG)
-       ===================================================== */
-    .journey-wrapper {
-      margin: 22px 0 18px;
-      position: relative;
-    }
-
-    .journey-svg-line {
-      width: 100%;
-      height: 55px;
-      margin-bottom: -18px;
-      overflow: visible;
-    }
-
-    .journey-stages {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 18px;
-    }
-
-    .stage-card {
-      background: var(--bg-card);
-      border: 1px solid var(--border-subtle);
-      border-radius: 16px;
-      padding: 22px;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      position: relative;
-    }
-
-    .stage-card:hover,
-    .stage-card.active-stage {
-      background: rgba(16, 43, 63, 0.95);
-      border-color: var(--cyan);
-      transform: translateY(-5px);
-      box-shadow: 0 12px 30px rgba(53, 224, 208, 0.2);
-    }
-
-    .stage-card.active-stage .stage-num {
-      background: var(--cyan);
-      color: var(--bg-deep);
-      box-shadow: 0 0 15px var(--cyan);
-    }
-
-    .stage-num {
-      width: 44px;
-      height: 44px;
-      border-radius: 50%;
-      background: rgba(53, 224, 208, 0.15);
-      border: 1px solid var(--cyan);
-      color: var(--cyan);
-      font-weight: 800;
-      font-size: 1.12rem;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin-bottom: 14px;
-      transition: all 0.3s ease;
-    }
-
-    .stage-card h3 {
-      font-family: 'Oswald', sans-serif;
-      font-size: 1.55rem;
-      text-transform: uppercase;
-      margin-bottom: 10px;
-      color: var(--white);
-    }
-
-    .stage-card p {
-      font-size: 1.16rem;
-      color: var(--text-muted);
-      line-height: 1.55;
-    }
-
-    .journey-quote-box {
-      margin-top: 20px;
-      background: linear-gradient(90deg, rgba(53, 224, 208, 0.14), rgba(16, 43, 63, 0.85));
-      border: 1px solid var(--border-subtle);
-      border-radius: 14px;
-      padding: 20px 26px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 20px;
-    }
-
-    .journey-quote-text {
-      font-size: clamp(1.28rem, 1.65vw, 1.58rem);
-      font-weight: 700;
-      color: var(--white);
-      line-height: 1.5;
-    }
-
-    .smart-training-note {
-      font-size: 1.1rem;
-      color: var(--amber);
-      margin-top: 8px;
-      font-weight: 500;
-      line-height: 1.45;
-    }
-
-    /* =====================================================
-       SLIDE 6: GIÁ TRỊ NHẬN LẠI
-       ===================================================== */
-    .values-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 24px;
-      margin-top: 18px;
-    }
-
-    .value-card {
-      border-radius: 18px;
-      overflow: hidden;
-      background: var(--bg-card);
-      border: 1px solid var(--border-subtle);
-      display: flex;
-      flex-direction: column;
-      transition: all 0.35s ease;
-    }
-
-    .value-card:hover {
-      transform: translateY(-6px);
-      border-color: var(--amber);
-      box-shadow: 0 14px 34px rgba(0, 0, 0, 0.45);
-    }
-
-    .value-visual {
-      height: 180px;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .value-visual img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      transition: transform 0.6s ease;
-    }
-
-    .value-card:hover .value-visual img {
-      transform: scale(1.05);
-    }
-
-    .value-num-badge {
-      position: absolute;
-      bottom: 12px;
-      left: 16px;
-      background: var(--amber);
-      color: var(--bg-deep);
-      font-weight: 800;
-      font-size: 1rem;
-      padding: 5px 12px;
-      border-radius: 6px;
-      text-transform: uppercase;
-    }
-
-    .value-content {
-      padding: 24px;
-      flex: 1;
-    }
-
-    .value-content h3 {
-      font-family: 'Oswald', sans-serif;
-      font-size: 1.7rem;
-      margin-bottom: 12px;
-      color: var(--white);
-      text-transform: uppercase;
-    }
-
-    .value-content p {
-      font-size: 1.2rem;
-      color: var(--text-muted);
-      line-height: 1.6;
-    }
-
-    /* =====================================================
-       SLIDE 7: TỪ SÂN CẦU ĐẾN CUỘC SỐNG
-       ===================================================== */
-    .bridge-layout {
-      display: grid;
-      grid-template-columns: 1fr 90px 1fr;
-      gap: 18px;
-      align-items: center;
-      margin: 18px 0;
-    }
-
-    .bridge-col {
-      background: var(--bg-card);
-      border: 1px solid var(--border-subtle);
-      border-radius: 18px;
-      padding: 24px;
-    }
-
-    .bridge-col.life-col {
-      border-color: rgba(255, 200, 87, 0.35);
-    }
-
-    .bridge-col-header {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      margin-bottom: 18px;
-      padding-bottom: 12px;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-    }
-
-    .bridge-col-header h3 {
-      font-family: 'Oswald', sans-serif;
-      font-size: 1.8rem;
-      text-transform: uppercase;
-    }
-
-    .bridge-items {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-    }
-
-    .bridge-item {
-      background: rgba(7, 21, 34, 0.65);
-      border: 1px solid rgba(255, 255, 255, 0.07);
-      padding: 14px 18px;
-      border-radius: 12px;
-      font-size: 1.22rem;
-      font-weight: 500;
-      display: flex;
-      align-items: center;
-      gap: 14px;
-    }
-
-    .bridge-connector {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 18px;
-    }
-
-    .connector-line {
-      width: 100%;
-      height: 2px;
-      background: linear-gradient(90deg, var(--cyan), var(--amber));
-      position: relative;
-      box-shadow: 0 0 10px var(--cyan);
-    }
-
-    /* =====================================================
-       SLIDE 8: KẾT LUẬN VÀ THÔNG ĐIỆP
-       ===================================================== */
-    .climax-grid {
-      display: grid;
-      grid-template-columns: 1.15fr 0.85fr;
-      gap: 36px;
-      align-items: center;
-    }
-
-    .climax-quote-card {
-      margin: 22px 0 26px;
-      padding: 26px 30px;
-      border-radius: 18px;
-      background: linear-gradient(135deg, rgba(53, 224, 208, 0.16) 0%, rgba(16, 43, 63, 0.9) 100%);
-      border: 1px solid var(--cyan);
-      box-shadow: 0 0 35px rgba(53, 224, 208, 0.18);
-      position: relative;
-    }
-
-    .climax-quote-card blockquote {
-      font-size: clamp(1.32rem, 1.8vw, 1.7rem);
-      font-weight: 700;
-      line-height: 1.55;
-      color: var(--white);
-    }
-
-    .spotlight-frame {
-      height: clamp(320px, 50vh, 440px);
-      position: relative;
-    }
-
-    /* =====================================================
-       SLIDE 9: CẢM ƠN VÀ GIAO LƯU
-       ===================================================== */
-    .qa-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 20px;
-      margin: 20px 0;
-    }
-
-    .qa-card {
-      background: var(--bg-card);
-      border: 1px solid var(--border-subtle);
-      border-radius: 16px;
-      padding: 22px;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-    }
-
-    .qa-card:hover,
-    .qa-card.open {
-      border-color: var(--amber);
-      background: rgba(16, 43, 63, 0.95);
-      transform: translateY(-4px);
-    }
-
-    .qa-question-header {
-      display: flex;
-      align-items: flex-start;
-      justify-content: space-between;
-      gap: 12px;
-    }
-
-    .qa-num {
-      font-size: 1rem;
-      font-weight: 800;
-      color: var(--amber);
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      margin-bottom: 8px;
-      display: block;
-    }
-
-    .qa-title {
-      font-size: 1.32rem;
-      font-weight: 700;
-      color: var(--white);
-      line-height: 1.45;
-    }
-
-    .qa-hint-box {
-      margin-top: 14px;
-      padding-top: 14px;
-      border-top: 1px dashed rgba(255, 200, 87, 0.35);
-      font-size: 1.14rem;
-      color: var(--text-muted);
-      line-height: 1.55;
-      display: none;
-    }
-
-    .qa-card.open .qa-hint-box {
-      display: block;
-      animation: fadeInHint 0.3s ease forwards;
-    }
-
-    .qa-toggle-label {
-      margin-top: 14px;
-      font-size: 1.02rem;
-      color: var(--cyan);
-      font-weight: 700;
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    @keyframes fadeInHint {
-      from { opacity: 0; transform: translateY(-6px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    /* =====================================================
-       SLIDE 10 — ĐẶC BIỆT: LỜI CHÚC 20/10 DÀNH TẶNG CÔ GIÁO
-       ===================================================== */
-    .slide-gift-2010 {
-      background:
-        radial-gradient(circle at 50% 25%, rgba(255, 246, 224, 0.95) 0%, rgba(252, 234, 238, 0.92) 48%, #F5DCE2 100%);
-      color: var(--gift-text-dark);
-      position: absolute;
-      inset: 0;
-      overflow-y: auto;
-      overflow-x: hidden;
-    }
-
-    /* Hạt sáng vàng dịu và cánh hoa bay ở tầng nền (không bao giờ che chữ) */
-    .gift-ambient-layer {
-      position: fixed;
-      inset: 0;
-      pointer-events: none;
-      z-index: 1;
-      overflow: hidden;
-    }
-
-    .petal-item {
-      position: absolute;
-      top: -40px;
-      opacity: 0.55;
-      animation: petalFall linear infinite;
-    }
-
-    .sparkle-dot {
-      position: absolute;
-      border-radius: 50%;
-      background: radial-gradient(circle, #FFF8DC 0%, #E6C77B 60%, transparent 100%);
-      box-shadow: 0 0 12px rgba(212, 175, 55, 0.7);
-      animation: twinkleGlow ease-in-out infinite alternate;
-    }
-
-    @keyframes petalFall {
-      0% {
-        transform: translateY(-5vh) translateX(0) rotate(0deg);
-        opacity: 0;
-      }
-      15% {
-        opacity: 0.65;
-      }
-      85% {
-        opacity: 0.65;
-      }
-      100% {
-        transform: translateY(105vh) translateX(60px) rotate(320deg);
-        opacity: 0;
-      }
-    }
-
-    @keyframes twinkleGlow {
-      0% { opacity: 0.25; transform: scale(0.8); }
-      100% { opacity: 0.85; transform: scale(1.25); }
-    }
-
-    .gift-stage-container {
-      position: relative;
-      z-index: 5;
-      width: 100%;
-      max-width: 1320px;
-      margin: auto;
-      min-height: calc(100vh - 145px);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: 12px 20px;
-    }
-
-    /* Giai đoạn 1: Dòng chữ dẫn nhập bất ngờ */
-    .gift-prelude {
-      position: absolute;
-      inset: 0;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      padding: 24px;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.85s ease, transform 0.85s ease;
-      transform: translateY(12px);
-      z-index: 15;
-    }
-
-    .gift-prelude.visible {
-      opacity: 1;
-      transform: translateY(0);
-    }
-
-    .gift-prelude-text {
-      font-family: 'Cormorant Garamond', Georgia, serif;
-      font-size: clamp(2rem, 3.3vw, 3.1rem);
-      font-style: italic;
-      font-weight: 700;
-      color: var(--gift-rose-deep);
-      max-width: 980px;
-      line-height: 1.4;
-      text-shadow: 0 2px 18px rgba(212, 175, 55, 0.25);
-    }
-
-    .gift-prelude-line {
-      width: 120px;
-      height: 2px;
-      background: linear-gradient(90deg, transparent, var(--gift-gold), transparent);
-      margin-top: 20px;
-    }
-
-    /* Giai đoạn 2: Khu vực Phong thư cao cấp & Thiệp */
-    .gift-main-experience {
-      width: 100%;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      opacity: 0;
-      transform: translateY(20px) scale(0.97);
-      pointer-events: none;
-      transition: opacity 0.9s ease, transform 0.9s var(--transition-smooth);
-    }
-
-    .gift-main-experience.visible {
-      opacity: 1;
-      transform: translateY(0) scale(1);
-      pointer-events: auto;
-    }
-
-    /* Phong thư 3D sang trọng ở trạng thái chờ mở */
-    .envelope-showcase {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      transition: all 0.8s var(--transition-smooth);
-      position: relative;
-    }
-
-    .envelope-showcase.minimized {
-      display: none;
-    }
-
-    /* Vòng sáng vàng dịu phía sau phong thư */
-    .envelope-Write-halo {
-      position: absolute;
-      width: 480px;
-      height: 480px;
-      border-radius: 50%;
-      background: radial-gradient(circle, rgba(255, 223, 128, 0.52) 0%, rgba(248, 210, 220, 0.25) 55%, transparent 75%);
-      filter: blur(12px);
-      z-index: 0;
-      animation: pulseWarmHalo 4s ease-in-out infinite alternate;
-    }
-
-    @keyframes pulseWarmHalo {
-      from { transform: scale(0.94); opacity: 0.75; }
-      to { transform: scale(1.08); opacity: 1; }
-    }
-
-    /* Hoa hồng & Hoa hướng dương trang trí xung quanh phong thư */
-    .floral-base-wrapper {
-      position: relative;
-      padding: 36px 50px 26px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
-
-    .floral-garland-svg {
-      position: absolute;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-      pointer-events: none;
-      z-index: 6;
-    }
-
-    /* Cấu trúc 3D của Phong Thư: Nắp mở đúng hướng, Thiệp trượt lên không xuyên qua phong bì */
-    .envelope-3d-box {
-      position: relative;
-      width: 420px;
-      height: 270px;
-      perspective: 1400px;
-      z-index: 3;
-    }
-
-    /* Mặt lưng trong của phong bì (z-index: 1) */
-    .envelope-back-plate {
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(160deg, #F6E3C5 0%, #E7C99E 100%);
-      border-radius: 14px;
-      border: 2px solid var(--gift-gold);
-      box-shadow:
-        0 24px 55px rgba(138, 79, 93, 0.22),
-        0 0 35px rgba(212, 175, 55, 0.32);
-      z-index: 1;
-    }
-
-    /* Tấm thiệp bên trong phong bì trượt lên (z-index: 2 — nằm sau túi trước z-index: 3 nên không bao giờ xuyên thủng phong bì) */
-    .envelope-rising-card {
-      position: absolute;
-      left: 22px;
-      right: 22px;
-      top: 18px;
-      height: 230px;
-      background: linear-gradient(180deg, #FFFDF9 0%, #FFF6F8 100%);
-      border: 1.5px solid var(--gift-gold);
-      border-radius: 10px;
       z-index: 2;
-      padding: 20px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      box-shadow: 0 8px 24px rgba(120, 70, 80, 0.16);
-      transform: translateY(0);
-      transition: transform 0.95s cubic-bezier(0.22, 1, 0.36, 1);
     }
 
-    .envelope-3d-box.is-opening .envelope-rising-card {
-      transform: translateY(-135px);
-    }
-
-    .rising-card-preview-title {
-      font-family: 'Cormorant Garamond', Georgia, serif;
-      font-size: 1.55rem;
-      font-weight: 700;
-      color: var(--gift-rose-deep);
-      margin-bottom: 6px;
-    }
-
-    .rising-card-preview-sub {
-      font-size: 0.95rem;
-      color: var(--gift-gold);
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      font-weight: 700;
-    }
-
-    /* Túi trước của phong bì (z-index: 3 — che phần thân dưới của thiệp) */
-    .envelope-front-pocket {
-      position: absolute;
-      inset: 0;
-      z-index: 3;
-      pointer-events: none;
-      border-radius: 14px;
-      overflow: hidden;
-    }
-
-    .envelope-front-pocket svg {
-      width: 100%;
-      height: 100%;
-      display: block;
-    }
-
-    /* Nắp phong bì (z-index: 4 khi đóng, xoay 180 độ mở lên trên) */
-    .envelope-top-flap {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 155px;
-      transform-origin: top center;
-      transform: rotateX(0deg);
-      transform-style: preserve-3d;
-      transition: transform 0.75s cubic-bezier(0.4, 0, 0.2, 1);
-      z-index: 4;
-      pointer-events: none;
-    }
-
-    .envelope-3d-box.is-opening .envelope-top-flap {
-      transform: rotateX(180deg);
-    }
-
-    .envelope-3d-box.flap-behind .envelope-top-flap {
-      z-index: 1;
-    }
-
-    /* Con dấu sáp vàng Champagne ở giữa nắp thư */
-    .wax-seal-badge {
-      position: absolute;
-      top: 122px;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      width: 58px;
-      height: 58px;
-      border-radius: 50%;
-      background: radial-gradient(circle at 35% 35%, #F4D78C, #C59332 70%, #9A6D1B 100%);
-      border: 2px solid #FFF5D6;
-      box-shadow: 0 6px 16px rgba(120, 75, 20, 0.35);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 5;
-      transition: opacity 0.35s ease, transform 0.35s ease;
-    }
-
-    .envelope-3d-box.is-opening .wax-seal-badge {
+    /* Smooth Staggered Content Reveal */
+    .slide .anim {
       opacity: 0;
-      transform: translate(-50%, -50%) scale(0.6);
+      transform: translateY(16px);
+      transition: opacity 0.55s ease-out, transform 0.55s cubic-bezier(0.22, 1, 0.36, 1);
     }
 
-    /* Nút "MỞ LỜI CHÚC DÀNH TẶNG CÔ" */
-    .open-gift-btn {
-      margin-top: 26px;
-      background: linear-gradient(135deg, #D4AF37 0%, #B6862C 100%);
-      color: #FFFDF9;
-      font-family: 'Be Vietnam Pro', sans-serif;
-      font-size: 1.22rem;
-      font-weight: 800;
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
-      padding: 18px 38px;
-      border-radius: 999px;
-      border: 2px solid #FFF3D1;
-      cursor: pointer;
-      box-shadow:
-        0 10px 30px rgba(182, 134, 44, 0.42),
-        0 0 20px rgba(244, 215, 140, 0.6);
-      display: inline-flex;
-      align-items: center;
-      gap: 12px;
-      transition: all 0.3s ease;
-      position: relative;
-      z-index: 10;
-    }
-
-    .open-gift-btn:hover {
-      transform: translateY(-3px) scale(1.03);
-      box-shadow:
-        0 14px 36px rgba(182, 134, 44, 0.55),
-        0 0 28px rgba(244, 215, 140, 0.85);
-      background: linear-gradient(135deg, #E2BE4A 0%, #C49233 100%);
-    }
-
-    /* =====================================================
-       TẤM THIỆP CAO CẤP KHI ĐÃ MỞ HOÀN TOÀN (ĐỌC RÕ TRÊN TIVI)
-       ===================================================== */
-    .opened-card-stage {
-      width: 100%;
-      max-width: 1180px;
-      display: none;
-      flex-direction: column;
-      align-items: center;
-      position: relative;
-      z-index: 10;
-    }
-
-    .opened-card-stage.active-card {
-      display: flex;
-      animation: cardRiseReveal 0.85s var(--transition-smooth) forwards;
-    }
-
-    @keyframes cardRiseReveal {
-      from {
-        opacity: 0;
-        transform: translateY(45px) scale(0.94);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0) scale(1);
-      }
-    }
-
-    /* Vòng sáng vàng dịu lan tỏa phía sau tấm thiệp khi cao trào */
-    .climax-golden-aura {
-      position: absolute;
-      inset: -35px;
-      border-radius: 36px;
-      background: radial-gradient(circle, rgba(255, 218, 120, 0.65) 0%, rgba(244, 188, 202, 0.35) 55%, transparent 78%);
-      filter: blur(22px);
-      opacity: 0;
-      transition: opacity 1.2s ease, transform 1.2s ease;
-      transform: scale(0.9);
-      pointer-events: none;
-      z-index: -1;
-    }
-
-    .opened-card-stage.climax-reached .climax-golden-aura {
-      opacity: 1;
-      transform: scale(1.04);
-    }
-
-    .luxury-letter-card {
-      width: 100%;
-      background: linear-gradient(180deg, #FFFDF9 0%, #FFF9FA 100%);
-      border: 2px solid var(--gift-gold);
-      border-radius: 22px;
-      padding: 28px 42px;
-      box-shadow:
-        0 20px 60px rgba(138, 71, 88, 0.18),
-        inset 0 0 0 6px rgba(255, 253, 249, 1),
-        inset 0 0 0 7.5px rgba(200, 155, 60, 0.38);
-      position: relative;
-    }
-
-    .letter-corner-ornament {
-      position: absolute;
-      width: 44px;
-      height: 44px;
-      pointer-events: none;
-    }
-    .letter-corner-ornament.tl { top: 14px; left: 14px; }
-    .letter-corner-ornament.tr { top: 14px; right: 14px; transform: scaleX(-1); }
-    .letter-corner-ornament.bl { bottom: 14px; left: 14px; transform: scaleY(-1); }
-    .letter-corner-ornament.br { bottom: 14px; right: 14px; transform: scale(-1, -1); }
-
-    .letter-header-badge {
-      text-align: center;
-      margin-bottom: 12px;
-    }
-
-    .letter-header-badge span {
-      display: inline-block;
-      font-size: 0.96rem;
-      font-weight: 700;
-      letter-spacing: 0.14em;
-      text-transform: uppercase;
-      color: var(--gift-gold);
-      background: rgba(200, 155, 60, 0.1);
-      border: 1px solid rgba(200, 155, 60, 0.35);
-      padding: 4px 16px;
-      border-radius: 99px;
-    }
-
-    /* Các dòng lời chúc xuất hiện tuần tự */
-    .letter-body-content {
-      display: flex;
-      flex-direction: column;
-      gap: 11px;
-    }
-
-    .wish-line {
-      opacity: 0;
-      transform: translateY(10px);
-      transition: opacity 0.65s ease, transform 0.65s ease;
-      font-size: clamp(1.12rem, 1.38vw, 1.32rem);
-      line-height: 1.55;
-      color: var(--gift-text-dark);
-    }
-
-    .wish-line.line-visible {
+    .slide.active .anim {
       opacity: 1;
       transform: translateY(0);
     }
 
-    .wish-salutation {
-      font-family: 'Cormorant Garamond', Georgia, serif;
-      font-size: clamp(1.65rem, 2.2vw, 2.15rem);
-      font-weight: 700;
-      color: var(--gift-rose-deep);
-      margin-bottom: 2px;
-    }
+    .slide.active .anim:nth-child(1) { transition-delay: 0.06s; }
+    .slide.active .anim:nth-child(2) { transition-delay: 0.14s; }
+    .slide.active .anim:nth-child(3) { transition-delay: 0.22s; }
+    .slide.active .anim:nth-child(4) { transition-delay: 0.30s; }
 
-    .wish-highlight-em {
-      font-weight: 700;
-      color: var(--gift-rose-deep);
-    }
-
-    .wish-signature-row {
+    /* Top Editorial Header Bar */
+    .slide-header {
       display: flex;
       justify-content: space-between;
-      align-items: flex-end;
-      flex-wrap: wrap;
-      gap: 16px;
-      margin-top: 6px;
-      padding-top: 12px;
-      border-top: 1px solid rgba(200, 155, 60, 0.28);
-    }
-
-    .wish-signoff {
-      text-align: right;
-      margin-left: auto;
-    }
-
-    .wish-signoff .sign-italic {
-      font-style: italic;
-      color: var(--gift-text-soft);
-      font-size: 1.12rem;
-    }
-
-    .wish-signoff .sign-collective {
-      font-family: 'Cormorant Garamond', Georgia, serif;
-      font-size: 1.65rem;
-      font-weight: 700;
-      color: var(--gift-rose-deep);
-      margin-top: 2px;
-    }
-
-    /* Khối Cao Trào Cuối Cùng: "CẢM ƠN CÔ VÌ TẤT CẢ!" */
-    .climax-tribute-banner {
-      margin-top: 14px;
-      width: 100%;
-      background: linear-gradient(135deg, #9E475B 0%, #B85A70 50%, #C89B3C 100%);
-      color: #FFFDF9;
-      border-radius: 16px;
-      padding: 16px 28px;
-      text-align: center;
-      box-shadow: 0 12px 32px rgba(158, 71, 91, 0.3);
-      opacity: 0;
-      transform: translateY(14px) scale(0.98);
-      transition: all 0.8s var(--transition-smooth);
-      pointer-events: none;
-    }
-
-    .climax-tribute-banner.banner-visible {
-      opacity: 1;
-      transform: translateY(0) scale(1);
-      pointer-events: auto;
-    }
-
-    .climax-tribute-title {
-      font-family: 'Oswald', sans-serif;
-      font-size: clamp(1.7rem, 2.5vw, 2.35rem);
-      font-weight: 700;
-      letter-spacing: 0.05em;
+      align-items: center;
+      padding-bottom: 1.6vh;
+      border-bottom: 1px solid var(--line-light);
+      font-size: clamp(0.68rem, 0.95vw, 0.88rem);
+      letter-spacing: 0.18em;
       text-transform: uppercase;
-      color: #FFF9E6;
-      text-shadow: 0 2px 12px rgba(0, 0, 0, 0.2);
+      color: var(--gray-muted);
+      font-weight: 500;
+      flex-shrink: 0;
     }
 
-    .climax-tribute-sub {
-      font-size: clamp(1.08rem, 1.3vw, 1.25rem);
-      font-weight: 600;
-      color: #FFFDF9;
-      margin-top: 4px;
-    }
-
-    /* Các nút điều khiển cuối Slide 10 */
-    .gift-footer-actions {
-      margin-top: 14px;
+    .header-brand {
       display: flex;
       align-items: center;
-      justify-content: center;
-      flex-wrap: wrap;
-      gap: 16px;
+      gap: 10px;
     }
 
-    .gift-action-btn {
-      background: #FFFDF9;
-      color: var(--gift-rose-deep);
-      border: 1.5px solid var(--gift-gold);
-      padding: 11px 24px;
-      border-radius: 999px;
-      font-family: inherit;
-      font-size: 1.02rem;
+    .diamond-mark {
+      width: 8px;
+      height: 8px;
+      background-color: var(--red-earth);
+      transform: rotate(45deg);
+      display: inline-block;
+    }
+
+    /* Typography */
+    .kicker {
+      font-size: clamp(0.72rem, 1.05vw, 0.95rem);
+      text-transform: uppercase;
+      letter-spacing: 0.22em;
+      color: var(--red-earth);
       font-weight: 700;
-      cursor: pointer;
+      margin-bottom: 1vh;
       display: inline-flex;
       align-items: center;
-      gap: 8px;
-      transition: all 0.25s ease;
-      box-shadow: 0 4px 14px rgba(158, 71, 91, 0.12);
+      gap: 10px;
     }
 
-    .gift-action-btn:hover {
-      background: var(--gift-gold);
-      color: #FFFDF9;
-      transform: translateY(-2px);
+    .kicker::before {
+      content: "";
+      width: 24px;
+      height: 2px;
+      background-color: var(--red-earth);
+      display: inline-block;
     }
 
-    .gift-action-btn.secondary {
-      background: rgba(255, 253, 249, 0.78);
-      color: var(--gift-text-soft);
-      border-color: rgba(158, 71, 91, 0.3);
+    h1.hero-title {
+      font-size: clamp(2.3rem, 5.1vw, 4.9rem);
+      font-weight: 800;
+      line-height: 1.05;
+      letter-spacing: -0.025em;
+      color: var(--ivory);
+      text-transform: uppercase;
     }
 
-    .gift-action-btn.secondary:hover {
-      background: var(--gift-rose-deep);
-      color: #FFFDF9;
-      border-color: var(--gift-rose-deep);
+    h2.slide-title {
+      font-size: clamp(1.7rem, 3.2vw, 3.05rem);
+      font-weight: 800;
+      line-height: 1.1;
+      letter-spacing: -0.02em;
+      color: var(--ivory);
+      text-transform: uppercase;
+      margin-bottom: 2vh;
     }
 
-    /* Thanh điều khiển dưới cùng */
-    .bottom-bar {
-      position: fixed;
+    .subtitle {
+      font-size: clamp(1.05rem, 1.85vw, 1.7rem);
+      font-weight: 400;
+      color: var(--ivory);
+      line-height: 1.45;
+    }
+
+    /* Editorial Numbered List */
+    .editorial-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 2.2vh;
+    }
+
+    .editorial-item {
+      display: flex;
+      align-items: baseline;
+      gap: 1.4vw;
+      font-size: clamp(1.05rem, 1.7vw, 1.58rem);
+      line-height: 1.45;
+      color: var(--ivory);
+      font-weight: 300;
+      padding-bottom: 2vh;
+      border-bottom: 1px solid var(--line-light);
+    }
+
+    .editorial-item:last-child {
+      border-bottom: none;
+      padding-bottom: 0;
+    }
+
+    .item-index {
+      font-size: clamp(0.82rem, 1.15vw, 1.05rem);
+      font-weight: 800;
+      color: var(--red-earth);
+      letter-spacing: 0.08em;
+      min-width: 2.2em;
+    }
+
+    .item-text strong {
+      font-weight: 700;
+      color: var(--ivory);
+      background: linear-gradient(180deg, transparent 65%, rgba(166, 61, 50, 0.5) 65%);
+      padding: 0 3px;
+    }
+
+    /* Museum-Style Image Frame */
+    .photo-frame {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background-color: #1e1c1b;
+      border: 1px solid var(--line-strong);
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.55);
+      cursor: pointer;
+    }
+
+    /* Corner Editorial Accent Marks */
+    .photo-frame::after {
+      content: "";
+      position: absolute;
+      inset: 8px;
+      border: 1px solid rgba(244, 240, 232, 0.16);
+      pointer-events: none;
+      z-index: 3;
+    }
+
+    .photo-frame img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      filter: contrast(1.04) saturate(1.04);
+      transition: transform 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    .photo-frame:hover img {
+      transform: scale(1.03);
+    }
+
+    /* Smart crop to hide bottom-right watermark on image_2.png */
+    .photo-frame img.crop-watermark {
+      object-position: center 35%;
+      transform: scale(1.09);
+    }
+    .photo-frame:hover img.crop-watermark {
+      transform: scale(1.12);
+    }
+
+    .photo-caption {
+      position: absolute;
       bottom: 0;
       left: 0;
       right: 0;
-      height: 70px;
-      padding: 0 32px;
+      padding: 22px 18px 12px 18px;
+      background: linear-gradient(to top, rgba(23, 23, 23, 0.96) 15%, rgba(23, 23, 23, 0.55) 65%, transparent 100%);
+      color: var(--ivory);
+      font-size: clamp(0.68rem, 0.88vw, 0.82rem);
+      letter-spacing: 0.04em;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 4;
+    }
+
+    .photo-caption span.tag {
+      color: var(--ivory);
+      background: var(--red-earth);
+      padding: 2px 8px;
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    .change-photo-hint {
+      position: absolute;
+      top: 14px;
+      right: 14px;
+      background: rgba(23, 23, 23, 0.88);
+      color: var(--ivory);
+      border: 1px solid var(--line-strong);
+      padding: 5px 10px;
+      font-size: 0.68rem;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      z-index: 5;
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+
+    .photo-frame:hover .change-photo-hint {
+      opacity: 1;
+    }
+
+    /* ==========================================
+       SLIDE LAYOUTS (9 DISTINCT COMPOSITIONS)
+       ========================================== */
+
+    /* SLIDE 1: HERO COVER */
+    .s1-grid {
+      display: grid;
+      grid-template-columns: 1.12fr 0.88fr;
+      gap: 4vw;
+      height: 82%;
+      align-items: center;
+    }
+
+    .s1-hero-showcase {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      display: grid;
+      grid-template-rows: 1fr 0.52fr;
+      gap: 1.6vh;
+    }
+
+    .s1-bottom-duo {
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 1.2vw;
+      height: 100%;
+    }
+
+    .red-rule {
+      width: 80px;
+      height: 4px;
+      background-color: var(--red-earth);
+      margin: 2.6vh 0;
+    }
+
+    .cover-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      margin-top: 3vh;
+      padding: 1.2vh 1.4vw;
+      border: 1px solid var(--line-light);
+      background: var(--card-surface);
+      font-size: clamp(0.75rem, 1vw, 0.92rem);
+      color: var(--gray-muted);
+      letter-spacing: 0.08em;
+    }
+
+    .cover-badge strong {
+      color: var(--ivory);
+    }
+
+    /* SLIDE 2: HERITAGE & DATE */
+    .s2-grid {
+      display: grid;
+      grid-template-columns: 1.05fr 0.95fr;
+      gap: 4.5vw;
+      height: 81%;
+      align-items: stretch;
+    }
+
+    .monument-date-card {
+      background: linear-gradient(90deg, rgba(166, 61, 50, 0.16) 0%, rgba(244, 240, 232, 0.02) 100%);
+      border-left: 5px solid var(--red-earth);
+      border-top: 1px solid var(--line-light);
+      border-right: 1px solid var(--line-light);
+      border-bottom: 1px solid var(--line-light);
+      padding: 2.2vh 2vw;
+      margin-bottom: 2.8vh;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .monument-label {
+      font-size: clamp(0.7rem, 0.95vw, 0.88rem);
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      color: var(--gray-muted);
+      margin-bottom: 0.4vh;
+    }
+
+    .monument-number {
+      font-size: clamp(2rem, 3.9vw, 3.7rem);
+      font-weight: 800;
+      color: var(--ivory);
+      letter-spacing: -0.02em;
+      line-height: 1.05;
+    }
+
+    .monument-number span {
+      color: var(--red-earth);
+    }
+
+    /* SLIDE 3: GENERATIONS */
+    .s3-grid {
+      display: grid;
+      grid-template-columns: 1.18fr 0.82fr;
+      gap: 4.2vw;
+      height: 81%;
+      align-items: center;
+    }
+
+    /* SLIDE 4: CRAFT & LOOM */
+    .s4-grid {
+      display: grid;
+      grid-template-columns: 0.92fr 1.08fr;
+      gap: 4vw;
+      height: 81%;
+      align-items: stretch;
+    }
+
+    .process-stack {
+      display: grid;
+      grid-template-rows: repeat(3, 1fr);
+      gap: 1.6vh;
+      margin-top: 1vh;
+      flex: 1;
+    }
+
+    .process-step {
+      background: var(--card-surface);
+      border: 1px solid var(--line-light);
+      padding: 1.8vh 1.8vw;
       display: flex;
       align-items: center;
+      gap: 1.5vw;
+      position: relative;
+    }
+
+    .process-step::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 4px;
+      background: var(--red-earth);
+    }
+
+    .step-num {
+      font-size: clamp(1.3rem, 2.1vw, 1.9rem);
+      font-weight: 800;
+      color: var(--red-earth);
+      min-width: 2ch;
+    }
+
+    .step-desc {
+      font-size: clamp(1rem, 1.55vw, 1.42rem);
+      font-weight: 300;
+      color: var(--ivory);
+      line-height: 1.35;
+    }
+
+    .step-desc strong {
+      font-weight: 700;
+    }
+
+    /* SLIDE 5: THREE SIGNATURE COLORS */
+    .s5-layout {
+      display: grid;
+      grid-template-rows: auto 1fr;
+      gap: 2.2vh;
+      height: 81%;
+    }
+
+    .color-triptych {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      height: 100%;
+      border: 1px solid var(--line-strong);
+      overflow: hidden;
+    }
+
+    .color-column {
+      position: relative;
+      padding: 3.5vh 2.5vw;
+      display: flex;
+      flex-direction: column;
       justify-content: space-between;
-      z-index: 50;
-      background: linear-gradient(to top, rgba(7, 21, 34, 0.95), transparent);
-      transition: opacity 0.35s ease, background 0.8s ease;
     }
 
-    body.gift-theme-active .bottom-bar {
-      background: linear-gradient(to top, rgba(248, 226, 230, 0.94), transparent);
+    .color-column::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background-image:
+        repeating-linear-gradient(0deg, rgba(128,128,128,0.07) 0px, rgba(128,128,128,0.07) 2px, transparent 2px, transparent 6px),
+        repeating-linear-gradient(90deg, rgba(128,128,128,0.05) 0px, rgba(128,128,128,0.05) 2px, transparent 2px, transparent 6px);
+      pointer-events: none;
     }
 
-    .progress-track {
-      position: fixed;
+    .col-black {
+      background-color: #171717;
+      color: var(--ivory);
+      border-right: 1px solid var(--line-light);
+    }
+
+    .col-red {
+      background-color: #A63D32;
+      color: var(--ivory);
+    }
+
+    .col-white {
+      background-color: #F4F0E8;
+      color: #171717;
+    }
+
+    .col-meta {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: clamp(0.72rem, 0.95vw, 0.88rem);
+      letter-spacing: 0.16em;
+      font-weight: 700;
+      opacity: 0.8;
+    }
+
+    .col-title {
+      position: relative;
+      z-index: 1;
+      font-size: clamp(2.4rem, 4.4vw, 4.1rem);
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      line-height: 1;
+      margin-bottom: 1.2vh;
+    }
+
+    .col-text {
+      position: relative;
+      z-index: 1;
+      font-size: clamp(1.05rem, 1.6vw, 1.5rem);
+      line-height: 1.4;
+      font-weight: 400;
+    }
+
+    .col-text strong {
+      font-weight: 800;
+      text-decoration: underline;
+      text-underline-offset: 5px;
+    }
+
+    /* SLIDE 6: PATTERNS */
+    .s6-grid {
+      display: grid;
+      grid-template-columns: 1.05fr 0.95fr;
+      gap: 4.2vw;
+      height: 81%;
+      align-items: stretch;
+    }
+
+    .s6-visual-split {
+      display: grid;
+      grid-template-rows: 1.15fr 0.85fr;
+      gap: 1.6vh;
+      height: 100%;
+    }
+
+    /* SLIDE 7: CHALLENGES VS OPPORTUNITIES */
+    .s7-layout {
+      display: grid;
+      grid-template-rows: auto 1fr;
+      gap: 2.2vh;
+      height: 81%;
+    }
+
+    .s7-columns {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2.8vw;
+      height: 100%;
+    }
+
+    .contrast-card {
+      border: 1px solid var(--line-light);
+      display: grid;
+      grid-template-rows: 0.46fr 0.54fr;
+      overflow: hidden;
+      background: var(--card-surface);
+    }
+
+    .contrast-card.opportunity {
+      border-color: rgba(166, 61, 50, 0.65);
+      background: rgba(166, 61, 50, 0.08);
+    }
+
+    .contrast-body {
+      padding: 2.4vh 2.2vw;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .badge-pill {
+      display: inline-block;
+      font-size: clamp(0.7rem, 0.95vw, 0.85rem);
+      font-weight: 800;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      padding: 5px 12px;
+      margin-bottom: 1.4vh;
+      width: fit-content;
+    }
+
+    .challenge .badge-pill {
+      background: rgba(140, 137, 131, 0.25);
+      color: var(--ivory);
+    }
+
+    .opportunity .badge-pill {
+      background: var(--red-earth);
+      color: var(--ivory);
+    }
+
+    .contrast-points {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 1.2vh;
+      font-size: clamp(1rem, 1.55vw, 1.42rem);
+      line-height: 1.4;
+      font-weight: 300;
+    }
+
+    .contrast-points li {
+      padding-left: 1.1em;
+      position: relative;
+    }
+
+    .contrast-points li::before {
+      content: "•";
+      position: absolute;
+      left: 0;
+      color: var(--red-earth);
+      font-weight: 800;
+    }
+
+    /* SLIDE 8: FUTURE & TOURISM */
+    .s8-grid {
+      display: grid;
+      grid-template-columns: 0.92fr 1.08fr;
+      gap: 4.2vw;
+      height: 81%;
+      align-items: center;
+    }
+
+    /* SLIDE 9: CONCLUSION */
+    .s9-grid {
+      display: grid;
+      grid-template-columns: 1.05fr 0.95fr;
+      gap: 4vw;
+      height: 81%;
+      align-items: center;
+    }
+
+    .s9-mosaic {
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      grid-template-rows: 1fr 1fr;
+      gap: 1.4vh;
+      height: 100%;
+    }
+
+    .s9-mosaic .mosaic-tall {
+      grid-row: 1 / span 2;
+    }
+
+    .quote-banner {
+      margin: 2.6vh 0;
+      padding: 2.2vh 1.8vw;
+      border-left: 4px solid var(--red-earth);
+      background: linear-gradient(90deg, rgba(166, 61, 50, 0.16), rgba(244, 240, 232, 0.02));
+      font-size: clamp(1.1rem, 1.8vw, 1.68rem);
+      font-weight: 700;
+      color: var(--ivory);
+      line-height: 1.38;
+    }
+
+    .thanks-footer {
+      font-size: clamp(0.9rem, 1.25vw, 1.15rem);
+      color: var(--gray-muted);
+      letter-spacing: 0.05em;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    /* ==========================================
+       HUD NAVIGATION BAR & SPEAKER NOTES
+       ========================================== */
+    .hud-bar {
+      position: absolute;
+      bottom: 1.8%;
+      left: 6%;
+      right: 6%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 30;
+      pointer-events: none;
+    }
+
+    .hud-group {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      pointer-events: auto;
+    }
+
+    .slide-counter {
+      font-size: clamp(0.75rem, 1vw, 0.92rem);
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      color: var(--gray-muted);
+      margin-right: 10px;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .slide-counter strong {
+      color: var(--ivory);
+    }
+
+    .hud-btn {
+      background: rgba(23, 23, 23, 0.88);
+      color: var(--ivory);
+      border: 1px solid var(--line-light);
+      height: 34px;
+      padding: 0 12px;
+      font-family: var(--font-main);
+      font-size: 0.75rem;
+      font-weight: 500;
+      letter-spacing: 0.05em;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s ease;
+    }
+
+    .hud-btn:hover {
+      background: var(--red-earth);
+      border-color: var(--red-earth);
+      color: var(--ivory);
+    }
+
+    .hud-btn.highlight {
+      border-color: rgba(166, 61, 50, 0.8);
+      background: rgba(166, 61, 50, 0.22);
+    }
+
+    .hud-btn.active {
+      background: var(--ivory);
+      color: var(--bg-dark);
+      border-color: var(--ivory);
+    }
+
+    /* Bottom Progress Line */
+    .progress-bar {
+      position: absolute;
       bottom: 0;
       left: 0;
-      width: 100%;
-      height: 4px;
-      background: rgba(255, 255, 255, 0.08);
-      z-index: 55;
+      right: 0;
+      height: 3px;
+      background: rgba(244, 240, 232, 0.08);
+      z-index: 35;
     }
 
     .progress-fill {
       height: 100%;
-      width: 10%;
-      background: linear-gradient(90deg, var(--cyan), var(--amber));
-      box-shadow: 0 0 12px var(--cyan);
-      transition: width 0.4s var(--transition-smooth), background 0.6s ease;
+      background: var(--red-earth);
+      width: 11.11%;
+      transition: width 0.4s cubic-bezier(0.22, 1, 0.36, 1);
     }
 
-    body.gift-theme-active .progress-fill {
-      background: linear-gradient(90deg, var(--gift-rose), var(--gift-gold));
-      box-shadow: 0 0 12px var(--gift-gold);
-    }
-
-    .slide-counter {
-      font-family: 'Oswald', sans-serif;
-      font-size: 1.35rem;
-      letter-spacing: 0.08em;
-      color: var(--white);
-      transition: color 0.5s ease;
-    }
-
-    body.gift-theme-active .slide-counter {
-      color: var(--gift-text-dark);
-    }
-
-    .slide-counter span {
-      color: var(--cyan);
-    }
-
-    body.gift-theme-active .slide-counter span {
-      color: var(--gift-rose-deep);
-    }
-
-    .nav-controls {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-
-    .nav-btn {
-      background: rgba(16, 43, 63, 0.85);
-      color: var(--white);
-      border: 1px solid var(--border-subtle);
-      padding: 10px 22px;
-      border-radius: 999px;
-      font-family: inherit;
-      font-size: 1.05rem;
-      font-weight: 700;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
+    /* Speaker Notes Drawer */
+    .notes-panel {
+      position: absolute;
+      bottom: 56px;
+      left: 6%;
+      right: 6%;
+      background: rgba(23, 23, 23, 0.96);
+      border: 1px solid var(--red-earth);
+      padding: 18px 22px;
+      z-index: 40;
+      transform: translateY(16px);
+      opacity: 0;
+      visibility: hidden;
       transition: all 0.25s ease;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.85);
     }
 
-    body.gift-theme-active .nav-btn {
-      background: rgba(255, 253, 249, 0.9);
-      color: var(--gift-text-dark);
-      border-color: rgba(200, 155, 60, 0.45);
+    .notes-panel.open {
+      transform: translateY(0);
+      opacity: 1;
+      visibility: visible;
     }
 
-    .nav-btn:hover:not(:disabled) {
-      border-color: var(--cyan);
-      color: var(--cyan);
-      box-shadow: 0 0 16px rgba(53, 224, 208, 0.25);
+    .notes-meta {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.72rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--red-earth);
+      font-weight: 700;
+      margin-bottom: 6px;
     }
 
-    body.gift-theme-active .nav-btn:hover:not(:disabled) {
-      border-color: var(--gift-gold);
-      color: var(--gift-rose-deep);
-      box-shadow: 0 4px 16px rgba(200, 155, 60, 0.25);
+    .notes-text {
+      font-size: clamp(0.85rem, 1.1vw, 1.02rem);
+      line-height: 1.55;
+      color: var(--ivory);
+      font-weight: 300;
     }
 
-    .nav-btn.primary {
-      background: var(--cyan);
-      color: var(--bg-deep);
-      border-color: var(--cyan);
-    }
-
-    body.gift-theme-active .nav-btn.primary {
-      background: var(--gift-gold);
-      color: #FFFDF9;
-      border-color: var(--gift-gold);
-    }
-
-    .nav-btn.primary:hover:not(:disabled) {
-      background: #52efe0;
-      color: var(--bg-deep);
-    }
-
-    .nav-btn:disabled {
-      opacity: 0.35;
-      cursor: not-allowed;
-    }
-
-    /* Responsive trên Laptop nhỏ, Tablet và Điện thoại */
-    @media (max-width: 1024px) {
-      .hero-grid,
-      .climax-grid,
-      .dual-power-layout,
-      .bridge-layout {
+    @media (max-width: 768px) {
+      .s1-grid, .s2-grid, .s3-grid, .s4-grid, .s6-grid, .s7-columns, .s8-grid, .s9-grid {
         grid-template-columns: 1fr;
       }
-
-      .center-synergy,
-      .bridge-connector {
-        flex-direction: row;
-        padding: 8px 0;
-      }
-
-      .pillars-grid,
-      .barriers-grid,
-      .values-grid,
-      .qa-grid {
+      .color-triptych {
         grid-template-columns: 1fr;
       }
-
-      .journey-stages {
-        grid-template-columns: repeat(2, 1fr);
-      }
-
-      .journey-svg-line {
+      .hide-sm {
         display: none;
-      }
-
-      .hero-visual-box,
-      .spotlight-frame {
-        height: 280px;
-      }
-    }
-
-    @media (max-width: 640px) {
-      .top-bar {
-        padding: 0 16px;
-      }
-      .slide-dots, .brand-title {
-        display: none;
-      }
-      .slide {
-        padding: 70px 18px 80px 18px;
-        justify-content: flex-start;
-      }
-      .journey-stages {
-        grid-template-columns: 1fr;
-      }
-      .bottom-bar {
-        padding: 0 16px;
-      }
-      .envelope-3d-box {
-        width: 310px;
-        height: 210px;
-      }
-      .envelope-top-flap {
-        height: 120px;
-      }
-      .luxury-letter-card {
-        padding: 22px 20px;
-      }
-    }
-
-    /* Tôn trọng cài đặt giảm chuyển động của hệ điều hành */
-    @media (prefers-reduced-motion: reduce) {
-      *, *::before, *::after {
-        animation-duration: 0.01ms !important;
-        animation-iteration-count: 1 !important;
-        transition-duration: 0.01ms !important;
       }
     }
   </style>
 </head>
 <body>
 
-  <!-- Nền Sân Đấu & Đường Cầu Phát Sáng (Slide 1 -> 9) -->
-  <div class="arena-bg" aria-hidden="true">
-    <div class="court-lines"></div>
-    <svg class="ambient-trajectory" viewBox="0 0 1440 700" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path d="M-80 620 C 340 120, 860 80, 1520 460" stroke="#35E0D0" stroke-width="2.5" />
-      <path d="M-40 680 C 420 240, 920 180, 1540 540" stroke="#FFC857" stroke-width="1.5" opacity="0.6" />
-    </svg>
-  </div>
-
-  <!-- Thanh điều hướng phía trên -->
-  <header class="top-bar">
-    <div class="brand-badge">
-      <span class="team-pill">TỔ 1</span>
-      <span class="brand-title" id="headerBrandTitle">Đường Cầu Kiên Cường — CLB Cầu Lông</span>
-    </div>
-
-    <nav class="slide-dots" id="slideDots" aria-label="Chọn trang chiếu"></nav>
-
-    <div class="top-actions">
-      <button class="icon-btn" id="minimalToggleBtn" title="Ẩn/Hiện thanh điều khiển (Phím M)">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
-          <circle cx="12" cy="12" r="3"/>
-        </svg>
-        <span>Tối giản</span>
-      </button>
-      <button class="icon-btn" id="fullscreenBtn" title="Chế độ toàn màn hình (Phím F)">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/>
-        </svg>
-        <span>Toàn màn hình</span>
-      </button>
-    </div>
-  </header>
-
-  <button class="restore-ui-btn" id="restoreUiBtn">Hiện thanh điều khiển (M)</button>
-
-  <!-- KHU VỰC 10 SLIDE TRÌNH CHIẾU -->
-  <main class="slides-viewport" id="slidesViewport">
+<div class="stage-wrapper">
+  <main class="deck" id="deck">
 
     <!-- ==========================================
-         SLIDE 1: TRANG BÌA ĐIỆN ẢNH
+         SLIDE 1 — BÌA
          ========================================== -->
-    <section class="slide active" data-slide="1">
-      <div class="slide-inner hero-grid">
+    <section class="slide active">
+      <header class="slide-header anim">
+        <div class="header-brand"><span class="diamond-mark"></span>THUYẾT TRÌNH VĂN HÓA TRUYỀN THỐNG</div>
+        <div>01 / 09 — MỞ ĐẦU</div>
+      </header>
+
+      <div class="s1-grid">
         <div>
-          <div class="section-tag reveal">Bài thuyết trình chuyên đề — Tổ 1</div>
-          <h1 class="hero-main-title reveal delay-1">
-            <span class="line-1">ĐƯỜNG CẦU</span>
-            <span class="line-2">
-              KIÊN CƯỜNG
-              <!-- Icon Quả Cầu Lông tạo điểm nhấn thị giác -->
-              <svg width="60" height="60" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <circle cx="16" cy="48" r="9" fill="#FFC857"/>
-                <path d="M23 41L54 14L44 32L23 41Z" fill="#35E0D0" fill-opacity="0.85"/>
-                <path d="M19 37L32 20L50 10L23 41" stroke="#F4F8FC" stroke-width="2.5" stroke-linecap="round"/>
-                <path d="M27 45L44 32L58 22L23 41" stroke="#F4F8FC" stroke-width="2.5" stroke-linecap="round"/>
-              </svg>
-            </span>
+          <span class="kicker anim">Ba Tơ, Quảng Ngãi</span>
+          <h1 class="hero-title anim">
+            SẮC MÀU<br>
+            THỔ CẨM LÀNG TENG
           </h1>
-          <p class="hero-subtitle reveal delay-2">
-            Sức mạnh của sự tự chủ và ý chí vượt khó trong bộ môn cầu lông
-          </p>
-          <p class="hero-tagline reveal delay-3">
-            “Làm chủ bản thân — Bền bỉ trước thử thách — Kiên cường trên từng đường cầu.”
-          </p>
-          <div class="reveal delay-4">
-            <button class="cta-btn" onclick="goToSlide(1)">
-              <span>BẮT ĐẦU HÀNH TRÌNH</span>
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                <path d="M5 12h14M12 5l7 7-7 7"/>
-              </svg>
-            </button>
+          <div class="red-rule anim"></div>
+          <p class="subtitle anim">Di sản văn hóa của người H’rê</p>
+
+          <div class="cover-badge anim">
+            <span class="diamond-mark"></span>
+            <span>Làng nghề truyền thống bên dòng sông Liêng — <strong>Xã Ba Thành, Ba Tơ</strong></span>
           </div>
         </div>
 
-        <div class="visual-frame hero-visual-box reveal delay-2">
-          <img
-            src="https://images.unsplash.com/photo-1626224583764-f87db24ac4ea?auto=format&fit=crop&w=1200&q=85"
-            alt="Vận động viên cầu lông bật nhảy đập cầu mạnh mẽ trên sân đấu"
-            onerror="this.style.display='none'"
-          />
-          <div class="visual-overlay"></div>
-          <div class="hero-badge-floating">
-            <div>
-              <div style="font-size: 0.98rem; color: var(--cyan); font-weight: 700; text-transform: uppercase;">Tinh thần thể thao học đường</div>
-              <div style="font-size: 1.18rem; font-weight: 700; color: var(--white);">CLB Cầu Lông — Nhóm thực hiện: Tổ 1</div>
-            </div>
-            <span class="team-pill">TỔ 1</span>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- ==========================================
-         SLIDE 2: MỞ ĐẦU — KHI TỐC ĐỘ GẶP BẢN LĨNH
-         ========================================== -->
-    <section class="slide" data-slide="2">
-      <div class="slide-inner">
-        <div class="section-tag reveal">Mở đầu — Khi tốc độ gặp bản lĩnh</div>
-        <h2 class="slide-title reveal delay-1">Không chỉ là <span class="highlight-cyan">một trận cầu</span></h2>
-        <p class="lead-text reveal delay-1">
-          Cầu lông không đơn thuần là một trò chơi giải trí. Đây là bộ môn đòi hỏi tốc độ, phản xạ nhanh, khả năng phán đoán và thể lực bền bỉ. Trong mỗi pha cầu, người chơi không chỉ đối đầu với đối thủ mà còn phải kiểm soát cảm xúc, sự tập trung và giới hạn của chính mình.
-        </p>
-
-        <div class="pillars-grid reveal delay-2">
-          <div class="pillar-card">
-            <div class="pillar-icon">
-              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
-              </svg>
-            </div>
-            <h3>1. Tốc độ</h3>
-            <p>Phản xạ tính bằng phần nhỏ của giây và bước chân di chuyển linh hoạt khắp các góc sân.</p>
-          </div>
-
-          <div class="pillar-card">
-            <div class="pillar-icon">
-              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <circle cx="12" cy="12" r="10"/>
-                <circle cx="12" cy="12" r="6"/>
-                <circle cx="12" cy="12" r="2"/>
-              </svg>
-            </div>
-            <h3>2. Áp lực</h3>
-            <p>Mỗi pha cầu đều đòi hỏi sự tập trung cao độ; chỉ một thoáng lơ là có thể làm đổi chiều ván đấu.</p>
-          </div>
-
-          <div class="pillar-card">
-            <div class="pillar-icon">
-              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
-              </svg>
-            </div>
-            <h3>3. Bản lĩnh</h3>
-            <p>Làm chủ nhịp thở, giữ cái đầu lạnh và kiểm soát cảm xúc ngay khi khó khăn xuất hiện.</p>
-          </div>
-        </div>
-
-        <div class="question-spotlight reveal delay-3">
-          <div>
-            <div class="q-label">Câu hỏi dẫn dắt & Bối cảnh mới</div>
-            <div class="q-main">
-              “Nếu luật chơi trở nên nhanh hơn và áp lực lớn hơn, điều gì giúp chúng ta đứng vững?”
-            </div>
-            <div class="bwf-note">
-              *Góc nhìn thực tế: Liên đoàn Cầu lông Thế giới (BWF) đã và đang nghiên cứu, thử nghiệm xu hướng rút ngắn điểm số mỗi ván (như phương án 3 ván × 15 điểm bên cạnh luật 21 điểm hiện hành) nhằm đẩy cao nhịp độ trận đấu — khiến mọi điểm số đều trở nên quyết định.
+        <div class="s1-hero-showcase anim">
+          <!-- Main procedural brocade weave macro -->
+          <div class="photo-frame" data-photo-slot="2" title="Nhấn để đổi ảnh">
+            <img class="slot-img-2 crop-watermark" alt="Cận cảnh tấm thổ cẩm làng Teng trên khung cửi" />
+            <div class="change-photo-hint">Đổi ảnh</div>
+            <div class="photo-caption">
+              <span>Cận cảnh mặt vải thổ cẩm làng Teng với 3 sắc Đen – Đỏ – Trắng</span>
+              <span class="tag">Làng Teng</span>
             </div>
           </div>
-          <button class="cta-btn amber" onclick="goToSlide(2)" style="white-space: nowrap;">
-            <span>Khám phá lời giải</span>
-          </button>
-        </div>
-      </div>
-    </section>
 
-    <!-- ==========================================
-         SLIDE 3: SỰ TỰ CHỦ VÀ Ý CHÍ VƯỢT KHÓ
-         ========================================== -->
-    <section class="slide" data-slide="3">
-      <div class="slide-inner">
-        <div class="section-tag reveal">Nền tảng cốt lõi</div>
-        <h2 class="slide-title reveal delay-1">Hai sức mạnh tạo nên <span class="highlight-cyan">một vận động viên kiên cường</span></h2>
-
-        <div class="dual-power-layout reveal delay-2">
-          <!-- KHU VỰC A: SỰ TỰ CHỦ -->
-          <div class="power-panel">
-            <div>
-              <div class="power-header">
-                <span class="team-pill">Khu vực A</span>
-                <h3>SỰ TỰ CHỦ</h3>
+          <!-- Bottom Duo Preview of Photo 1 & Photo 3 -->
+          <div class="s1-bottom-duo">
+            <div class="photo-frame" data-photo-slot="1" title="Nhấn để đổi ảnh">
+              <img class="slot-img-1" alt="Thiếu nữ H'rê bên khung dệt" />
+              <div class="photo-caption">
+                <span>Người giữ nhịp khung cửi</span>
               </div>
-              <p class="power-desc">
-                “Sự tự chủ là khả năng tự giác hành động, quản lý bản thân và chịu trách nhiệm với mục tiêu của mình mà không phải luôn chờ người khác nhắc nhở.”
-              </p>
-              <ul class="power-list">
-                <li>
-                  <span class="num-badge">01</span>
-                  <span><strong>Tự giác tập luyện:</strong> Đến sân đúng giờ, chủ động luyện phát cầu, đập cầu, phông cầu, chạy bộ và nhảy dây.</span>
-                </li>
-                <li>
-                  <span class="num-badge">02</span>
-                  <span><strong>Quản lý thời gian:</strong> Cân bằng việc học trên lớp với lịch sinh hoạt của CLB.</span>
-                </li>
-                <li>
-                  <span class="num-badge">03</span>
-                  <span><strong>Bảo vệ bản thân:</strong> Khởi động đúng cách, tập luyện phù hợp và biết dừng lại khi có dấu hiệu chấn thương.</span>
-                </li>
+            </div>
+            <div class="photo-frame" data-photo-slot="3" title="Nhấn để đổi ảnh">
+              <img class="slot-img-3" alt="Truyền nghề qua các thế hệ" />
+              <div class="photo-caption">
+                <span>Di sản tiếp nối</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div></div>
+    </section>
+
+    <!-- ==========================================
+         SLIDE 2 — MỘT NGHỀ DỆT, MỘT DI SẢN
+         ========================================== -->
+    <section class="slide">
+      <header class="slide-header anim">
+        <div class="header-brand"><span class="diamond-mark"></span>SẮC MÀU THỔ CẨM LÀNG TENG</div>
+        <div>02 / 09 — VỊ THẾ DI SẢN</div>
+      </header>
+
+      <div class="s2-grid">
+        <div style="display:flex;flex-direction:column;justify-content:center;">
+          <span class="kicker anim">Niềm tự hào của người H’rê ở Quảng Ngãi</span>
+          <h2 class="slide-title anim">MỘT NGHỀ DỆT, MỘT DI SẢN</h2>
+
+          <div class="monument-date-card anim">
+            <div>
+              <div class="monument-label">Ngày công nhận Di sản Quốc gia</div>
+              <div class="monument-number">29<span>.</span>01<span>.</span>2019</div>
+            </div>
+            <div style="text-align:right;font-size:0.78rem;color:var(--gray-muted);letter-spacing:0.1em;text-transform:uppercase;">
+              Bộ Văn hóa,<br>Thể thao & Du lịch
+            </div>
+          </div>
+
+          <ul class="editorial-list anim">
+            <li class="editorial-item">
+              <span class="item-index">01</span>
+              <span class="item-text">Lưu giữ nguyên vẹn tại <strong>làng Teng, xã Ba Thành, Ba Tơ</strong>.</span>
+            </li>
+            <li class="editorial-item">
+              <span class="item-index">02</span>
+              <span class="item-text">Được vinh danh <strong>Di sản văn hóa phi vật thể quốc gia</strong>.</span>
+            </li>
+            <li class="editorial-item">
+              <span class="item-index">03</span>
+              <span class="item-text">Cột mốc lịch sử: <strong>Ngày công nhận 29/01/2019</strong>.</span>
+            </li>
+          </ul>
+        </div>
+
+        <div class="photo-frame anim" data-photo-slot="1" title="Nhấn để đổi ảnh">
+          <img class="slot-img-1" alt="Thiếu nữ H'rê dệt thổ cẩm tại làng Teng" />
+          <div class="change-photo-hint">Đổi ảnh</div>
+          <div class="photo-caption">
+            <span>Phụ nữ H’rê trong trang phục truyền thống bên khung dệt</span>
+            <span class="tag">Ba Tơ, Quảng Ngãi</span>
+          </div>
+        </div>
+      </div>
+      <div></div>
+    </section>
+
+    <!-- ==========================================
+         SLIDE 3 — DI SẢN TRUYỀN QUA CÁC THẾ HỆ
+         ========================================== -->
+    <section class="slide">
+      <header class="slide-header anim">
+        <div class="header-brand"><span class="diamond-mark"></span>SẮC MÀU THỔ CẨM LÀNG TENG</div>
+        <div>03 / 09 — SỰ TIẾP NỐI</div>
+      </header>
+
+      <div class="s3-grid">
+        <div class="photo-frame anim" data-photo-slot="3" title="Nhấn để đổi ảnh">
+          <img class="slot-img-3" alt="Hai thế hệ phụ nữ H'rê bên khung dệt thổ cẩm" />
+          <div class="change-photo-hint">Đổi ảnh</div>
+          <div class="photo-caption">
+            <span>Sợi dây gắn kết giữa thế hệ đi trước và thế hệ trẻ trong nếp nhà sàn</span>
+            <span class="tag">Truyền nghề</span>
+          </div>
+        </div>
+
+        <div style="display:flex;flex-direction:column;justify-content:center;">
+          <span class="kicker anim">Gìn giữ trong gia đình & cộng đồng</span>
+          <h2 class="slide-title anim">DI SẢN TRUYỀN QUA CÁC THẾ HỆ</h2>
+
+          <ul class="editorial-list anim" style="margin-top:1.5vh;">
+            <li class="editorial-item">
+              <span class="item-index">01</span>
+              <span class="item-text"><strong>Mẹ truyền nghề</strong> cho con gái.</span>
+            </li>
+            <li class="editorial-item">
+              <span class="item-index">02</span>
+              <span class="item-text">Học từ <strong>se sợi đến dệt vải</strong>.</span>
+            </li>
+            <li class="editorial-item">
+              <span class="item-index">03</span>
+              <span class="item-text">Gìn giữ <strong>sự khéo léo</strong> và <strong>bản sắc H’rê</strong>.</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div></div>
+    </section>
+
+    <!-- ==========================================
+         SLIDE 4 — TỪ SỢI VẢI ĐẾN TẤM THỔ CẨM
+         ========================================== -->
+    <section class="slide">
+      <header class="slide-header anim">
+        <div class="header-brand"><span class="diamond-mark"></span>SẮC MÀU THỔ CẨM LÀNG TENG</div>
+        <div>04 / 09 — KỸ THUẬT THỦ CÔNG</div>
+      </header>
+
+      <div class="s4-grid">
+        <div style="display:flex;flex-direction:column;justify-content:space-between;">
+          <div class="anim">
+            <span class="kicker">Tinh hoa từ đôi bàn tay</span>
+            <h2 class="slide-title" style="margin-bottom:1vh;">TỪ SỢI VẢI ĐẾN TẤM THỔ CẨM</h2>
+          </div>
+
+          <div class="process-stack anim">
+            <div class="process-step">
+              <div class="step-num">01</div>
+              <div class="step-desc"><strong>Nguyên liệu bông</strong> và sợi dệt truyền thống.</div>
+            </div>
+            <div class="process-step">
+              <div class="step-num">02</div>
+              <div class="step-desc"><strong>Khung dệt thủ công</strong> bằng tre, gỗ.</div>
+            </div>
+            <div class="process-step">
+              <div class="step-num">03</div>
+              <div class="step-desc"><strong>Sự tỉ mỉ</strong> trong từng sợi chỉ.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="photo-frame anim" data-photo-slot="2" title="Nhấn để đổi ảnh">
+          <img class="slot-img-2 crop-watermark" alt="Cận cảnh bàn tay và khung dệt bằng tre gỗ" />
+          <div class="change-photo-hint">Đổi ảnh</div>
+          <div class="photo-caption">
+            <span>Cận cảnh kỹ thuật dệt cài hoa văn trên khung dệt tre gỗ mộc mạc</span>
+            <span class="tag">Thủ công</span>
+          </div>
+        </div>
+      </div>
+      <div></div>
+    </section>
+
+    <!-- ==========================================
+         SLIDE 5 — BA SẮC MÀU ĐẶC TRƯNG
+         ========================================== -->
+    <section class="slide">
+      <header class="slide-header anim">
+        <div class="header-brand"><span class="diamond-mark"></span>SẮC MÀU THỔ CẨM LÀNG TENG</div>
+        <div>05 / 09 — BẢNG MÀU BẢN ĐỊA</div>
+      </header>
+
+      <div class="s5-layout">
+        <div class="anim">
+          <span class="kicker">Triết lý vũ trụ và con người trên nền vải</span>
+          <h2 class="slide-title" style="margin-bottom:0;">BA SẮC MÀU ĐẶC TRƯNG</h2>
+        </div>
+
+        <div class="color-triptych anim">
+          <!-- BLACK -->
+          <div class="color-column col-black">
+            <div class="col-meta">
+              <span>01 / SẮC CHỦ ĐẠO</span>
+              <span>#171717</span>
+            </div>
+            <div>
+              <div class="col-title">ĐEN</div>
+              <p class="col-text">Tượng trưng cho <strong>đất đai, đại ngàn</strong>.</p>
+            </div>
+          </div>
+
+          <!-- RED -->
+          <div class="color-column col-red">
+            <div class="col-meta">
+              <span>02 / SẮC NHẤN</span>
+              <span>#A63D32</span>
+            </div>
+            <div>
+              <div class="col-title">ĐỎ</div>
+              <p class="col-text">Biểu thị <strong>khát vọng, tình yêu, sức sống</strong>.</p>
+            </div>
+          </div>
+
+          <!-- WHITE -->
+          <div class="color-column col-white">
+            <div class="col-meta">
+              <span>03 / SẮC CÂN BẰNG</span>
+              <span>#F4F0E8</span>
+            </div>
+            <div>
+              <div class="col-title">TRẮNG</div>
+              <p class="col-text">Thể hiện <strong>sự thuần khiết, trong sáng</strong>.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div></div>
+    </section>
+
+    <!-- ==========================================
+         SLIDE 6 — HOA VĂN KỂ CHUYỆN
+         ========================================== -->
+    <section class="slide">
+      <header class="slide-header anim">
+        <div class="header-brand"><span class="diamond-mark"></span>SẮC MÀU THỔ CẨM LÀNG TENG</div>
+        <div>06 / 09 — NGÔN NGỮ HỌA TIẾT</div>
+      </header>
+
+      <div class="s6-grid">
+        <div class="s6-visual-split anim">
+          <div class="photo-frame" data-photo-slot="2" title="Nhấn để đổi ảnh">
+            <img class="slot-img-2" style="object-position: left bottom; transform: scale(1.35);" alt="Chi tiết hoa văn trên mép tấm vải thổ cẩm" />
+            <div class="photo-caption">
+              <span>Họa tiết dệt cài trực tiếp trên mặt vải thổ cẩm người H’rê</span>
+              <span class="tag">Chi tiết thực tế</span>
+            </div>
+          </div>
+
+          <div class="photo-frame">
+            <canvas id="geometricWeaveCanvas" style="width:100%;height:100%;display:block;"></canvas>
+            <div class="photo-caption">
+              <span>Cấu trúc đường viền song song, hình thoi và hình tam giác cân</span>
+            </div>
+          </div>
+        </div>
+
+        <div style="display:flex;flex-direction:column;justify-content:center;">
+          <span class="kicker anim">Phản chiếu thiên nhiên và đời sống</span>
+          <h2 class="slide-title anim">HOA VĂN KỂ CHUYỆN</h2>
+
+          <ul class="editorial-list anim" style="margin-top:1.5vh;">
+            <li class="editorial-item">
+              <span class="item-index">01</span>
+              <span class="item-text">Mô típ <strong>hình học cách điệu</strong>.</span>
+            </li>
+            <li class="editorial-item">
+              <span class="item-index">02</span>
+              <span class="item-text">Tổ hợp <strong>đường viền và hình tam giác</strong>.</span>
+            </li>
+            <li class="editorial-item">
+              <span class="item-index">03</span>
+              <span class="item-text">Cảm hứng từ <strong>núi rừng, sông nước và muôn loài</strong>.</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div></div>
+    </section>
+
+    <!-- ==========================================
+         SLIDE 7 — THỬ THÁCH CỦA LÀNG NGHỀ
+         ========================================== -->
+    <section class="slide">
+      <header class="slide-header anim">
+        <div class="header-brand"><span class="diamond-mark"></span>SẮC MÀU THỔ CẨM LÀNG TENG</div>
+        <div>07 / 09 — BƯỚC CHUYỂN MÌNH</div>
+      </header>
+
+      <div class="s7-layout">
+        <div class="anim">
+          <span class="kicker">Thích nghi để tiếp tục tồn tại</span>
+          <h2 class="slide-title" style="margin-bottom:0;">THỬ THÁCH CỦA LÀNG NGHỀ</h2>
+        </div>
+
+        <div class="s7-columns anim">
+          <!-- CHALLENGE -->
+          <div class="contrast-card challenge">
+            <div class="photo-frame" data-photo-slot="3" style="border:none;">
+              <img class="slot-img-3" alt="Khung dệt truyền thống nhỏ lẻ" />
+            </div>
+            <div class="contrast-body">
+              <span class="badge-pill">THÁCH THỨC</span>
+              <ul class="contrast-points">
+                <li>Quy mô <strong>sản xuất nhỏ lẻ</strong>, tốn nhiều công sức.</li>
+                <li><strong>Cạnh tranh với vải công nghiệp</strong> giá rẻ.</li>
               </ul>
             </div>
-            <div class="power-mini-img">
-              <img src="https://images.unsplash.com/photo-1521537634581-0dced2fee2ef?auto=format&fit=crop&w=800&q=80" alt="Người chơi tự giác luyện tập" onerror="this.style.display='none'"/>
-              <span class="power-mini-caption">Tự giác rèn luyện kỷ luật cá nhân</span>
-            </div>
           </div>
 
-          <!-- BIỂU TƯỢNG KẾT HỢP GIỮA HAI KHU VỰC -->
-          <div class="center-synergy">
-            <span class="synergy-pill" style="color: var(--cyan);">KỶ LUẬT</span>
-            <div class="synergy-emblem">
-              <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#FFC857" stroke-width="2">
-                <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/>
-              </svg>
+          <!-- OPPORTUNITY -->
+          <div class="contrast-card opportunity">
+            <div class="photo-frame" data-photo-slot="4" style="border:none;">
+              <img class="slot-img-4" alt="Đa dạng hóa sản phẩm thổ cẩm ra thị trường" />
             </div>
-            <span class="synergy-pill" style="color: var(--amber);">KIÊN TRÌ</span>
-          </div>
-
-          <!-- KHU VỰC B: Ý CHÍ VƯỢT KHÓ -->
-          <div class="power-panel panel-b">
-            <div>
-              <div class="power-header">
-                <span class="team-pill" style="background: var(--amber);">Khu vực B</span>
-                <h3 style="color: var(--amber);">Ý CHÍ VƯỢT KHÓ</h3>
-              </div>
-              <p class="power-desc">
-                “Ý chí vượt khó là khả năng kiên trì theo đuổi mục tiêu, điều chỉnh bản thân trước thất bại và không dễ dàng bỏ cuộc khi gặp trở ngại.”
-              </p>
-              <ul class="power-list">
-                <li>
-                  <span class="num-badge">01</span>
-                  <span><strong>Kiên trì học kỹ thuật mới:</strong> Chấp nhận những lỗi sai trong giai đoạn đầu để hoàn thiện động tác.</span>
-                </li>
-                <li>
-                  <span class="num-badge">02</span>
-                  <span><strong>Giữ bình tĩnh khi bị dẫn điểm:</strong> Không hoảng loạn, tập trung vào từng pha cầu tiếp theo.</span>
-                </li>
-                <li>
-                  <span class="num-badge">03</span>
-                  <span><strong>Nỗ lực bền bỉ & khoa học:</strong> Cải thiện thể lực và khả năng di chuyển, đồng thời biết nghỉ ngơi hợp lý.</span>
-                </li>
+            <div class="contrast-body">
+              <span class="badge-pill">CƠ HỘI</span>
+              <ul class="contrast-points">
+                <li><strong>Đổi mới sản phẩm</strong> phù hợp đời sống hiện đại.</li>
+                <li>Chủ động <strong>phát triển thị trường</strong> tiêu thụ rộng mở.</li>
               </ul>
             </div>
-            <div class="power-mini-img">
-              <img src="https://images.unsplash.com/photo-1554068865-24cecd4e34b8?auto=format&fit=crop&w=800&q=80" alt="Vận động viên thi đấu quyết liệt" onerror="this.style.display='none'"/>
-              <span class="power-mini-caption">Bản lĩnh thi đấu trước áp lực</span>
-            </div>
           </div>
         </div>
       </div>
+      <div></div>
     </section>
 
     <!-- ==========================================
-         SLIDE 4: NHỮNG RÀO CẢN TRÊN SÂN CẦU
+         SLIDE 8 — GIỮ NGHỀ, MỞ LỐI TƯƠNG LAI
          ========================================== -->
-    <section class="slide" data-slide="4">
-      <div class="slide-inner">
-        <div class="section-tag reveal">Thực tế luyện tập tại CLB</div>
-        <h2 class="slide-title reveal delay-1">Muốn tiến bộ, phải <span class="highlight-amber">đối diện với thử thách</span></h2>
+    <section class="slide">
+      <header class="slide-header anim">
+        <div class="header-brand"><span class="diamond-mark"></span>SẮC MÀU THỔ CẨM LÀNG TENG</div>
+        <div>08 / 09 — HƯỚNG ĐI BỀN VỮNG</div>
+      </header>
 
-        <div class="barriers-grid reveal delay-2">
-          <!-- RÀO CẢN 1 -->
-          <article class="barrier-card">
-            <div class="barrier-img">
-              <img src="https://images.unsplash.com/photo-1613918431703-aa50889e3be9?auto=format&fit=crop&w=700&q=80" alt="Rào cản kỹ thuật cầu lông" onerror="this.style.display='none'"/>
-              <span class="barrier-tag">Rào cản 01</span>
-            </div>
-            <div class="barrier-body">
-              <div>
-                <h3>KỸ THUẬT</h3>
-                <ul class="barrier-bullets">
-                  <li>Đánh hụt cầu, giao cầu lỗi.</li>
-                  <li>Di chuyển sai bước, chưa biết phán đoán đường cầu.</li>
-                  <li>Dễ tự ti khi tập cùng những người chơi giỏi hơn.</li>
-                </ul>
-              </div>
-              <div class="barrier-msg">
-                “Sai lầm là dữ liệu để học hỏi, không phải lý do để từ bỏ.”
-              </div>
-            </div>
-          </article>
+      <div class="s8-grid">
+        <div style="display:flex;flex-direction:column;justify-content:center;">
+          <span class="kicker anim">Bảo tồn song hành phát triển kinh tế</span>
+          <h2 class="slide-title anim">GIỮ NGHỀ, MỞ LỐI TƯƠNG LAI</h2>
 
-          <!-- RÀO CẢN 2 -->
-          <article class="barrier-card">
-            <div class="barrier-img">
-              <img src="https://images.unsplash.com/photo-1517649763962-0c623066013b?auto=format&fit=crop&w=700&q=80" alt="Rào cản tâm lý thi đấu" onerror="this.style.display='none'"/>
-              <span class="barrier-tag">Rào cản 02</span>
-            </div>
-            <div class="barrier-body">
-              <div>
-                <h3>TÂM LÝ</h3>
-                <ul class="barrier-bullets">
-                  <li>Sợ thua, sợ bị người khác đánh giá.</li>
-                  <li>Lo lắng khi phối hợp đánh đôi cùng đồng đội.</li>
-                  <li>Mất bình tĩnh khi mắc lỗi liên tiếp.</li>
-                </ul>
-              </div>
-              <div class="barrier-msg">
-                “Hãy tập trung vào pha cầu tiếp theo thay vì mắc kẹt trong lỗi sai vừa rồi.”
-              </div>
-            </div>
-          </article>
-
-          <!-- RÀO CẢN 3 -->
-          <article class="barrier-card">
-            <div class="barrier-img">
-              <img src="https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&w=700&q=80" alt="Điều kiện tập luyện" onerror="this.style.display='none'"/>
-              <span class="barrier-tag">Rào cản 03</span>
-            </div>
-            <div class="barrier-body">
-              <div>
-                <h3>ĐIỀU KIỆN TẬP LUYỆN</h3>
-                <ul class="barrier-bullets">
-                  <li>Thiếu sân bãi hoặc thời gian tập phù hợp.</li>
-                  <li>Thời tiết nóng, điều kiện luyện tập chưa thuận lợi.</li>
-                  <li>Chi phí vợt, giày và cầu có thể gây khó khăn cho học sinh.</li>
-                </ul>
-              </div>
-              <div class="barrier-msg">
-                “Không cần điều kiện hoàn hảo mới bắt đầu; cần lựa chọn cách tập luyện phù hợp với điều kiện hiện có.”
-              </div>
-            </div>
-          </article>
-        </div>
-      </div>
-    </section>
-
-    <!-- ==========================================
-         SLIDE 5: HÀNH TRÌNH VƯỢT KHÓ
-         ========================================== -->
-    <section class="slide" data-slide="5">
-      <div class="slide-inner">
-        <div class="section-tag reveal">Quá trình trưởng thành</div>
-        <h2 class="slide-title reveal delay-1">Không ai giỏi <span class="highlight-cyan">ngay từ lần đầu tiên</span></h2>
-        <p class="lead-text reveal delay-1">
-          Nhấn vào từng chặng bên dưới để theo dõi đường bay trưởng thành của một thành viên CLB cầu lông:
-        </p>
-
-        <div class="journey-wrapper reveal delay-2">
-          <!-- Đường cầu phát sáng nối 4 điểm -->
-          <svg class="journey-svg-line" viewBox="0 0 1200 60" fill="none">
-            <path d="M 120 35 Q 300 5, 460 35 T 800 35 T 1080 25" stroke="#35E0D0" stroke-width="3" stroke-dasharray="8 6"/>
-            <circle cx="120" cy="35" r="7" fill="#35E0D0"/>
-            <circle cx="440" cy="35" r="7" fill="#35E0D0"/>
-            <circle cx="760" cy="35" r="7" fill="#35E0D0"/>
-            <circle cx="1080" cy="25" r="9" fill="#FFC857"/>
-          </svg>
-
-          <div class="journey-stages" id="journeyStages">
-            <div class="stage-card active-stage" onclick="highlightStage(0)">
-              <div class="stage-num">01</div>
-              <h3>CHẶNG 1 — BẮT ĐẦU</h3>
-              <p>Làm quen với cách cầm vợt, cảm giác quả cầu và các động tác di chuyển cơ bản đầu tiên.</p>
-            </div>
-
-            <div class="stage-card" onclick="highlightStage(1)">
-              <div class="stage-num">02</div>
-              <h3>CHẶNG 2 — VẤP NGÃ</h3>
-              <p>Đánh hụt cầu, giao cầu lỗi, bước chân còn chậm và liên tục mất điểm trong các trận tập.</p>
-            </div>
-
-            <div class="stage-card" onclick="highlightStage(2)">
-              <div class="stage-num">03</div>
-              <h3>CHẶNG 3 — KIÊN TRÌ</h3>
-              <p>Luyện tập có kế hoạch, cầu thị tiếp nhận góp ý từ thầy cô, bạn bè và kiên nhẫn sửa từng lỗi nhỏ.</p>
-            </div>
-
-            <div class="stage-card" onclick="highlightStage(3)">
-              <div class="stage-num">04</div>
-              <h3>CHẶNG 4 — TIẾN BỘ</h3>
-              <p>Phối hợp ăn ý hơn, làm chủ cảm xúc và tự tin xử lý các đường cầu khó trong thi đấu.</p>
-            </div>
-          </div>
+          <ul class="editorial-list anim" style="margin-top:1.5vh;">
+            <li class="editorial-item">
+              <span class="item-index">01</span>
+              <span class="item-text">Đưa thổ cẩm đến gần <strong>thị trường hiện đại</strong>.</span>
+            </li>
+            <li class="editorial-item">
+              <span class="item-index">02</span>
+              <span class="item-text"><strong>Tạo sinh kế</strong> cho người dân.</span>
+            </li>
+            <li class="editorial-item">
+              <span class="item-index">03</span>
+              <span class="item-text">Kết nối văn hóa với <strong>du lịch cộng đồng</strong>.</span>
+            </li>
+          </ul>
         </div>
 
-        <div class="journey-quote-box reveal delay-3">
-          <div>
-            <div class="journey-quote-text">
-              “Tiến bộ không đến từ việc chưa từng thất bại, mà đến từ cách chúng ta đứng dậy sau mỗi lần thất bại.”
-            </div>
-            <div class="smart-training-note">
-              Lời khuyên khoa học: Thành công đến từ sự kiên trì thông minh, kỹ thuật đúng và phục hồi hợp lý — không phải tập luyện bất chấp đến mức kiệt sức.
-            </div>
+        <div class="photo-frame anim" data-photo-slot="4" title="Nhấn để đổi ảnh">
+          <img class="slot-img-4" alt="Các sản phẩm thổ cẩm ứng dụng và quà lưu niệm du lịch" />
+          <div class="change-photo-hint">Đổi ảnh</div>
+          <div class="photo-caption">
+            <span>Đa dạng hóa sản phẩm: Trang phục, túi xách, khăn choàng, quà lưu niệm</span>
+            <span class="tag">Du lịch & Sinh kế</span>
           </div>
         </div>
       </div>
+      <div></div>
     </section>
 
     <!-- ==========================================
-         SLIDE 6: GIÁ TRỊ NHẬN LẠI
+         SLIDE 9 — KẾT LUẬN
          ========================================== -->
-    <section class="slide" data-slide="6">
-      <div class="slide-inner">
-        <div class="section-tag reveal">Thành quả xứng đáng</div>
-        <h2 class="slide-title reveal delay-1">Mỗi đường cầu, <span class="highlight-cyan">một bài học trưởng thành</span></h2>
+    <section class="slide">
+      <header class="slide-header anim">
+        <div class="header-brand"><span class="diamond-mark"></span>SẮC MÀU THỔ CẨM LÀNG TENG</div>
+        <div>09 / 09 — TỔNG KẾT</div>
+      </header>
 
-        <div class="values-grid">
-          <div class="value-card reveal delay-1">
-            <div class="value-visual">
-              <img src="https://images.unsplash.com/photo-1626224583764-f87db24ac4ea?auto=format&fit=crop&w=800&q=80" alt="Sức khỏe và phản xạ" onerror="this.style.display='none'"/>
-              <span class="value-num-badge">Giá trị 01</span>
-            </div>
-            <div class="value-content">
-              <h3>1. SỨC KHỎE VÀ PHẢN XẠ</h3>
-              <p>
-                “Cầu lông giúp rèn luyện thể lực, khả năng phối hợp vận động và mang lại cơ hội giải tỏa căng thẳng sau giờ học.”
-              </p>
-            </div>
-          </div>
+      <div class="s9-grid">
+        <div style="display:flex;flex-direction:column;justify-content:center;">
+          <span class="kicker anim">Niềm tự hào văn hóa Ba Tơ, Quảng Ngãi</span>
+          <h2 class="slide-title anim">GIỮ SỢI DỆT — GIỮ HỒN DI SẢN</h2>
 
-          <div class="value-card reveal delay-2">
-            <div class="value-visual">
-              <img src="https://images.unsplash.com/photo-1526676037777-05a232554f77?auto=format&fit=crop&w=800&q=80" alt="Tinh thần đồng đội" onerror="this.style.display='none'"/>
-              <span class="value-num-badge">Giá trị 02</span>
-            </div>
-            <div class="value-content">
-              <h3>2. TINH THẦN ĐỒNG ĐỘI</h3>
-              <p>
-                “Trong đánh đôi, mỗi người phải chủ động với phần việc của mình, biết bọc lót, giao tiếp và phối hợp cùng đồng đội.”
-              </p>
-            </div>
-          </div>
-
-          <div class="value-card reveal delay-3">
-            <div class="value-visual">
-              <img src="https://images.unsplash.com/photo-1461896836934-ffe607ba8211?auto=format&fit=crop&w=800&q=80" alt="Bản lĩnh cuộc sống" onerror="this.style.display='none'"/>
-              <span class="value-num-badge">Giá trị 03</span>
-            </div>
-            <div class="value-content">
-              <h3>3. BẢN LĨNH CUỘC SỐNG</h3>
-              <p>
-                “Những bài học về kỷ luật, bình tĩnh và kiên trì trên sân cầu có thể giúp chúng ta đối mặt tốt hơn với áp lực học tập và những thử thách trong cuộc sống.”
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- ==========================================
-         SLIDE 7: TỪ SÂN CẦU ĐẾN CUỘC SỐNG
-         ========================================== -->
-    <section class="slide" data-slide="7">
-      <div class="slide-inner">
-        <div class="section-tag reveal">Sự chuyển hóa giá trị</div>
-        <h2 class="slide-title reveal delay-1">Làm chủ đường cầu, <span class="highlight-amber">làm chủ chính mình</span></h2>
-
-        <div class="bridge-layout reveal delay-2">
-          <!-- CỘT 1: TRÊN SÂN CẦU -->
-          <div class="bridge-col">
-            <div class="bridge-col-header">
-              <span class="team-pill">Trên sân cầu</span>
-              <h3>KHI CẦM VỢT</h3>
-            </div>
-            <div class="bridge-items">
-              <div class="bridge-item">
-                <span style="color: var(--cyan); font-weight: 800;">01</span>
-                <span>Tự giác đến sân và luyện tập.</span>
-              </div>
-              <div class="bridge-item">
-                <span style="color: var(--cyan); font-weight: 800;">02</span>
-                <span>Giữ bình tĩnh khi bị dẫn điểm.</span>
-              </div>
-              <div class="bridge-item">
-                <span style="color: var(--cyan); font-weight: 800;">03</span>
-                <span>Phối hợp và chịu trách nhiệm với đồng đội.</span>
-              </div>
-              <div class="bridge-item">
-                <span style="color: var(--cyan); font-weight: 800;">04</span>
-                <span>Kiên trì sửa chữa những lỗi sai.</span>
-              </div>
-            </div>
-          </div>
-
-          <!-- ĐƯỜNG CẦU PHÁT SÁNG NỐI GIỮA 2 CỘT -->
-          <div class="bridge-connector" aria-hidden="true">
-            <div class="connector-line"></div>
-            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#35E0D0" stroke-width="2">
-              <path d="M5 12h14M13 6l6 6-6 6"/>
-            </svg>
-            <div class="connector-line"></div>
-          </div>
-
-          <!-- CỘT 2: TRONG CUỘC SỐNG -->
-          <div class="bridge-col life-col">
-            <div class="bridge-col-header">
-              <span class="team-pill" style="background: var(--amber);">Trong cuộc sống</span>
-              <h3 style="color: var(--amber);">KHI TRƯỞNG THÀNH</h3>
-            </div>
-            <div class="bridge-items">
-              <div class="bridge-item">
-                <span style="color: var(--amber); font-weight: 800;">01</span>
-                <span>Chủ động học tập và hoàn thành nhiệm vụ.</span>
-              </div>
-              <div class="bridge-item">
-                <span style="color: var(--amber); font-weight: 800;">02</span>
-                <span>Bình tĩnh trước áp lực thi cử.</span>
-              </div>
-              <div class="bridge-item">
-                <span style="color: var(--amber); font-weight: 800;">03</span>
-                <span>Tôn trọng, hỗ trợ những người xung quanh.</span>
-              </div>
-              <div class="bridge-item">
-                <span style="color: var(--amber); font-weight: 800;">04</span>
-                <span>Không nản lòng khi kết quả chưa như mong muốn.</span>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="question-spotlight reveal delay-3" style="margin-top: 16px;">
-          <div class="q-main" style="text-align: center; width: 100%;">
-            “Thể thao không chỉ rèn luyện cơ thể. Thể thao còn giúp chúng ta học cách làm chủ bản thân.”
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- ==========================================
-         SLIDE 8: KẾT LUẬN VÀ THÔNG ĐIỆP
-         ========================================== -->
-    <section class="slide" data-slide="8">
-      <div class="slide-inner climax-grid">
-        <div>
-          <div class="section-tag reveal">Kết luận & Thông điệp</div>
-          <h2 class="slide-title reveal delay-1">Bản lĩnh được tạo nên <span class="highlight-cyan">từ những điều nhỏ nhất</span></h2>
-          <p class="lead-text reveal delay-2" style="margin-bottom: 12px;">
-            Luật chơi có thể thay đổi, đối thủ có thể mạnh hơn và thử thách có thể xuất hiện bất cứ lúc nào. Nhưng sự tự chủ trong tập luyện và ý chí kiên cường vượt khó vẫn luôn là nền tảng để mỗi thành viên CLB cầu lông trưởng thành.
-          </p>
-          <p class="lead-text reveal delay-2">
-            Hãy bắt đầu từ những việc nhỏ: đến sân đúng giờ, luyện tập nghiêm túc, biết lắng nghe và không ngừng hoàn thiện bản thân.
+          <p class="subtitle anim" style="font-weight:300;">
+            “Thổ cẩm làng Teng không chỉ là <strong>trang phục</strong>, mà còn là <strong>ký ức, bản sắc</strong> và <strong>niềm tự hào</strong> của người H’rê.”
           </p>
 
-          <div class="climax-quote-card reveal delay-3">
-            <blockquote>
-              “Trận đấu chỉ thực sự kết thúc khi quả cầu chạm đất. Khi bạn chưa buông vợt, bạn vẫn còn cơ hội chiến thắng. Hãy làm chủ đường cầu của mình và mạnh mẽ vượt qua mọi thử thách!”
-            </blockquote>
+          <div class="quote-banner anim">
+            “Giữ gìn di sản hôm nay, tiếp nối bản sắc ngày mai.”
           </div>
 
-          <div class="reveal delay-4">
-            <button class="cta-btn amber" onclick="goToSlide(8)">
-              <span>TIẾP TỤC — GIAO LƯU</span>
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                <path d="M5 12h14M12 5l7 7-7 7"/>
-              </svg>
-            </button>
+          <div class="thanks-footer anim">
+            <span class="diamond-mark"></span>
+            <span>Xin chân thành cảm ơn thầy cô và các bạn!</span>
           </div>
         </div>
 
-        <div class="visual-frame spotlight-frame reveal delay-2">
-          <img
-            src="https://images.unsplash.com/photo-1613918431703-aa50889e3be9?auto=format&fit=crop&w=1000&q=85"
-            alt="Quả cầu lông dưới ánh đèn sân đấu"
-            onerror="this.style.display='none'"
-          />
-          <div class="visual-overlay"></div>
-          <div class="hero-badge-floating">
-            <div>
-              <div style="font-size: 0.98rem; color: var(--amber); font-weight: 700; text-transform: uppercase;">Thông điệp Tổ 1</div>
-              <div style="font-size: 1.18rem; font-weight: 700;">Chưa buông vợt là còn cơ hội chiến thắng</div>
+        <div class="s9-mosaic anim">
+          <div class="photo-frame mosaic-tall" data-photo-slot="1">
+            <img class="slot-img-1" alt="Thiếu nữ H'rê dệt thổ cẩm" />
+            <div class="photo-caption">
+              <span>Bản sắc người H’rê</span>
+            </div>
+          </div>
+          <div class="photo-frame" data-photo-slot="3">
+            <img class="slot-img-3" alt="Truyền giữ nghề dệt" />
+            <div class="photo-caption">
+              <span>Trao truyền thế hệ</span>
+            </div>
+          </div>
+          <div class="photo-frame" data-photo-slot="4">
+            <img class="slot-img-4" alt="Vươn ra thị trường" />
+            <div class="photo-caption">
+              <span>Tiếp nối tương lai</span>
             </div>
           </div>
         </div>
       </div>
+      <div></div>
     </section>
 
     <!-- ==========================================
-         SLIDE 9: CẢM ƠN VÀ GIAO LƯU
+         SPEAKER NOTES PANEL (PHÍM 'N')
          ========================================== -->
-    <section class="slide" data-slide="9">
-      <div class="slide-inner">
-        <div class="section-tag reveal">Phần thảo luận & Giao lưu — Tổ 1</div>
-        <h2 class="slide-title reveal delay-1">CẢM ƠN THẦY CÔ VÀ CÁC BẠN <span class="highlight-cyan">ĐÃ LẮNG NGHE!</span></h2>
-        <p class="lead-text reveal delay-1">
-          “Hy vọng rằng mỗi chúng ta không chỉ tìm thấy niềm vui trong từng trận cầu, mà còn học được cách tự chủ, kiên trì và mạnh mẽ hơn mỗi ngày.”
-        </p>
-
-        <p style="font-size: 1.15rem; color: var(--amber); font-weight: 700; margin-top: 16px;" class="reveal delay-2">
-          GÓC GIAO LƯU CÙNG LỚP (Nhấn vào từng câu hỏi để mở gợi ý dẫn dắt thảo luận cho người thuyết trình):
-        </p>
-
-        <div class="qa-grid reveal delay-2">
-          <!-- CÂU HỎI 1 -->
-          <div class="qa-card" onclick="toggleQaCard(this)">
-            <div>
-              <span class="qa-num">Câu hỏi giao lưu 01</span>
-              <div class="qa-question-header">
-                <h3 class="qa-title">“Theo bạn, điều khó nhất khi tham gia CLB cầu lông là gì?”</h3>
-              </div>
-              <div class="qa-hint-box">
-                <strong>Gợi ý dẫn dắt (Tổ 1):</strong> Mời 1–2 bạn chia sẻ. Nhiều bạn thường ngại kỹ thuật ban đầu (đánh hụt cầu, mỏi tay) hoặc ngại sắp xếp thời gian. Hãy nhấn mạnh: Khó khăn lúc bắt đầu là điều hoàn toàn bình thường, chỉ cần duy trì lịch tập đều đặn 2–3 buổi/tuần là sẽ vượt qua.
-              </div>
-            </div>
-            <div class="qa-toggle-label">
-              <span>Nhấn để xem / đóng gợi ý</span>
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                <path d="M6 9l6 6 6-6"/>
-              </svg>
-            </div>
-          </div>
-
-          <!-- CÂU HỎI 2 -->
-          <div class="qa-card" onclick="toggleQaCard(this)">
-            <div>
-              <span class="qa-num">Câu hỏi giao lưu 02</span>
-              <div class="qa-question-header">
-                <h3 class="qa-title">“Làm thế nào để giữ bình tĩnh khi bị đối thủ dẫn điểm?”</h3>
-              </div>
-              <div class="qa-hint-box">
-                <strong>Gợi ý dẫn dắt (Tổ 1):</strong> Gợi mở các mẹo thực tế trên sân: Hít thở sâu trước khi giao cầu, lau mồ hôi để điều chỉnh nhịp độ, động viên đồng đội đánh đôi và chỉ tập trung giành lại từng điểm một thay vì nhìn vào khoảng cách điểm số.
-              </div>
-            </div>
-            <div class="qa-toggle-label">
-              <span>Nhấn để xem / đóng gợi ý</span>
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                <path d="M6 9l6 6 6-6"/>
-              </svg>
-            </div>
-          </div>
-
-          <!-- CÂU HỎI 3 -->
-          <div class="qa-card" onclick="toggleQaCard(this)">
-            <div>
-              <span class="qa-num">Câu hỏi giao lưu 03</span>
-              <div class="qa-question-header">
-                <h3 class="qa-title">“Bạn đã từng vượt qua khó khăn nào trong quá trình luyện tập?”</h3>
-              </div>
-              <div class="qa-hint-box">
-                <strong>Gợi ý dẫn dắt (Tổ 1):</strong> Đại diện Tổ 1 có thể kể ngắn gọn kỷ niệm thật của nhóm (ví dụ: tập giao cầu thuận tay/trái tay mãi mới qua lưới) để truyền cảm hứng và kết nối gần gũi với cả lớp.
-              </div>
-            </div>
-            <div class="qa-toggle-label">
-              <span>Nhấn để xem / đóng gợi ý</span>
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                <path d="M6 9l6 6 6-6"/>
-              </svg>
-            </div>
-          </div>
-        </div>
-
-        <div class="reveal delay-3" style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px; margin-top: 18px;">
-          <div style="display: flex; align-items: center; gap: 14px; flex-wrap: wrap;">
-            <button class="cta-btn" onclick="goToSlide(0)">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                <path d="M19 12H5M12 19l-7-7 7-7"/>
-              </svg>
-              <span>QUAY LẠI TRANG ĐẦU</span>
-            </button>
-            <button class="cta-btn amber" onclick="goToSlide(9)">
-              <span>ĐIỀU BẤT NGỜ CUỐI CÙNG</span>
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                <path d="M5 12h14M12 5l7 7-7 7"/>
-              </svg>
-            </button>
-          </div>
-          <div style="font-size: 1.18rem; color: var(--text-muted);">
-            Thực hiện bởi: <strong style="color: var(--white);">Tập thể Tổ 1</strong>
-          </div>
-        </div>
+    <aside class="notes-panel" id="notesPanel">
+      <div class="notes-meta">
+        <span>KỊCH BẢN THUYẾT TRÌNH (SPEAKER NOTES)</span>
+        <span id="notesSlideLabel">SLIDE 01 / 09</span>
       </div>
-    </section>
+      <div class="notes-text" id="notesText"></div>
+    </aside>
 
     <!-- ==========================================
-         SLIDE 10 — ĐẶC BIỆT: LỜI CHÚC 20/10 DÀNH TẶNG CÔ GIÁO
+         BOTTOM HUD CONTROLS
          ========================================== -->
-    <section class="slide slide-gift-2010" data-slide="10">
-      <!-- Lớp cánh hoa rơi nhẹ & hạt sáng lấp lánh (nằm dưới chữ, không che nội dung) -->
-      <div class="gift-ambient-layer" id="giftAmbientLayer" aria-hidden="true"></div>
-
-      <div class="gift-stage-container">
-
-        <!-- 1. DÒNG CHỮ DẪN NHẬP BẤT NGỜ (Hiện 1.8 giây rồi mờ đi) -->
-        <div class="gift-prelude" id="giftPrelude">
-          <p class="gift-prelude-text">
-            “Trước khi kết thúc, chúng em còn một điều muốn gửi đến cô…”
-          </p>
-          <div class="gift-prelude-line"></div>
+    <footer class="hud-bar">
+      <div class="hud-group">
+        <div class="slide-counter">
+          <strong id="slideNum">01</strong> / 09
         </div>
-
-        <!-- 2. TRẢI NGHIỆM PHONG THƯ & TẤM THIỆP 20/10 -->
-        <div class="gift-main-experience" id="giftMainExperience">
-
-          <!-- Trạng thái Phong Thư Cao Cấp trước khi mở -->
-          <div class="envelope-showcase" id="envelopeShowcase">
-            <div class="envelope-Write-halo" aria-hidden="true"></div>
-
-            <div class="floral-base-wrapper">
-              <!-- Hoa hồng & Hoa hướng dương SVG tinh tế trang trí quanh phong thư -->
-              <svg class="floral-garland-svg" viewBox="0 0 540 360" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                <!-- Cành lá vàng champagne bên trái -->
-                <path d="M50 300 C 20 250, 35 190, 68 155" stroke="#C89B3C" stroke-width="2" stroke-linecap="round"/>
-                <path d="M38 250 C 12 242, 14 222, 36 226" fill="#E6C77B" fill-opacity="0.55"/>
-                <path d="M48 205 C 24 192, 28 174, 50 182" fill="#E6C77B" fill-opacity="0.55"/>
-                <!-- Bông hoa hồng bên trái dưới -->
-                <g transform="translate(55, 290)">
-                  <circle cx="0" cy="0" r="24" fill="#F2B8C6"/>
-                  <circle cx="-4" cy="-3" r="17" fill="#E392A6"/>
-                  <path d="M-10 -4 C -4 -14, 10 -10, 8 2 C 6 12, -8 12, -12 2" stroke="#FFFDF9" stroke-width="2" fill="none"/>
-                  <circle cx="0" cy="0" r="6" fill="#9E475B"/>
-                </g>
-                <!-- Bông hoa hướng dương nhỏ bên trái -->
-                <g transform="translate(36, 165)">
-                  <circle cx="0" cy="-14" r="5" fill="#F4C552"/>
-                  <circle cx="10" cy="-10" r="5" fill="#F4C552"/>
-                  <circle cx="14" cy="0" r="5" fill="#F4C552"/>
-                  <circle cx="10" cy="10" r="5" fill="#F4C552"/>
-                  <circle cx="0" cy="14" r="5" fill="#F4C552"/>
-                  <circle cx="-10" cy="10" r="5" fill="#F4C552"/>
-                  <circle cx="-14" cy="0" r="5" fill="#F4C552"/>
-                  <circle cx="-10" cy="-10" r="5" fill="#F4C552"/>
-                  <circle cx="0" cy="0" r="9" fill="#8C5828"/>
-                </g>
-
-                <!-- Cành lá vàng champagne bên phải -->
-                <path d="M490 300 C 520 250, 505 190, 472 155" stroke="#C89B3C" stroke-width="2" stroke-linecap="round"/>
-                <path d="M502 250 C 528 242, 526 222, 504 226" fill="#E6C77B" fill-opacity="0.55"/>
-                <!-- Bông hoa hướng dương bên phải dưới -->
-                <g transform="translate(485, 288)">
-                  <circle cx="0" cy="-18" r="6.5" fill="#F4C552"/>
-                  <circle cx="13" cy="-13" r="6.5" fill="#F4C552"/>
-                  <circle cx="18" cy="0" r="6.5" fill="#F4C552"/>
-                  <circle cx="13" cy="13" r="6.5" fill="#F4C552"/>
-                  <circle cx="0" cy="18" r="6.5" fill="#F4C552"/>
-                  <circle cx="-13" cy="13" r="6.5" fill="#F4C552"/>
-                  <circle cx="-18" cy="0" r="6.5" fill="#F4C552"/>
-                  <circle cx="-13" cy="-13" r="6.5" fill="#F4C552"/>
-                  <circle cx="0" cy="0" r="11" fill="#8C5828"/>
-                  <circle cx="0" cy="0" r="7" fill="#C89B3C"/>
-                </g>
-                <!-- Bông hoa hồng bên phải trên -->
-                <g transform="translate(502, 168)">
-                  <circle cx="0" cy="0" r="19" fill="#F2B8C6"/>
-                  <circle cx="3" cy="-2" r="13" fill="#E392A6"/>
-                  <path d="M-7 -3 C -2 -10, 8 -8, 6 2 C 4 9, -6 9, -9 2" stroke="#FFFDF9" stroke-width="1.8" fill="none"/>
-                </g>
-              </svg>
-
-              <!-- Phong Thư 3D -->
-              <div class="envelope-3d-box" id="envelope3dBox">
-                <div class="envelope-back-plate"></div>
-
-                <!-- Tấm thiệp trượt từ bên trong lên -->
-                <div class="envelope-rising-card">
-                  <div class="rising-card-preview-sub">Tri Ân Ngày Phụ Nữ Việt Nam 20/10</div>
-                  <div class="rising-card-preview-title">Kính gửi Cô giáo kính yêu!</div>
-                  <div style="width: 60px; height: 2px; background: var(--gift-gold); margin-top: 8px;"></div>
-                </div>
-
-                <!-- Mặt túi trước của phong bì (che phần thân thiệp, không bị xuyên qua) -->
-                <div class="envelope-front-pocket">
-                  <svg viewBox="0 0 420 270" preserveAspectRatio="none">
-                    <!-- Cánh gấp trái -->
-                    <polygon points="0,0 210,145 0,270" fill="#F3DEC0" stroke="#C89B3C" stroke-width="1.5"/>
-                    <!-- Cánh gấp phải -->
-                    <polygon points="420,0 210,145 420,270" fill="#EED4B1" stroke="#C89B3C" stroke-width="1.5"/>
-                    <!-- Cánh gấp đáy -->
-                    <polygon points="0,270 210,130 420,270" fill="#F8E8CF" stroke="#C89B3C" stroke-width="2"/>
-                  </svg>
-                </div>
-
-                <!-- Nắp phong bì xoay 3D mở lên -->
-                <div class="envelope-top-flap">
-                  <svg viewBox="0 0 420 155" preserveAspectRatio="none" style="width:100%; height:100%; display:block;">
-                    <polygon points="0,0 420,0 210,150" fill="#FDF1DF" stroke="#C89B3C" stroke-width="2"/>
-                    <polyline points="16,8 210,140 404,8" fill="none" stroke="#D4AF37" stroke-width="1" stroke-dasharray="5 4"/>
-                  </svg>
-                </div>
-
-                <!-- Con dấu sáp vàng sang trọng -->
-                <div class="wax-seal-badge">
-                  <svg width="28" height="28" viewBox="0 0 24 24" fill="#FFFDF9">
-                    <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
-                  </svg>
-                </div>
-              </div>
-            </div>
-
-            <button class="open-gift-btn" id="openGiftBtn" onclick="openTeacherLetter()">
-              <span>MỞ LỜI CHÚC DÀNH TẶNG CÔ</span>
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                <path d="M5 12h14M12 5l7 7-7 7"/>
-              </svg>
-            </button>
-          </div>
-
-          <!-- Trạng thái Tấm Thiệp Đã Mở Hoàn Toàn (Hiển thị nguyên văn lời chúc) -->
-          <div class="opened-card-stage" id="openedCardStage">
-            <div class="climax-golden-aura" aria-hidden="true"></div>
-
-            <article class="luxury-letter-card">
-              <!-- Họa tiết 4 góc thiệp -->
-              <svg class="letter-corner-ornament tl" viewBox="0 0 44 44" fill="none">
-                <path d="M2 42V8C2 4.68629 4.68629 2 8 2H42" stroke="#C89B3C" stroke-width="2"/>
-                <circle cx="10" cy="10" r="3" fill="#C89B3C"/>
-              </svg>
-              <svg class="letter-corner-ornament tr" viewBox="0 0 44 44" fill="none">
-                <path d="M2 42V8C2 4.68629 4.68629 2 8 2H42" stroke="#C89B3C" stroke-width="2"/>
-                <circle cx="10" cy="10" r="3" fill="#C89B3C"/>
-              </svg>
-              <svg class="letter-corner-ornament bl" viewBox="0 0 44 44" fill="none">
-                <path d="M2 42V8C2 4.68629 4.68629 2 8 2H42" stroke="#C89B3C" stroke-width="2"/>
-                <circle cx="10" cy="10" r="3" fill="#C89B3C"/>
-              </svg>
-              <svg class="letter-corner-ornament br" viewBox="0 0 44 44" fill="none">
-                <path d="M2 42V8C2 4.68629 4.68629 2 8 2H42" stroke="#C89B3C" stroke-width="2"/>
-                <circle cx="10" cy="10" r="3" fill="#C89B3C"/>
-              </svg>
-
-              <div class="letter-header-badge">
-                <span>Món Quà Tri Ân Ngày Phụ Nữ Việt Nam 20/10</span>
-              </div>
-
-              <div class="letter-body-content" id="letterLinesContainer">
-                <p class="wish-line wish-salutation">Kính gửi cô giáo kính yêu!</p>
-
-                <p class="wish-line">
-                  Nhân ngày Phụ nữ Việt Nam 20/10, chúng em xin gửi đến cô những lời chúc tốt đẹp và chân thành nhất.
-                </p>
-
-                <p class="wish-line">
-                  Chúc cô luôn mạnh khỏe, hạnh phúc, rạng rỡ và giữ mãi ngọn lửa nhiệt huyết với nghề. Cảm ơn cô vì đã tận tâm dạy dỗ, kiên nhẫn chỉ bảo và truyền cho chúng em không chỉ kiến thức mà còn cả những bài học quý giá trong cuộc sống.
-                </p>
-
-                <p class="wish-line">
-                  Nếu mỗi đường cầu trên sân là một lần nỗ lực vượt qua thử thách, thì trên hành trình trưởng thành của chúng em, cô chính là người luôn tận tình hướng dẫn và tiếp thêm động lực để chúng em tiến về phía trước.
-                </p>
-
-                <p class="wish-line">
-                  Mong rằng ngày 20/10 của cô sẽ ngập tràn niềm vui, yêu thương và những điều thật đẹp.
-                </p>
-
-                <p class="wish-line wish-highlight-em">
-                  Chúng em kính chúc cô một ngày 20/10 thật hạnh phúc và ý nghĩa!
-                </p>
-
-                <div class="wish-line wish-signature-row">
-                  <!-- Cụm hoa hồng & hướng dương nhỏ trang trí chân thiệp -->
-                  <svg width="110" height="46" viewBox="0 0 110 46" fill="none" aria-hidden="true">
-                    <path d="M10 34 Q 55 24, 98 34" stroke="#C89B3C" stroke-width="1.8"/>
-                    <circle cx="32" cy="28" r="11" fill="#F2B8C6"/>
-                    <circle cx="32" cy="28" r="6" fill="#9E475B"/>
-                    <circle cx="62" cy="26" r="10" fill="#F4C552"/>
-                    <circle cx="62" cy="26" r="5" fill="#8C5828"/>
-                  </svg>
-
-                  <div class="wish-signoff">
-                    <div class="sign-italic">Với tất cả lòng biết ơn và yêu quý,</div>
-                    <div class="sign-collective">Tập thể lớp chúng em.</div>
-                  </div>
-                </div>
-              </div>
-            </article>
-
-            <!-- Hiệu ứng cao trào cuối cùng -->
-            <div class="climax-tribute-banner" id="climaxTributeBanner">
-              <div class="climax-tribute-title">CẢM ƠN CÔ VÌ TẤT CẢ!</div>
-              <div class="climax-tribute-sub">Chúc cô 20/10 luôn xinh đẹp, hạnh phúc và ngập tràn yêu thương.</div>
-            </div>
-
-            <!-- Hai nút điều khiển theo đúng yêu cầu kỹ thuật -->
-            <div class="gift-footer-actions">
-              <button class="gift-action-btn" onclick="replayTeacherLetter()">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
-                  <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/>
-                  <path d="M3 3v5h5"/>
-                </svg>
-                <span>XEM LẠI LỜI CHÚC</span>
-              </button>
-
-              <button class="gift-action-btn secondary" onclick="goToSlide(8)">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
-                  <path d="M19 12H5M12 19l-7-7 7-7"/>
-                </svg>
-                <span>QUAY LẠI PHẦN THUYẾT TRÌNH</span>
-              </button>
-            </div>
-          </div>
-
-        </div>
+        <button class="hud-btn" id="prevBtn" title="Slide trước (Phím ←)">← Trước</button>
+        <button class="hud-btn" id="nextBtn" title="Slide tiếp (Phím → / Space)">Tiếp →</button>
       </div>
-    </section>
 
+      <div class="hud-group">
+        <button class="hud-btn highlight" id="batchUploadBtn" title="Chọn cùng lúc 4 bức ảnh từ máy của bạn (Phím I)">
+          <span>Nạp 4 ảnh</span> <span class="hide-sm">(I)</span>
+        </button>
+        <button class="hud-btn" id="exportHtmlBtn" style="display:none;" title="Tải về 1 file HTML duy nhất đã nhúng sẵn cả 4 ảnh">
+          <span>Tải HTML đã gộp ảnh</span>
+        </button>
+        <button class="hud-btn" id="notesBtn" title="Bật/tắt lời thuyết trình (Phím N)">
+          <span>Kịch bản</span> <span class="hide-sm">(N)</span>
+        </button>
+        <button class="hud-btn" id="fsBtn" title="Toàn màn hình (Phím F)">
+          <span>Toàn màn hình</span> <span class="hide-sm">(F)</span>
+        </button>
+      </div>
+    </footer>
+
+    <div class="progress-bar">
+      <div class="progress-fill" id="progressFill"></div>
+    </div>
+
+    <!-- Hidden File Inputs -->
+    <input type="file" id="singleFileInput" accept="image/*" style="display:none;" />
+    <input type="file" id="batchFileInput" accept="image/*" multiple style="display:none;" />
   </main>
+</div>
 
-  <!-- Thanh điều khiển phía dưới -->
-  <footer class="bottom-bar">
-    <div class="slide-counter" id="slideCounter">
-      <span>01</span> / 10
-    </div>
+<script>
+  /* =================================================================
+     1. KỊCH BẢN THUYẾT TRÌNH CHO 9 SLIDE
+     ================================================================= */
+  const speakerNotes = [
+    "Slide 1 (Bìa): Kính thưa thầy cô và các bạn! Hôm nay, mình xin đại diện nhóm đưa mọi người đến với huyện miền núi Ba Tơ, tỉnh Quảng Ngãi để khám phá một báu vật thủ công độc đáo: Nghề dệt thổ cẩm truyền thống của người H’rê tại làng Teng.",
+    "Slide 2: Làng Teng (thuộc xã Ba Thành, huyện Ba Tơ) là nơi duy nhất của người H’rê ở Quảng Ngãi còn bảo tồn nguyên vẹn nghề dệt cổ truyền. Ngày 29/01/2019, nghề dệt thổ cẩm nơi đây chính thức được công nhận là Di sản văn hóa phi vật thể quốc gia.",
+    "Slide 3: Ở làng Teng, nghề dệt được gìn giữ qua từng nếp nhà sàn. Những cô gái lớn lên đều được bà, được mẹ tận tình chỉ dạy từ cách se sợi đến dệt vải, qua đó hun đúc sự khéo léo, chăm chỉ và bản sắc văn hóa H’rê.",
+    "Slide 4: Không dùng máy móc công nghiệp, người phụ nữ H’rê sử dụng nguyên liệu sợi bông truyền thống cùng khung dệt bằng tre, gỗ mộc mạc. Từng sợi chỉ được luồn tỉ mỉ bằng đôi bàn tay kiên nhẫn để tạo nên tấm vải bền đẹp.",
+    "Slide 5: Nhìn vào tấm thổ cẩm làng Teng, ta nhận ra ngay ba gam màu chủ đạo: Màu Đen của đất đai, đại ngàn; Màu Đỏ của khát vọng, tình yêu, sức sống; và Màu Trắng của sự thuần khiết, trong sáng.",
+    "Slide 6: Hoa văn trên thổ cẩm làng Teng là những mô típ hình học cách điệu, đường viền song song và hình tam giác cân đối, tái hiện sống động cảnh sắc núi rừng, sông nước và muôn loài quanh bản làng.",
+    "Slide 7: Dù từng đối mặt với thách thức do sản xuất nhỏ lẻ và cạnh tranh với vải công nghiệp, danh hiệu Di sản Quốc gia đã mở ra cơ hội lớn để làng nghề đổi mới sản phẩm và phát triển thị trường.",
+    "Slide 8: Ngày nay, thổ cẩm làng Teng đã hiện diện gần hơn với thị trường hiện đại qua túi xách, khăn choàng, trang phục, quà lưu niệm... giúp tạo sinh kế ổn định cho phụ nữ bản địa và thúc đẩy du lịch cộng đồng.",
+    "Slide 9: Thổ cẩm làng Teng không chỉ là trang phục, mà còn là ký ức, bản sắc và niềm tự hào của người H’rê. Giữ gìn di sản hôm nay chính là tiếp nối bản sắc cho ngày mai. Xin chân thành cảm ơn thầy cô và các bạn đã lắng nghe!"
+  ];
 
-    <div class="nav-controls">
-      <button class="nav-btn" id="prevBtn" onclick="prevSlide()">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-          <path d="M15 18l-6-6 6-6"/>
-        </svg>
-        <span>Trước</span>
-      </button>
-      <button class="nav-btn primary" id="nextBtn" onclick="nextSlide()">
-        <span>Tiếp theo</span>
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-          <path d="M9 18l6-6-6-6"/>
-        </svg>
-      </button>
-    </div>
-  </footer>
+  /* =================================================================
+     2. HỆ THỐNG NẠP & HIỂN THỊ 4 BỨC ẢNH TƯ LIỆU CỦA BẠN
+     ================================================================= */
+  // Danh sách tên file tự động dò tìm nếu để cùng thư mục với index.html
+  const candidateFilenames = {
+    1: ['image.png', 'image_1.png', '1.png', '1.jpg', 'anh1.png', 'anh1.jpg'],
+    2: ['image_2.png', '2.png', '2.jpg', 'anh2.png', 'anh2.jpg'],
+    3: ['image_3.png', '3.png', '3.jpg', 'anh3.png', 'anh3.jpg'],
+    4: ['image_4.png', '4.png', '4.jpg', 'anh4.png', 'anh4.jpg']
+  };
 
-  <!-- Thanh tiến trình -->
-  <div class="progress-track">
-    <div class="progress-fill" id="progressFill"></div>
-  </div>
+  // Lưu trữ dữ liệu ảnh đang dùng
+  const currentPhotoSources = { 1: null, 2: null, 3: null, 4: null };
 
-  <!-- JAVASCRIPT ĐIỀU KHIỂN TRÌNH CHIẾU & HIỆU ỨNG SLIDE 10 -->
-  <script>
-    const slides = document.querySelectorAll('.slide');
-    const totalSlides = slides.length;
-    const slideCounter = document.getElementById('slideCounter');
-    const progressFill = document.getElementById('progressFill');
-    const prevBtn = document.getElementById('prevBtn');
-    const nextBtn = document.getElementById('nextBtn');
-    const slideDotsContainer = document.getElementById('slideDots');
-    const minimalToggleBtn = document.getElementById('minimalToggleBtn');
-    const restoreUiBtn = document.getElementById('restoreUiBtn');
-    const fullscreenBtn = document.getElementById('fullscreenBtn');
-    const headerBrandTitle = document.getElementById('headerBrandTitle');
+  // Tạo ảnh đồ họa thổ cẩm dự phòng chất lượng cao nếu chưa tìm thấy file cục bộ
+  function generateFallbackDataUrl(slot) {
+    const c = document.createElement('canvas');
+    c.width = 960;
+    c.height = 720;
+    const ctx = c.getContext('2d');
 
-    // Phần tử của Slide 10 (Quà tặng 20/10)
-    const giftAmbientLayer = document.getElementById('giftAmbientLayer');
-    const giftPrelude = document.getElementById('giftPrelude');
-    const giftMainExperience = document.getElementById('giftMainExperience');
-    const envelopeShowcase = document.getElementById('envelopeShowcase');
-    const envelope3dBox = document.getElementById('envelope3dBox');
-    const openedCardStage = document.getElementById('openedCardStage');
-    const climaxTributeBanner = document.getElementById('climaxTributeBanner');
-    const wishLines = document.querySelectorAll('#letterLinesContainer .wish-line');
+    ctx.fillStyle = '#171717';
+    ctx.fillRect(0, 0, c.width, c.height);
 
-    let currentSlide = 0;
-    let giftTimers = [];
+    // Vẽ dải thổ cẩm Đỏ - Đen - Trắng
+    for (let y = 0; y < c.height; y += 120) {
+      ctx.fillStyle = '#A63D32';
+      ctx.fillRect(0, y + 18, c.width, 22);
+      ctx.fillRect(0, y + 80, c.width, 22);
 
-    // Khởi tạo cánh hoa bay chậm và hạt sáng vàng dịu cho Slide 10
-    function initGiftAmbientParticles() {
-      if (!giftAmbientLayer) return;
-      giftAmbientLayer.innerHTML = '';
+      ctx.fillStyle = '#F4F0E8';
+      ctx.fillRect(0, y + 12, c.width, 3);
+      ctx.fillRect(0, y + 44, c.width, 3);
+      ctx.fillRect(0, y + 74, c.width, 3);
+      ctx.fillRect(0, y + 106, c.width, 3);
 
-      // 14 cánh hoa SVG bay chậm tinh tế
-      for (let i = 0; i < 14; i++) {
-        const petal = document.createElement('div');
-        petal.className = 'petal-item';
-        const leftPos = Math.random() * 96;
-        const duration = 11 + Math.random() * 9;
-        const delay = Math.random() * 8;
-        const size = 16 + Math.random() * 12;
-        petal.style.left = `${leftPos}%`;
-        petal.style.animationDuration = `${duration}s`;
-        petal.style.animationDelay = `-${delay}s`;
-        petal.innerHTML = `
-          <svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none">
-            <path d="M12 2C7 7 5 13 8 18C10 21 14 21 16 18C19 13 17 7 12 2Z" fill="#F2B8C6" fill-opacity="0.7"/>
-          </svg>
-        `;
-        giftAmbientLayer.appendChild(petal);
-      }
-
-      // 16 hạt bụi sáng vàng champagne lấp lánh
-      for (let i = 0; i < 16; i++) {
-        const dot = document.createElement('div');
-        dot.className = 'sparkle-dot';
-        const size = 4 + Math.random() * 6;
-        dot.style.width = `${size}px`;
-        dot.style.height = `${size}px`;
-        dot.style.left = `${Math.random() * 96}%`;
-        dot.style.top = `${Math.random() * 92}%`;
-        dot.style.animationDuration = `${2 + Math.random() * 2.5}s`;
-        dot.style.animationDelay = `${Math.random() * 2}s`;
-        giftAmbientLayer.appendChild(dot);
+      for (let x = 0; x < c.width; x += 64) {
+        ctx.strokeStyle = '#F4F0E8';
+        ctx.lineWidth = 2.5;
+        ctx.beginPath();
+        ctx.moveTo(x + 32, y + 48);
+        ctx.lineTo(x + 54, y + 60);
+        ctx.lineTo(x + 32, y + 72);
+        ctx.lineTo(x + 10, y + 60);
+        ctx.closePath();
+        ctx.stroke();
       }
     }
+    return c.toDataURL('image/png');
+  }
 
-    function clearGiftTimers() {
-      giftTimers.forEach(t => clearTimeout(t));
-      giftTimers = [];
-    }
-
-    // Đặt lại trạng thái Slide 10 và chạy chuỗi chuyển cảnh bất ngờ
-    function startSlide10Sequence() {
-      clearGiftTimers();
-
-      // Đặt lại phong thư về trạng thái đóng
-      envelopeShowcase.classList.remove('minimized');
-      envelope3dBox.classList.remove('is-opening', 'flap-behind');
-      openedCardStage.classList.remove('active-card', 'climax-reached');
-      climaxTributeBanner.classList.remove('banner-visible');
-      wishLines.forEach(line => line.classList.remove('line-visible'));
-
-      giftMainExperience.classList.remove('visible');
-      giftPrelude.classList.add('visible');
-
-      // Sau 1.9 giây, dòng chữ dẫn nhập mờ đi và Phong thư xuất hiện ở chính giữa màn hình
-      const t1 = setTimeout(() => {
-        giftPrelude.classList.remove('visible');
-        const t2 = setTimeout(() => {
-          giftMainExperience.classList.add('visible');
-        }, 450);
-        giftTimers.push(t2);
-      }, 1900);
-
-      giftTimers.push(t1);
-    }
-
-    // Khi người xem nhấn nút "MỞ LỜI CHÚC DÀNH TẶNG CÔ"
-    function openTeacherLetter() {
-      clearGiftTimers();
-
-      // Bước 1: Mở nắp phong thư bằng CSS 3D transform và trượt tấm thiệp lên
-      envelope3dBox.classList.add('is-opening');
-
-      const tFlap = setTimeout(() => {
-        envelope3dBox.classList.add('flap-behind');
-      }, 360);
-      giftTimers.push(tFlap);
-
-      // Bước 2: Sau khi nắp mở và thiệp trượt lên khỏi túi phong bì, hiển thị tấm thiệp lớn rõ chữ
-      const tCard = setTimeout(() => {
-        envelopeShowcase.classList.add('minimized');
-        openedCardStage.classList.add('active-card');
-
-        // Bước 3: Lời chúc xuất hiện từng dòng mượt mà
-        wishLines.forEach((line, index) => {
-          const tLine = setTimeout(() => {
-            line.classList.add('line-visible');
-          }, 260 + index * 480);
-          giftTimers.push(tLine);
-        });
-
-        // Bước 4: Hiệu ứng cao trào cuối cùng sau khi các dòng lời chúc đã hiện đầy đủ
-        const totalLinesTime = 260 + wishLines.length * 480 + 300;
-        const tClimax = setTimeout(() => {
-          openedCardStage.classList.add('climax-reached');
-          climaxTributeBanner.classList.add('banner-visible');
-        }, totalLinesTime);
-        giftTimers.push(tClimax);
-
-      }, 1150);
-
-      giftTimers.push(tCard);
-    }
-
-    // Nút "XEM LẠI LỜI CHÚC": Đóng lại và phát lại hiệu ứng mở phong thư
-    function replayTeacherLetter() {
-      clearGiftTimers();
-      openedCardStage.classList.remove('active-card', 'climax-reached');
-      climaxTributeBanner.classList.remove('banner-visible');
-      wishLines.forEach(line => line.classList.remove('line-visible'));
-
-      envelope3dBox.classList.remove('is-opening', 'flap-behind');
-      envelopeShowcase.classList.remove('minimized');
-      giftPrelude.classList.remove('visible');
-      giftMainExperience.classList.add('visible');
-
-      const tReplay = setTimeout(() => {
-        openTeacherLetter();
-      }, 350);
-      giftTimers.push(tReplay);
-    }
-
-    // Khởi tạo các chấm điều hướng trên thanh Header
-    function initDots() {
-      for (let i = 0; i < totalSlides; i++) {
-        const dot = document.createElement('button');
-        dot.className = 'dot-btn' + (i === 0 ? ' active' : '');
-        dot.setAttribute('aria-label', `Đến slide ${i + 1}`);
-        dot.title = i === 9 ? 'Slide 10 — Quà tặng 20/10' : `Slide ${i + 1}`;
-        dot.addEventListener('click', () => goToSlide(i));
-        slideDotsContainer.appendChild(dot);
-      }
-    }
-
-    // Cập nhật giao diện khi chuyển Slide
-    function updateSlideUI() {
-      slides.forEach((slide, index) => {
-        if (index === currentSlide) {
-          slide.classList.add('active');
-          slide.scrollTop = 0;
-        } else {
-          slide.classList.remove('active');
-        }
-      });
-
-      // Chuyển đổi bảng màu ấm áp khi vào Slide 10 (index === 9)
-      if (currentSlide === 9) {
-        document.body.classList.add('gift-theme-active');
-        headerBrandTitle.textContent = 'Món Quà Tri Ân 20/10 — Dành Tặng Cô Giáo';
-        startSlide10Sequence();
-      } else {
-        document.body.classList.remove('gift-theme-active');
-        headerBrandTitle.textContent = 'Đường Cầu Kiên Cường — CLB Cầu Lông';
-        clearGiftTimers();
-      }
-
-      const dots = slideDotsContainer.querySelectorAll('.dot-btn');
-      dots.forEach((dot, index) => {
-        dot.classList.toggle('active', index === currentSlide);
-      });
-
-      const formattedCurrent = String(currentSlide + 1).padStart(2, '0');
-      const formattedTotal = String(totalSlides).padStart(2, '0');
-      slideCounter.innerHTML = `<span>${formattedCurrent}</span> / ${formattedTotal}`;
-
-      const progressPercent = ((currentSlide + 1) / totalSlides) * 100;
-      progressFill.style.width = `${progressPercent}%`;
-
-      prevBtn.disabled = currentSlide === 0;
-      nextBtn.disabled = currentSlide === totalSlides - 1;
-    }
-
-    function goToSlide(index) {
-      if (index < 0 || index >= totalSlides) return;
-      currentSlide = index;
-      updateSlideUI();
-    }
-
-    function nextSlide() {
-      if (currentSlide < totalSlides - 1) {
-        currentSlide++;
-        updateSlideUI();
-      }
-    }
-
-    function prevSlide() {
-      if (currentSlide > 0) {
-        currentSlide--;
-        updateSlideUI();
-      }
-    }
-
-    // Tương tác 4 chặng ở Slide 5
-    function highlightStage(stageIndex) {
-      const stages = document.querySelectorAll('#journeyStages .stage-card');
-      stages.forEach((card, idx) => {
-        card.classList.toggle('active-stage', idx === stageIndex);
-      });
-    }
-
-    // Tương tác đóng/mở câu hỏi giao lưu ở Slide 9
-    function toggleQaCard(cardEl) {
-      cardEl.classList.toggle('open');
-    }
-
-    // Chế độ trình chiếu tối giản (ẩn thanh điều khiển)
-    function toggleMinimalMode() {
-      document.body.classList.toggle('minimal-ui');
-    }
-
-    minimalToggleBtn.addEventListener('click', toggleMinimalMode);
-    restoreUiBtn.addEventListener('click', toggleMinimalMode);
-
-    // Chế độ Toàn màn hình
-    function toggleFullscreen() {
-      if (!document.fullscreenElement) {
-        document.documentElement.requestFullscreen().catch(() => {});
-      } else {
-        if (document.exitFullscreen) {
-          document.exitFullscreen();
-        }
-      }
-    }
-
-    fullscreenBtn.addEventListener('click', toggleFullscreen);
-
-    // Hỗ trợ đầy đủ phím tắt bàn phím
-    window.addEventListener('keydown', (e) => {
-      if (e.key === 'ArrowRight' || e.key === ' ') {
-        e.preventDefault();
-        nextSlide();
-      } else if (e.key === 'ArrowLeft') {
-        e.preventDefault();
-        prevSlide();
-      } else if (e.key === 'Home') {
-        e.preventDefault();
-        goToSlide(0);
-      } else if (e.key === 'End') {
-        e.preventDefault();
-        goToSlide(totalSlides - 1);
-      } else if (e.key.toLowerCase() === 'f') {
-        e.preventDefault();
-        toggleFullscreen();
-      } else if (e.key.toLowerCase() === 'm') {
-        e.preventDefault();
-        toggleMinimalMode();
-      }
+  function applyPhotoToSlot(slot, srcUrl, saveToStorage = false) {
+    currentPhotoSources[slot] = srcUrl;
+    document.querySelectorAll(`.slot-img-${slot}`).forEach(img => {
+      img.src = srcUrl;
     });
+    if (saveToStorage) {
+      try {
+        localStorage.setItem(`langteng_photo_${slot}`, srcUrl);
+      } catch (e) {}
+      document.getElementById('exportHtmlBtn').style.display = 'inline-flex';
+    }
+  }
 
-    // Hỗ trợ thao tác vuốt Trái / Phải trên Điện thoại & Máy tính bảng
-    let touchStartX = 0;
-    let touchEndX = 0;
+  // Thử nạp lần lượt: 1. LocalStorage -> 2. File cùng thư mục (image.png, image_2.png...) -> 3. Đồ họa dự phòng
+  function initPhotos() {
+    [1, 2, 3, 4].forEach(slot => {
+      let saved = null;
+      try {
+        saved = localStorage.getItem(`langteng_photo_${slot}`);
+      } catch (e) {}
 
-    window.addEventListener('touchstart', (e) => {
-      touchStartX = e.changedTouches[0].screenX;
-    }, { passive: true });
-
-    window.addEventListener('touchend', (e) => {
-      touchEndX = e.changedTouches[0].screenX;
-      const diff = touchStartX - touchEndX;
-      if (Math.abs(diff) > 55) {
-        if (diff > 0) {
-          nextSlide();
-        } else {
-          prevSlide();
-        }
+      if (saved) {
+        applyPhotoToSlot(slot, saved, false);
+        document.getElementById('exportHtmlBtn').style.display = 'inline-flex';
+        return;
       }
-    }, { passive: true });
 
-    // Khởi chạy
-    initDots();
-    initGiftAmbientParticles();
-    updateSlideUI();
-  </script>
+      const files = candidateFilenames[slot];
+      let idx = 0;
+
+      function tryNextFile() {
+        if (idx >= files.length) {
+          applyPhotoToSlot(slot, generateFallbackDataUrl(slot), false);
+          return;
+        }
+        const testImg = new Image();
+        const candidate = files[idx++];
+        testImg.onload = () => applyPhotoToSlot(slot, candidate, false);
+        testImg.onerror = tryNextFile;
+        testImg.src = candidate;
+      }
+      tryNextFile();
+    });
+  }
+
+  // Cho phép nhấn vào từng khung ảnh để đổi riêng ảnh đó
+  let activeSlotToReplace = 1;
+  const singleFileInput = document.getElementById('singleFileInput');
+
+  document.querySelectorAll('.photo-frame[data-photo-slot]').forEach(frame => {
+    frame.addEventListener('click', () => {
+      activeSlotToReplace = parseInt(frame.getAttribute('data-photo-slot'), 10);
+      singleFileInput.click();
+    });
+  });
+
+  singleFileInput.addEventListener('change', (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (ev) => applyPhotoToSlot(activeSlotToReplace, ev.target.result, true);
+    reader.readAsDataURL(file);
+    singleFileInput.value = '';
+  });
+
+  // Cho phép chọn cả 4 ảnh cùng lúc (hoặc kéo thả 4 ảnh vào màn hình)
+  const batchFileInput = document.getElementById('batchFileInput');
+  document.getElementById('batchUploadBtn').addEventListener('click', () => {
+    batchFileInput.click();
+  });
+
+  function handleMultipleFiles(fileList) {
+    const files = Array.from(fileList).filter(f => f.type.startsWith('image/'));
+    if (!files.length) return;
+
+    // Sắp xếp theo tên file (image.png, image_2.png, image_3.png, image_4.png)
+    files.sort((a, b) => a.name.localeCompare(b.name, undefined, { numeric: true }));
+
+    files.slice(0, 4).forEach((file, index) => {
+      let targetSlot = index + 1;
+      if (file.name.includes('2')) targetSlot = 2;
+      else if (file.name.includes('3')) targetSlot = 3;
+      else if (file.name.includes('4')) targetSlot = 4;
+      else if (file.name.includes('1') || file.name === 'image.png') targetSlot = 1;
+
+      const reader = new FileReader();
+      reader.onload = (ev) => applyPhotoToSlot(targetSlot, ev.target.result, true);
+      reader.readAsDataURL(file);
+    });
+  }
+
+  batchFileInput.addEventListener('change', (e) => {
+    handleMultipleFiles(e.target.files);
+    batchFileInput.value = '';
+  });
+
+  // Hỗ trợ Kéo - Thả (Drag & Drop) 4 ảnh trực tiếp vào trang web
+  window.addEventListener('dragover', (e) => e.preventDefault());
+  window.addEventListener('drop', (e) => {
+    e.preventDefault();
+    if (e.dataTransfer && e.dataTransfer.files.length) {
+      handleMultipleFiles(e.dataTransfer.files);
+    }
+  });
+
+  // Tính năng Xuất ra 1 file HTML duy nhất đã nhúng sẵn cả 4 ảnh
+  document.getElementById('exportHtmlBtn').addEventListener('click', () => {
+    const cloneDoc = document.documentElement.cloneNode(true);
+    const exportBtnInClone = cloneDoc.querySelector('#exportHtmlBtn');
+    if (exportBtnInClone) exportBtnInClone.style.display = 'none';
+
+    const htmlContent = '<!DOCTYPE html>\n' + cloneDoc.outerHTML;
+    const blob = new Blob([htmlContent], { type: 'text/html;charset=utf-8' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'Thuyet_Trinh_Tho_Cam_Lang_Teng_Full_Anh.html';
+    a.click();
+  });
+
+  /* =================================================================
+     3. VẼ HỌA TIẾT KỶ HÀ MINH HỌA Ở SLIDE 6
+     ================================================================= */
+  function renderGeometricWeave() {
+    const canvas = document.getElementById('geometricWeaveCanvas');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    const w = canvas.width = 800;
+    const h = canvas.height = 380;
+
+    ctx.fillStyle = '#171717';
+    ctx.fillRect(0, 0, w, h);
+
+    // Đường viền song song Đỏ - Trắng
+    ctx.fillStyle = '#A63D32';
+    ctx.fillRect(0, 36, w, 28);
+    ctx.fillRect(0, h - 64, w, 28);
+
+    ctx.fillStyle = '#F4F0E8';
+    ctx.fillRect(0, 26, w, 4);
+    ctx.fillRect(0, 70, w, 4);
+    ctx.fillRect(0, h - 74, w, 4);
+    ctx.fillRect(0, h - 30, w, 4);
+
+    // Chuỗi hình tam giác cân & hình thoi ở trung tâm
+    const step = 80;
+    const cy = h / 2;
+    for (let x = 0; x <= w + step; x += step) {
+      // Hình thoi đỏ
+      ctx.fillStyle = '#A63D32';
+      ctx.beginPath();
+      ctx.moveTo(x, cy - 68);
+      ctx.lineTo(x + 36, cy);
+      ctx.lineTo(x, cy + 68);
+      ctx.lineTo(x - 36, cy);
+      ctx.closePath();
+      ctx.fill();
+
+      // Viền hình thoi trắng ngà
+      ctx.strokeStyle = '#F4F0E8';
+      ctx.lineWidth = 3.5;
+      ctx.beginPath();
+      ctx.moveTo(x, cy - 42);
+      ctx.lineTo(x + 22, cy);
+      ctx.lineTo(x, cy + 42);
+      ctx.lineTo(x - 22, cy);
+      ctx.closePath();
+      ctx.stroke();
+
+      // Tam giác cân xen kẽ
+      ctx.fillStyle = '#F4F0E8';
+      ctx.beginPath();
+      ctx.moveTo(x + step / 2, cy - 26);
+      ctx.lineTo(x + step / 2 - 16, cy - 64);
+      ctx.lineTo(x + step / 2 + 16, cy - 64);
+      ctx.closePath();
+      ctx.fill();
+
+      ctx.beginPath();
+      ctx.moveTo(x + step / 2, cy + 26);
+      ctx.lineTo(x + step / 2 - 16, cy + 64);
+      ctx.lineTo(x + step / 2 + 16, cy + 64);
+      ctx.closePath();
+      ctx.fill();
+    }
+  }
+
+  /* =================================================================
+     4. ĐIỀU HƯỚNG SLIDE & PHÍM TẮT
+     ================================================================= */
+  const slides = document.querySelectorAll('.slide');
+  const total = slides.length;
+  let idx = 0;
+
+  const slideNumEl = document.getElementById('slideNum');
+  const progressFill = document.getElementById('progressFill');
+  const notesPanel = document.getElementById('notesPanel');
+  const notesText = document.getElementById('notesText');
+  const notesSlideLabel = document.getElementById('notesSlideLabel');
+  const notesBtn = document.getElementById('notesBtn');
+
+  function goToSlide(newIdx) {
+    if (newIdx < 0 || newIdx >= total) return;
+    slides[idx].classList.remove('active');
+    idx = newIdx;
+    slides[idx].classList.add('active');
+
+    const numStr = String(idx + 1).padStart(2, '0');
+    slideNumEl.textContent = numStr;
+    progressFill.style.width = `${((idx + 1) / total) * 100}%`;
+    notesSlideLabel.textContent = `SLIDE ${numStr} / 09`;
+    notesText.textContent = speakerNotes[idx];
+  }
+
+  document.getElementById('prevBtn').addEventListener('click', () => goToSlide(idx - 1));
+  document.getElementById('nextBtn').addEventListener('click', () => goToSlide(idx + 1));
+
+  function toggleNotes() {
+    notesPanel.classList.toggle('open');
+    notesBtn.classList.toggle('active');
+  }
+  notesBtn.addEventListener('click', toggleNotes);
+
+  function toggleFullscreen() {
+    if (!document.fullscreenElement) {
+      document.documentElement.requestFullscreen().catch(() => {});
+    } else {
+      document.exitFullscreen().catch(() => {});
+    }
+  }
+  document.getElementById('fsBtn').addEventListener('click', toggleFullscreen);
+
+  window.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') {
+      e.preventDefault();
+      goToSlide(idx + 1);
+    } else if (e.key === 'ArrowLeft' || e.key === 'PageUp') {
+      e.preventDefault();
+      goToSlide(idx - 1);
+    } else if (e.key === 'n' || e.key === 'N') {
+      toggleNotes();
+    } else if (e.key === 'f' || e.key === 'F') {
+      toggleFullscreen();
+    } else if (e.key === 'i' || e.key === 'I') {
+      batchFileInput.click();
+    }
+  });
+
+  // Hỗ trợ vuốt trên điện thoại
+  let startX = 0;
+  window.addEventListener('touchstart', (e) => { startX = e.changedTouches[0].screenX; }, { passive: true });
+  window.addEventListener('touchend', (e) => {
+    const diff = startX - e.changedTouches[0].screenX;
+    if (Math.abs(diff) > 50) {
+      if (diff > 0) goToSlide(idx + 1);
+      else goToSlide(idx - 1);
+    }
+  }, { passive: true });
+
+  // Khởi chạy
+  initPhotos();
+  renderGeometricWeave();
+  goToSlide(0);
+</script>
 </body>
 </html>
