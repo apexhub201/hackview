@@ -1,1665 +1,690 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>Sắc Màu Thổ Cẩm Làng Teng — Di Sản Văn Hóa Người H’rê</title>
-  <!-- Google Fonts: Be Vietnam Pro -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400&display=swap" rel="stylesheet">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Đấu Trường Toán Học 10 - Hệ Thức Lượng</title>
+  
+  <!-- Cấu hình MathJax an toàn, không chặn hiển thị trang -->
+  <script>
+    window.MathJax = {
+      tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] },
+      startup: { typeset: false }
+    };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 
   <style>
     :root {
-      --bg-dark: #171717;
-      --ivory: #F4F0E8;
-      --red-earth: #A63D32;
-      --gray-muted: #8C8983;
-      --line-light: rgba(244, 240, 232, 0.14);
-      --line-strong: rgba(244, 240, 232, 0.28);
-      --card-surface: rgba(244, 240, 232, 0.03);
-      --font-main: 'Be Vietnam Pro', -apple-system, BlinkMacSystemFont, sans-serif;
-    }
-
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-
-    html, body {
-      width: 100vw;
-      height: 100vh;
-      overflow: hidden;
-      background-color: #0d0d0d;
-      color: var(--ivory);
-      font-family: var(--font-main);
-      -webkit-font-smoothing: antialiased;
-      -moz-osx-font-smoothing: grayscale;
-      user-select: none;
-    }
-
-    /* 16:9 Cinema Stage Wrapper */
-    .stage-wrapper {
-      width: 100vw;
-      height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      position: relative;
-      background: radial-gradient(circle at center, #1d1b1a 0%, #0b0b0b 100%);
-    }
-
-    .deck {
-      width: 100%;
-      height: 100%;
-      max-width: 177.78vh;
-      max-height: 56.25vw;
-      background-color: var(--bg-dark);
-      position: relative;
-      overflow: hidden;
-      box-shadow: 0 30px 100px rgba(0, 0, 0, 0.85);
-      border: 1px solid var(--line-light);
-    }
-
-    /* Subtle Woven Fabric Grain Overlay across the entire deck */
-    .deck::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background-image:
-        repeating-linear-gradient(0deg, rgba(244, 240, 232, 0.012) 0px, rgba(244, 240, 232, 0.012) 1px, transparent 1px, transparent 4px),
-        repeating-linear-gradient(90deg, rgba(244, 240, 232, 0.01) 0px, rgba(244, 240, 232, 0.01) 1px, transparent 1px, transparent 4px);
-      pointer-events: none;
-      z-index: 10;
-    }
-
-    /* Decorative Top Brocade Thread Line */
-    .deck::after {
-      content: "";
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      height: 4px;
-      background: linear-gradient(90deg,
-        var(--red-earth) 0%, var(--red-earth) 35%,
-        var(--ivory) 35%, var(--ivory) 37%,
-        var(--bg-dark) 37%, var(--bg-dark) 63%,
-        var(--ivory) 63%, var(--ivory) 65%,
-        var(--red-earth) 65%, var(--red-earth) 100%
-      );
-      z-index: 25;
-    }
-
-    @media (max-width: 1024px) {
-      .deck {
-        max-width: 100vw;
-        max-height: 100vh;
-        border: none;
-      }
-    }
-
-    /* Slide Base */
-    .slide {
-      position: absolute;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-      opacity: 0;
-      visibility: hidden;
-      transition: opacity 0.6s cubic-bezier(0.22, 1, 0.36, 1), visibility 0.6s;
-      padding: 4.8% 6% 6.2% 6%;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      z-index: 1;
-    }
-
-    .slide.active {
-      opacity: 1;
-      visibility: visible;
-      z-index: 2;
-    }
-
-    /* Smooth Staggered Content Reveal */
-    .slide .anim {
-      opacity: 0;
-      transform: translateY(16px);
-      transition: opacity 0.55s ease-out, transform 0.55s cubic-bezier(0.22, 1, 0.36, 1);
-    }
-
-    .slide.active .anim {
-      opacity: 1;
-      transform: translateY(0);
-    }
-
-    .slide.active .anim:nth-child(1) { transition-delay: 0.06s; }
-    .slide.active .anim:nth-child(2) { transition-delay: 0.14s; }
-    .slide.active .anim:nth-child(3) { transition-delay: 0.22s; }
-    .slide.active .anim:nth-child(4) { transition-delay: 0.30s; }
-
-    /* Top Editorial Header Bar */
-    .slide-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding-bottom: 1.6vh;
-      border-bottom: 1px solid var(--line-light);
-      font-size: clamp(0.68rem, 0.95vw, 0.88rem);
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-      color: var(--gray-muted);
-      font-weight: 500;
-      flex-shrink: 0;
-    }
-
-    .header-brand {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .diamond-mark {
-      width: 8px;
-      height: 8px;
-      background-color: var(--red-earth);
-      transform: rotate(45deg);
-      display: inline-block;
-    }
-
-    /* Typography */
-    .kicker {
-      font-size: clamp(0.72rem, 1.05vw, 0.95rem);
-      text-transform: uppercase;
-      letter-spacing: 0.22em;
-      color: var(--red-earth);
-      font-weight: 700;
-      margin-bottom: 1vh;
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .kicker::before {
-      content: "";
-      width: 24px;
-      height: 2px;
-      background-color: var(--red-earth);
-      display: inline-block;
-    }
-
-    h1.hero-title {
-      font-size: clamp(2.3rem, 5.1vw, 4.9rem);
-      font-weight: 800;
-      line-height: 1.05;
-      letter-spacing: -0.025em;
-      color: var(--ivory);
-      text-transform: uppercase;
-    }
-
-    h2.slide-title {
-      font-size: clamp(1.7rem, 3.2vw, 3.05rem);
-      font-weight: 800;
-      line-height: 1.1;
-      letter-spacing: -0.02em;
-      color: var(--ivory);
-      text-transform: uppercase;
-      margin-bottom: 2vh;
-    }
-
-    .subtitle {
-      font-size: clamp(1.05rem, 1.85vw, 1.7rem);
-      font-weight: 400;
-      color: var(--ivory);
-      line-height: 1.45;
-    }
-
-    /* Editorial Numbered List */
-    .editorial-list {
-      list-style: none;
-      display: flex;
-      flex-direction: column;
-      gap: 2.2vh;
-    }
-
-    .editorial-item {
-      display: flex;
-      align-items: baseline;
-      gap: 1.4vw;
-      font-size: clamp(1.05rem, 1.7vw, 1.58rem);
-      line-height: 1.45;
-      color: var(--ivory);
-      font-weight: 300;
-      padding-bottom: 2vh;
-      border-bottom: 1px solid var(--line-light);
-    }
-
-    .editorial-item:last-child {
-      border-bottom: none;
-      padding-bottom: 0;
-    }
-
-    .item-index {
-      font-size: clamp(0.82rem, 1.15vw, 1.05rem);
-      font-weight: 800;
-      color: var(--red-earth);
-      letter-spacing: 0.08em;
-      min-width: 2.2em;
-    }
-
-    .item-text strong {
-      font-weight: 700;
-      color: var(--ivory);
-      background: linear-gradient(180deg, transparent 65%, rgba(166, 61, 50, 0.5) 65%);
-      padding: 0 3px;
-    }
-
-    /* Museum-Style Image Frame */
-    .photo-frame {
-      position: relative;
-      width: 100%;
-      height: 100%;
-      overflow: hidden;
-      background-color: #1e1c1b;
-      border: 1px solid var(--line-strong);
-      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.55);
-      cursor: pointer;
-    }
-
-    /* Corner Editorial Accent Marks */
-    .photo-frame::after {
-      content: "";
-      position: absolute;
-      inset: 8px;
-      border: 1px solid rgba(244, 240, 232, 0.16);
-      pointer-events: none;
-      z-index: 3;
-    }
-
-    .photo-frame img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      display: block;
-      filter: contrast(1.04) saturate(1.04);
-      transition: transform 0.8s cubic-bezier(0.22, 1, 0.36, 1);
-    }
-
-    .photo-frame:hover img {
-      transform: scale(1.03);
-    }
-
-    /* Smart crop to hide bottom-right watermark on image_2.png */
-    .photo-frame img.crop-watermark {
-      object-position: center 35%;
-      transform: scale(1.09);
-    }
-    .photo-frame:hover img.crop-watermark {
-      transform: scale(1.12);
-    }
-
-    .photo-caption {
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      padding: 22px 18px 12px 18px;
-      background: linear-gradient(to top, rgba(23, 23, 23, 0.96) 15%, rgba(23, 23, 23, 0.55) 65%, transparent 100%);
-      color: var(--ivory);
-      font-size: clamp(0.68rem, 0.88vw, 0.82rem);
-      letter-spacing: 0.04em;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      z-index: 4;
-    }
-
-    .photo-caption span.tag {
-      color: var(--ivory);
-      background: var(--red-earth);
-      padding: 2px 8px;
-      font-size: 0.65rem;
-      font-weight: 700;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-    }
-
-    .change-photo-hint {
-      position: absolute;
-      top: 14px;
-      right: 14px;
-      background: rgba(23, 23, 23, 0.88);
-      color: var(--ivory);
-      border: 1px solid var(--line-strong);
-      padding: 5px 10px;
-      font-size: 0.68rem;
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
-      z-index: 5;
-      opacity: 0;
-      transition: opacity 0.2s;
-    }
-
-    .photo-frame:hover .change-photo-hint {
-      opacity: 1;
-    }
-
-    /* ==========================================
-       SLIDE LAYOUTS (9 DISTINCT COMPOSITIONS)
-       ========================================== */
-
-    /* SLIDE 1: HERO COVER */
-    .s1-grid {
-      display: grid;
-      grid-template-columns: 1.12fr 0.88fr;
-      gap: 4vw;
-      height: 82%;
-      align-items: center;
-    }
-
-    .s1-hero-showcase {
-      position: relative;
-      width: 100%;
-      height: 100%;
-      display: grid;
-      grid-template-rows: 1fr 0.52fr;
-      gap: 1.6vh;
-    }
-
-    .s1-bottom-duo {
-      display: grid;
-      grid-template-columns: 1.15fr 0.85fr;
-      gap: 1.2vw;
-      height: 100%;
-    }
-
-    .red-rule {
-      width: 80px;
-      height: 4px;
-      background-color: var(--red-earth);
-      margin: 2.6vh 0;
-    }
-
-    .cover-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 12px;
-      margin-top: 3vh;
-      padding: 1.2vh 1.4vw;
-      border: 1px solid var(--line-light);
-      background: var(--card-surface);
-      font-size: clamp(0.75rem, 1vw, 0.92rem);
-      color: var(--gray-muted);
-      letter-spacing: 0.08em;
-    }
-
-    .cover-badge strong {
-      color: var(--ivory);
-    }
-
-    /* SLIDE 2: HERITAGE & DATE */
-    .s2-grid {
-      display: grid;
-      grid-template-columns: 1.05fr 0.95fr;
-      gap: 4.5vw;
-      height: 81%;
-      align-items: stretch;
-    }
-
-    .monument-date-card {
-      background: linear-gradient(90deg, rgba(166, 61, 50, 0.16) 0%, rgba(244, 240, 232, 0.02) 100%);
-      border-left: 5px solid var(--red-earth);
-      border-top: 1px solid var(--line-light);
-      border-right: 1px solid var(--line-light);
-      border-bottom: 1px solid var(--line-light);
-      padding: 2.2vh 2vw;
-      margin-bottom: 2.8vh;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .monument-label {
-      font-size: clamp(0.7rem, 0.95vw, 0.88rem);
-      text-transform: uppercase;
-      letter-spacing: 0.16em;
-      color: var(--gray-muted);
-      margin-bottom: 0.4vh;
-    }
-
-    .monument-number {
-      font-size: clamp(2rem, 3.9vw, 3.7rem);
-      font-weight: 800;
-      color: var(--ivory);
-      letter-spacing: -0.02em;
-      line-height: 1.05;
-    }
-
-    .monument-number span {
-      color: var(--red-earth);
-    }
-
-    /* SLIDE 3: GENERATIONS */
-    .s3-grid {
-      display: grid;
-      grid-template-columns: 1.18fr 0.82fr;
-      gap: 4.2vw;
-      height: 81%;
-      align-items: center;
-    }
-
-    /* SLIDE 4: CRAFT & LOOM */
-    .s4-grid {
-      display: grid;
-      grid-template-columns: 0.92fr 1.08fr;
-      gap: 4vw;
-      height: 81%;
-      align-items: stretch;
-    }
-
-    .process-stack {
-      display: grid;
-      grid-template-rows: repeat(3, 1fr);
-      gap: 1.6vh;
-      margin-top: 1vh;
-      flex: 1;
-    }
-
-    .process-step {
-      background: var(--card-surface);
-      border: 1px solid var(--line-light);
-      padding: 1.8vh 1.8vw;
-      display: flex;
-      align-items: center;
-      gap: 1.5vw;
-      position: relative;
-    }
-
-    .process-step::before {
-      content: "";
-      position: absolute;
-      left: 0;
-      top: 0;
-      bottom: 0;
-      width: 4px;
-      background: var(--red-earth);
-    }
-
-    .step-num {
-      font-size: clamp(1.3rem, 2.1vw, 1.9rem);
-      font-weight: 800;
-      color: var(--red-earth);
-      min-width: 2ch;
-    }
-
-    .step-desc {
-      font-size: clamp(1rem, 1.55vw, 1.42rem);
-      font-weight: 300;
-      color: var(--ivory);
-      line-height: 1.35;
-    }
-
-    .step-desc strong {
-      font-weight: 700;
-    }
-
-    /* SLIDE 5: THREE SIGNATURE COLORS */
-    .s5-layout {
-      display: grid;
-      grid-template-rows: auto 1fr;
-      gap: 2.2vh;
-      height: 81%;
-    }
-
-    .color-triptych {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      height: 100%;
-      border: 1px solid var(--line-strong);
-      overflow: hidden;
-    }
-
-    .color-column {
-      position: relative;
-      padding: 3.5vh 2.5vw;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-    }
-
-    .color-column::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background-image:
-        repeating-linear-gradient(0deg, rgba(128,128,128,0.07) 0px, rgba(128,128,128,0.07) 2px, transparent 2px, transparent 6px),
-        repeating-linear-gradient(90deg, rgba(128,128,128,0.05) 0px, rgba(128,128,128,0.05) 2px, transparent 2px, transparent 6px);
-      pointer-events: none;
-    }
-
-    .col-black {
-      background-color: #171717;
-      color: var(--ivory);
-      border-right: 1px solid var(--line-light);
-    }
-
-    .col-red {
-      background-color: #A63D32;
-      color: var(--ivory);
-    }
-
-    .col-white {
-      background-color: #F4F0E8;
-      color: #171717;
-    }
-
-    .col-meta {
-      position: relative;
-      z-index: 1;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      font-size: clamp(0.72rem, 0.95vw, 0.88rem);
-      letter-spacing: 0.16em;
-      font-weight: 700;
-      opacity: 0.8;
-    }
-
-    .col-title {
-      position: relative;
-      z-index: 1;
-      font-size: clamp(2.4rem, 4.4vw, 4.1rem);
-      font-weight: 800;
-      letter-spacing: -0.02em;
-      line-height: 1;
-      margin-bottom: 1.2vh;
-    }
-
-    .col-text {
-      position: relative;
-      z-index: 1;
-      font-size: clamp(1.05rem, 1.6vw, 1.5rem);
-      line-height: 1.4;
-      font-weight: 400;
-    }
-
-    .col-text strong {
-      font-weight: 800;
-      text-decoration: underline;
-      text-underline-offset: 5px;
-    }
-
-    /* SLIDE 6: PATTERNS */
-    .s6-grid {
-      display: grid;
-      grid-template-columns: 1.05fr 0.95fr;
-      gap: 4.2vw;
-      height: 81%;
-      align-items: stretch;
-    }
-
-    .s6-visual-split {
-      display: grid;
-      grid-template-rows: 1.15fr 0.85fr;
-      gap: 1.6vh;
-      height: 100%;
-    }
-
-    /* SLIDE 7: CHALLENGES VS OPPORTUNITIES */
-    .s7-layout {
-      display: grid;
-      grid-template-rows: auto 1fr;
-      gap: 2.2vh;
-      height: 81%;
-    }
-
-    .s7-columns {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 2.8vw;
-      height: 100%;
-    }
-
-    .contrast-card {
-      border: 1px solid var(--line-light);
-      display: grid;
-      grid-template-rows: 0.46fr 0.54fr;
-      overflow: hidden;
-      background: var(--card-surface);
-    }
-
-    .contrast-card.opportunity {
-      border-color: rgba(166, 61, 50, 0.65);
-      background: rgba(166, 61, 50, 0.08);
-    }
-
-    .contrast-body {
-      padding: 2.4vh 2.2vw;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-    }
-
-    .badge-pill {
-      display: inline-block;
-      font-size: clamp(0.7rem, 0.95vw, 0.85rem);
-      font-weight: 800;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-      padding: 5px 12px;
-      margin-bottom: 1.4vh;
-      width: fit-content;
-    }
-
-    .challenge .badge-pill {
-      background: rgba(140, 137, 131, 0.25);
-      color: var(--ivory);
-    }
-
-    .opportunity .badge-pill {
-      background: var(--red-earth);
-      color: var(--ivory);
-    }
-
-    .contrast-points {
-      list-style: none;
-      display: flex;
-      flex-direction: column;
-      gap: 1.2vh;
-      font-size: clamp(1rem, 1.55vw, 1.42rem);
-      line-height: 1.4;
-      font-weight: 300;
-    }
-
-    .contrast-points li {
-      padding-left: 1.1em;
-      position: relative;
-    }
-
-    .contrast-points li::before {
-      content: "•";
-      position: absolute;
-      left: 0;
-      color: var(--red-earth);
-      font-weight: 800;
-    }
-
-    /* SLIDE 8: FUTURE & TOURISM */
-    .s8-grid {
-      display: grid;
-      grid-template-columns: 0.92fr 1.08fr;
-      gap: 4.2vw;
-      height: 81%;
-      align-items: center;
-    }
-
-    /* SLIDE 9: CONCLUSION */
-    .s9-grid {
-      display: grid;
-      grid-template-columns: 1.05fr 0.95fr;
-      gap: 4vw;
-      height: 81%;
-      align-items: center;
-    }
-
-    .s9-mosaic {
-      display: grid;
-      grid-template-columns: 1.1fr 0.9fr;
-      grid-template-rows: 1fr 1fr;
-      gap: 1.4vh;
-      height: 100%;
-    }
-
-    .s9-mosaic .mosaic-tall {
-      grid-row: 1 / span 2;
-    }
-
-    .quote-banner {
-      margin: 2.6vh 0;
-      padding: 2.2vh 1.8vw;
-      border-left: 4px solid var(--red-earth);
-      background: linear-gradient(90deg, rgba(166, 61, 50, 0.16), rgba(244, 240, 232, 0.02));
-      font-size: clamp(1.1rem, 1.8vw, 1.68rem);
-      font-weight: 700;
-      color: var(--ivory);
-      line-height: 1.38;
-    }
-
-    .thanks-footer {
-      font-size: clamp(0.9rem, 1.25vw, 1.15rem);
-      color: var(--gray-muted);
-      letter-spacing: 0.05em;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    /* ==========================================
-       HUD NAVIGATION BAR & SPEAKER NOTES
-       ========================================== */
-    .hud-bar {
-      position: absolute;
-      bottom: 1.8%;
-      left: 6%;
-      right: 6%;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      z-index: 30;
-      pointer-events: none;
-    }
-
-    .hud-group {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      pointer-events: auto;
-    }
-
-    .slide-counter {
-      font-size: clamp(0.75rem, 1vw, 0.92rem);
-      font-weight: 700;
-      letter-spacing: 0.18em;
-      color: var(--gray-muted);
-      margin-right: 10px;
-      font-variant-numeric: tabular-nums;
-    }
-
-    .slide-counter strong {
-      color: var(--ivory);
-    }
-
-    .hud-btn {
-      background: rgba(23, 23, 23, 0.88);
-      color: var(--ivory);
-      border: 1px solid var(--line-light);
-      height: 34px;
-      padding: 0 12px;
-      font-family: var(--font-main);
-      font-size: 0.75rem;
-      font-weight: 500;
-      letter-spacing: 0.05em;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      transition: all 0.2s ease;
-    }
-
-    .hud-btn:hover {
-      background: var(--red-earth);
-      border-color: var(--red-earth);
-      color: var(--ivory);
-    }
-
-    .hud-btn.highlight {
-      border-color: rgba(166, 61, 50, 0.8);
-      background: rgba(166, 61, 50, 0.22);
-    }
-
-    .hud-btn.active {
-      background: var(--ivory);
-      color: var(--bg-dark);
-      border-color: var(--ivory);
-    }
-
-    /* Bottom Progress Line */
-    .progress-bar {
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      height: 3px;
-      background: rgba(244, 240, 232, 0.08);
-      z-index: 35;
-    }
-
-    .progress-fill {
-      height: 100%;
-      background: var(--red-earth);
-      width: 11.11%;
-      transition: width 0.4s cubic-bezier(0.22, 1, 0.36, 1);
-    }
-
-    /* Speaker Notes Drawer */
-    .notes-panel {
-      position: absolute;
-      bottom: 56px;
-      left: 6%;
-      right: 6%;
-      background: rgba(23, 23, 23, 0.96);
-      border: 1px solid var(--red-earth);
-      padding: 18px 22px;
-      z-index: 40;
-      transform: translateY(16px);
-      opacity: 0;
-      visibility: hidden;
-      transition: all 0.25s ease;
-      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.85);
-    }
-
-    .notes-panel.open {
-      transform: translateY(0);
-      opacity: 1;
-      visibility: visible;
-    }
-
-    .notes-meta {
-      display: flex;
-      justify-content: space-between;
-      font-size: 0.72rem;
-      letter-spacing: 0.16em;
-      text-transform: uppercase;
-      color: var(--red-earth);
-      font-weight: 700;
-      margin-bottom: 6px;
-    }
-
-    .notes-text {
-      font-size: clamp(0.85rem, 1.1vw, 1.02rem);
-      line-height: 1.55;
-      color: var(--ivory);
-      font-weight: 300;
-    }
-
-    @media (max-width: 768px) {
-      .s1-grid, .s2-grid, .s3-grid, .s4-grid, .s6-grid, .s7-columns, .s8-grid, .s9-grid {
-        grid-template-columns: 1fr;
-      }
-      .color-triptych {
-        grid-template-columns: 1fr;
-      }
-      .hide-sm {
-        display: none;
-      }
-    }
+      --primary: #1e3a8a;
+      --secondary: #0284c7;
+      --success: #16a34a;
+      --danger: #dc2626;
+      --bg: #f1f5f9;
+      --card-bg: #ffffff;
+      --text: #0f172a;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+    body { background-color: var(--bg); color: var(--text); display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 16px; }
+    .game-card { background: var(--card-bg); width: 100%; max-width: 820px; border-radius: 20px; box-shadow: 0 10px 25px -5px rgba(0,0,0,0.1); padding: 26px; border: 1px solid #e2e8f0; position: relative; }
+    .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px; padding-bottom: 14px; border-bottom: 2px solid #f1f5f9; flex-wrap: wrap; gap: 8px; }
+    .badge { background: #e0f2fe; color: var(--secondary); padding: 6px 14px; border-radius: 9999px; font-weight: 700; font-size: 0.9rem; }
+    .student-badge { background: #ede9fe; color: #6d28d9; padding: 6px 14px; border-radius: 9999px; font-weight: 700; font-size: 0.9rem; }
+    .score-badge { background: #fef08a; color: #854d0e; padding: 6px 14px; border-radius: 9999px; font-weight: 700; font-size: 0.9rem; }
+    .progress-bar-container { width: 100%; background: #e2e8f0; height: 8px; border-radius: 9999px; margin-bottom: 22px; overflow: hidden; }
+    .progress-bar { height: 100%; background: linear-gradient(90deg, var(--secondary), var(--primary)); width: 0%; transition: width 0.3s ease; }
+    .question-title { font-size: 1.15rem; font-weight: 600; line-height: 1.6; margin-bottom: 20px; color: #1e293b; }
+    .options-grid { display: grid; grid-template-columns: 1fr; gap: 12px; }
+    .option-btn { background: #f8fafc; border: 2px solid #cbd5e1; border-radius: 14px; padding: 14px 18px; font-size: 1.05rem; text-align: left; cursor: pointer; transition: all 0.2s ease; display: flex; align-items: center; width: 100%; user-select: none; }
+    .option-btn:hover:not(:disabled) { border-color: var(--secondary); background: #f0f9ff; transform: translateY(-2px); }
+    .option-btn.correct { background: #dcfce7 !important; border-color: var(--success) !important; color: #14532d !important; font-weight: bold; }
+    .option-btn.wrong { background: #fee2e2 !important; border-color: var(--danger) !important; color: #7f1d1d !important; }
+    .footer { margin-top: 24px; display: flex; justify-content: flex-end; }
+    .btn-main { background: var(--primary); color: white; border: none; border-radius: 12px; padding: 12px 28px; font-weight: 600; font-size: 1rem; cursor: pointer; transition: background 0.2s; }
+    .btn-main:hover { background: #1e40af; }
+    .btn-secondary { background: #e2e8f0; color: #334155; border: none; border-radius: 12px; padding: 10px 18px; font-weight: 600; font-size: 0.92rem; cursor: pointer; transition: all 0.2s; }
+    .btn-secondary:hover { background: #cbd5e1; }
+    .btn-success { background: #16a34a; color: white; border: none; border-radius: 12px; padding: 10px 18px; font-weight: 600; font-size: 0.92rem; cursor: pointer; }
+    .btn-success:hover { background: #15803d; }
+    .stage-modal, .result-modal, .login-modal { text-align: center; padding: 10px 0; }
+    .icon-large { font-size: 3.5rem; margin-bottom: 12px; }
+    .modal-title { font-size: 1.45rem; font-weight: 800; color: var(--primary); margin-bottom: 12px; }
+    .modal-msg { font-size: 1.05rem; color: #475569; line-height: 1.6; margin-bottom: 24px; padding: 0 10px; }
+    .input-group { margin: 20px 0; display: flex; flex-direction: column; gap: 12px; text-align: left; }
+    .input-field { width: 100%; padding: 14px 16px; border-radius: 12px; border: 2px solid #cbd5e1; font-size: 1.05rem; outline: none; }
+    .input-field:focus { border-color: var(--secondary); }
+    .leaderboard-table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 0.92rem; text-align: left; }
+    .leaderboard-table th { background: #f1f5f9; padding: 10px 12px; color: #475569; font-weight: 700; border-bottom: 2px solid #cbd5e1; position: sticky; top: 0; }
+    .leaderboard-table td { padding: 10px 12px; border-bottom: 1px solid #e2e8f0; }
+    .leaderboard-table tr:hover { background: #f8fafc; }
+    .sync-status { padding: 10px 14px; border-radius: 10px; font-size: 0.95rem; font-weight: 600; margin-top: 14px; display: inline-block; }
+    .modal-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(15, 23, 42, 0.6); display: flex; justify-content: center; align-items: center; z-index: 9999; padding: 16px; }
+    .pin-box { background: white; width: 100%; max-width: 400px; padding: 26px; border-radius: 18px; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.2); text-align: center; }
+    .top-nav { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; padding-bottom: 10px; border-bottom: 1px solid #e2e8f0; }
   </style>
 </head>
 <body>
 
-<div class="stage-wrapper">
-  <main class="deck" id="deck">
-
-    <!-- ==========================================
-         SLIDE 1 — BÌA
-         ========================================== -->
-    <section class="slide active">
-      <header class="slide-header anim">
-        <div class="header-brand"><span class="diamond-mark"></span>THUYẾT TRÌNH VĂN HÓA TRUYỀN THỐNG</div>
-        <div>01 / 09 — MỞ ĐẦU</div>
-      </header>
-
-      <div class="s1-grid">
-        <div>
-          <span class="kicker anim">Ba Tơ, Quảng Ngãi</span>
-          <h1 class="hero-title anim">
-            SẮC MÀU<br>
-            THỔ CẨM LÀNG TENG
-          </h1>
-          <div class="red-rule anim"></div>
-          <p class="subtitle anim">Di sản văn hóa của người H’rê</p>
-
-          <div class="cover-badge anim">
-            <span class="diamond-mark"></span>
-            <span>Làng nghề truyền thống bên dòng sông Liêng — <strong>Xã Ba Thành, Ba Tơ</strong></span>
-          </div>
-        </div>
-
-        <div class="s1-hero-showcase anim">
-          <!-- Main procedural brocade weave macro -->
-          <div class="photo-frame" data-photo-slot="4" title="Nhấn để đổi ảnh">
-            <img class="slot-img-4 crop-watermark" alt="Cận cảnh tấm thổ cẩm làng Teng trên khung cửi" />
-            <div class="change-photo-hint">Đổi ảnh</div>
-            <div class="photo-caption">
-              <span>Cận cảnh mặt vải thổ cẩm làng Teng với 3 sắc Đen – Đỏ – Trắng</span>
-              <span class="tag">Làng Teng</span>
-            </div>
-          </div>
-
-          <!-- Bottom Duo Preview of Photo 1 & Photo 3 -->
-          <div class="s1-bottom-duo">
-            <div class="photo-frame" data-photo-slot="1" title="Nhấn để đổi ảnh">
-              <img class="slot-img-1" alt="Thiếu nữ H'rê bên khung dệt" />
-              <div class="photo-caption">
-                <span>Người giữ nhịp khung cửi</span>
-              </div>
-            </div>
-            <div class="photo-frame" data-photo-slot="3" title="Nhấn để đổi ảnh">
-              <img class="slot-img-3" alt="Truyền nghề qua các thế hệ" />
-              <div class="photo-caption">
-                <span>Di sản tiếp nối</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div></div>
-    </section>
-
-    <!-- ==========================================
-         SLIDE 2 — MỘT NGHỀ DỆT, MỘT DI SẢN
-         ========================================== -->
-    <section class="slide">
-      <header class="slide-header anim">
-        <div class="header-brand"><span class="diamond-mark"></span>SẮC MÀU THỔ CẨM LÀNG TENG</div>
-        <div>02 / 09 — VỊ THẾ DI SẢN</div>
-      </header>
-
-      <div class="s2-grid">
-        <div style="display:flex;flex-direction:column;justify-content:center;">
-          <span class="kicker anim">Niềm tự hào của người H’rê ở Quảng Ngãi</span>
-          <h2 class="slide-title anim">MỘT NGHỀ DỆT, MỘT DI SẢN</h2>
-
-          <div class="monument-date-card anim">
-            <div>
-              <div class="monument-label">Ngày công nhận Di sản Quốc gia</div>
-              <div class="monument-number">29<span>.</span>01<span>.</span>2019</div>
-            </div>
-            <div style="text-align:right;font-size:0.78rem;color:var(--gray-muted);letter-spacing:0.1em;text-transform:uppercase;">
-              Bộ Văn hóa,<br>Thể thao & Du lịch
-            </div>
-          </div>
-
-          <ul class="editorial-list anim">
-            <li class="editorial-item">
-              <span class="item-index">01</span>
-              <span class="item-text">Lưu giữ nguyên vẹn tại <strong>làng Teng, xã Ba Thành, Ba Tơ</strong>.</span>
-            </li>
-            <li class="editorial-item">
-              <span class="item-index">02</span>
-              <span class="item-text">Được vinh danh <strong>Di sản văn hóa phi vật thể quốc gia</strong>.</span>
-            </li>
-            <li class="editorial-item">
-              <span class="item-index">03</span>
-              <span class="item-text">Cột mốc lịch sử: <strong>Ngày công nhận 29/01/2019</strong>.</span>
-            </li>
-          </ul>
-        </div>
-
-        <div class="photo-frame anim" data-photo-slot="1" title="Nhấn để đổi ảnh">
-          <img class="slot-img-1" alt="Thiếu nữ H'rê dệt thổ cẩm tại làng Teng" />
-          <div class="change-photo-hint">Đổi ảnh</div>
-          <div class="photo-caption">
-            <span>Phụ nữ H’rê trong trang phục truyền thống bên khung dệt</span>
-            <span class="tag">Ba Tơ, Quảng Ngãi</span>
-          </div>
-        </div>
-      </div>
-      <div></div>
-    </section>
-
-    <!-- ==========================================
-         SLIDE 3 — DI SẢN TRUYỀN QUA CÁC THẾ HỆ
-         ========================================== -->
-    <section class="slide">
-      <header class="slide-header anim">
-        <div class="header-brand"><span class="diamond-mark"></span>SẮC MÀU THỔ CẨM LÀNG TENG</div>
-        <div>03 / 09 — SỰ TIẾP NỐI</div>
-      </header>
-
-      <div class="s3-grid">
-        <div class="photo-frame anim" data-photo-slot="3" title="Nhấn để đổi ảnh">
-          <img class="slot-img-3" alt="Hai thế hệ phụ nữ H'rê bên khung dệt thổ cẩm" />
-          <div class="change-photo-hint">Đổi ảnh</div>
-          <div class="photo-caption">
-            <span>Sợi dây gắn kết giữa thế hệ đi trước và thế hệ trẻ trong nếp nhà sàn</span>
-            <span class="tag">Truyền nghề</span>
-          </div>
-        </div>
-
-        <div style="display:flex;flex-direction:column;justify-content:center;">
-          <span class="kicker anim">Gìn giữ trong gia đình & cộng đồng</span>
-          <h2 class="slide-title anim">DI SẢN TRUYỀN QUA CÁC THẾ HỆ</h2>
-
-          <ul class="editorial-list anim" style="margin-top:1.5vh;">
-            <li class="editorial-item">
-              <span class="item-index">01</span>
-              <span class="item-text"><strong>Mẹ truyền nghề</strong> cho con gái.</span>
-            </li>
-            <li class="editorial-item">
-              <span class="item-index">02</span>
-              <span class="item-text">Học từ <strong>se sợi đến dệt vải</strong>.</span>
-            </li>
-            <li class="editorial-item">
-              <span class="item-index">03</span>
-              <span class="item-text">Gìn giữ <strong>sự khéo léo</strong> và <strong>bản sắc H’rê</strong>.</span>
-            </li>
-          </ul>
-        </div>
-      </div>
-      <div></div>
-    </section>
-
-    <!-- ==========================================
-         SLIDE 4 — TỪ SỢI VẢI ĐẾN TẤM THỔ CẨM
-         ========================================== -->
-    <section class="slide">
-      <header class="slide-header anim">
-        <div class="header-brand"><span class="diamond-mark"></span>SẮC MÀU THỔ CẨM LÀNG TENG</div>
-        <div>04 / 09 — KỸ THUẬT THỦ CÔNG</div>
-      </header>
-
-      <div class="s4-grid">
-        <div style="display:flex;flex-direction:column;justify-content:space-between;">
-          <div class="anim">
-            <span class="kicker">Tinh hoa từ đôi bàn tay</span>
-            <h2 class="slide-title" style="margin-bottom:1vh;">TỪ SỢI VẢI ĐẾN TẤM THỔ CẨM</h2>
-          </div>
-
-          <div class="process-stack anim">
-            <div class="process-step">
-              <div class="step-num">01</div>
-              <div class="step-desc"><strong>Nguyên liệu bông</strong> và sợi dệt truyền thống.</div>
-            </div>
-            <div class="process-step">
-              <div class="step-num">02</div>
-              <div class="step-desc"><strong>Khung dệt thủ công</strong> bằng tre, gỗ.</div>
-            </div>
-            <div class="process-step">
-              <div class="step-num">03</div>
-              <div class="step-desc"><strong>Sự tỉ mỉ</strong> trong từng sợi chỉ.</div>
-            </div>
-          </div>
-        </div>
-
-        <div class="photo-frame anim" data-photo-slot="4" title="Nhấn để đổi ảnh">
-          <img class="slot-img-4 crop-watermark" alt="Cận cảnh bàn tay và khung dệt bằng tre gỗ" />
-          <div class="change-photo-hint">Đổi ảnh</div>
-          <div class="photo-caption">
-            <span>Cận cảnh kỹ thuật dệt cài hoa văn trên khung dệt tre gỗ mộc mạc</span>
-            <span class="tag">Thủ công</span>
-          </div>
-        </div>
-      </div>
-      <div></div>
-    </section>
-
-    <!-- ==========================================
-         SLIDE 5 — BA SẮC MÀU ĐẶC TRƯNG
-         ========================================== -->
-    <section class="slide">
-      <header class="slide-header anim">
-        <div class="header-brand"><span class="diamond-mark"></span>SẮC MÀU THỔ CẨM LÀNG TENG</div>
-        <div>05 / 09 — BẢNG MÀU BẢN ĐỊA</div>
-      </header>
-
-      <div class="s5-layout">
-        <div class="anim">
-          <span class="kicker">Triết lý vũ trụ và con người trên nền vải</span>
-          <h2 class="slide-title" style="margin-bottom:0;">BA SẮC MÀU ĐẶC TRƯNG</h2>
-        </div>
-
-        <div class="color-triptych anim">
-          <!-- BLACK -->
-          <div class="color-column col-black">
-            <div class="col-meta">
-              <span>01 / SẮC CHỦ ĐẠO</span>
-              <span>#171717</span>
-            </div>
-            <div>
-              <div class="col-title">ĐEN</div>
-              <p class="col-text">Tượng trưng cho <strong>đất đai, đại ngàn</strong>.</p>
-            </div>
-          </div>
-
-          <!-- RED -->
-          <div class="color-column col-red">
-            <div class="col-meta">
-              <span>02 / SẮC NHẤN</span>
-              <span>#A63D32</span>
-            </div>
-            <div>
-              <div class="col-title">ĐỎ</div>
-              <p class="col-text">Biểu thị <strong>khát vọng, tình yêu, sức sống</strong>.</p>
-            </div>
-          </div>
-
-          <!-- WHITE -->
-          <div class="color-column col-white">
-            <div class="col-meta">
-              <span>03 / SẮC CÂN BẰNG</span>
-              <span>#F4F0E8</span>
-            </div>
-            <div>
-              <div class="col-title">TRẮNG</div>
-              <p class="col-text">Thể hiện <strong>sự thuần khiết, trong sáng</strong>.</p>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div></div>
-    </section>
-
-    <!-- ==========================================
-         SLIDE 6 — HOA VĂN KỂ CHUYỆN
-         ========================================== -->
-    <section class="slide">
-      <header class="slide-header anim">
-        <div class="header-brand"><span class="diamond-mark"></span>SẮC MÀU THỔ CẨM LÀNG TENG</div>
-        <div>06 / 09 — NGÔN NGỮ HỌA TIẾT</div>
-      </header>
-
-      <div class="s6-grid">
-        <div class="s6-visual-split anim">
-          <div class="photo-frame" data-photo-slot="5" title="Nhấn để đổi ảnh">
-            <img class="slot-img-5" style="object-position: left bottom; transform: scale(1.35);" alt="Chi tiết hoa văn trên mép tấm vải thổ cẩm" />
-            <div class="photo-caption">
-              <span>Họa tiết dệt cài trực tiếp trên mặt vải thổ cẩm người H’rê</span>
-              <span class="tag">Chi tiết thực tế</span>
-            </div>
-          </div>
-
-          <div class="photo-frame">
-            <canvas id="geometricWeaveCanvas" style="width:100%;height:100%;display:block;"></canvas>
-            <div class="photo-caption">
-              <span>Cấu trúc đường viền song song, hình thoi và hình tam giác cân</span>
-            </div>
-          </div>
-        </div>
-
-        <div style="display:flex;flex-direction:column;justify-content:center;">
-          <span class="kicker anim">Phản chiếu thiên nhiên và đời sống</span>
-          <h2 class="slide-title anim">HOA VĂN KỂ CHUYỆN</h2>
-
-          <ul class="editorial-list anim" style="margin-top:1.5vh;">
-            <li class="editorial-item">
-              <span class="item-index">01</span>
-              <span class="item-text">Mô típ <strong>hình học cách điệu</strong>.</span>
-            </li>
-            <li class="editorial-item">
-              <span class="item-index">02</span>
-              <span class="item-text">Tổ hợp <strong>đường viền và hình tam giác</strong>.</span>
-            </li>
-            <li class="editorial-item">
-              <span class="item-index">03</span>
-              <span class="item-text">Cảm hứng từ <strong>núi rừng, sông nước và muôn loài</strong>.</span>
-            </li>
-          </ul>
-        </div>
-      </div>
-      <div></div>
-    </section>
-
-    <!-- ==========================================
-         SLIDE 7 — THỬ THÁCH CỦA LÀNG NGHỀ
-         ========================================== -->
-    <section class="slide">
-      <header class="slide-header anim">
-        <div class="header-brand"><span class="diamond-mark"></span>SẮC MÀU THỔ CẨM LÀNG TENG</div>
-        <div>07 / 09 — BƯỚC CHUYỂN MÌNH</div>
-      </header>
-
-      <div class="s7-layout">
-        <div class="anim">
-          <span class="kicker">Thích nghi để tiếp tục tồn tại</span>
-          <h2 class="slide-title" style="margin-bottom:0;">THỬ THÁCH CỦA LÀNG NGHỀ</h2>
-        </div>
-
-        <div class="s7-columns anim">
-          <!-- CHALLENGE -->
-          <div class="contrast-card challenge">
-            <div class="photo-frame" data-photo-slot="6" style="border:none;">
-              <img class="slot-img-6" alt="Khung dệt truyền thống nhỏ lẻ" />
-            </div>
-            <div class="contrast-body">
-              <span class="badge-pill">THÁCH THỨC</span>
-              <ul class="contrast-points">
-                <li>Quy mô <strong>sản xuất nhỏ lẻ</strong>, tốn nhiều công sức.</li>
-                <li><strong>Cạnh tranh với vải công nghiệp</strong> giá rẻ.</li>
-              </ul>
-            </div>
-          </div>
-
-          <!-- OPPORTUNITY -->
-          <div class="contrast-card opportunity">
-            <div class="photo-frame" data-photo-slot="2" style="border:none;">
-              <img class="slot-img-2" alt="Đa dạng hóa sản phẩm thổ cẩm ra thị trường" />
-            </div>
-            <div class="contrast-body">
-              <span class="badge-pill">CƠ HỘI</span>
-              <ul class="contrast-points">
-                <li><strong>Đổi mới sản phẩm</strong> phù hợp đời sống hiện đại.</li>
-                <li>Chủ động <strong>phát triển thị trường</strong> tiêu thụ rộng mở.</li>
-              </ul>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div></div>
-    </section>
-
-    <!-- ==========================================
-         SLIDE 8 — GIỮ NGHỀ, MỞ LỐI TƯƠNG LAI
-         ========================================== -->
-    <section class="slide">
-      <header class="slide-header anim">
-        <div class="header-brand"><span class="diamond-mark"></span>SẮC MÀU THỔ CẨM LÀNG TENG</div>
-        <div>08 / 09 — HƯỚNG ĐI BỀN VỮNG</div>
-      </header>
-
-      <div class="s8-grid">
-        <div style="display:flex;flex-direction:column;justify-content:center;">
-          <span class="kicker anim">Bảo tồn song hành phát triển kinh tế</span>
-          <h2 class="slide-title anim">GIỮ NGHỀ, MỞ LỐI TƯƠNG LAI</h2>
-
-          <ul class="editorial-list anim" style="margin-top:1.5vh;">
-            <li class="editorial-item">
-              <span class="item-index">01</span>
-              <span class="item-text">Đưa thổ cẩm đến gần <strong>thị trường hiện đại</strong>.</span>
-            </li>
-            <li class="editorial-item">
-              <span class="item-index">02</span>
-              <span class="item-text"><strong>Tạo sinh kế</strong> cho người dân.</span>
-            </li>
-            <li class="editorial-item">
-              <span class="item-index">03</span>
-              <span class="item-text">Kết nối văn hóa với <strong>du lịch cộng đồng</strong>.</span>
-            </li>
-          </ul>
-        </div>
-
-        <div class="photo-frame anim" data-photo-slot="2" title="Nhấn để đổi ảnh">
-          <img class="slot-img-2" alt="Các sản phẩm thổ cẩm ứng dụng và quà lưu niệm du lịch" />
-          <div class="change-photo-hint">Đổi ảnh</div>
-          <div class="photo-caption">
-            <span>Đa dạng hóa sản phẩm: Trang phục, túi xách, khăn choàng, quà lưu niệm</span>
-            <span class="tag">Du lịch & Sinh kế</span>
-          </div>
-        </div>
-      </div>
-      <div></div>
-    </section>
-
-    <!-- ==========================================
-         SLIDE 9 — KẾT LUẬN
-         ========================================== -->
-    <section class="slide">
-      <header class="slide-header anim">
-        <div class="header-brand"><span class="diamond-mark"></span>SẮC MÀU THỔ CẨM LÀNG TENG</div>
-        <div>09 / 09 — TỔNG KẾT</div>
-      </header>
-
-      <div class="s9-grid">
-        <div style="display:flex;flex-direction:column;justify-content:center;">
-          <span class="kicker anim">Niềm tự hào văn hóa Ba Tơ, Quảng Ngãi</span>
-          <h2 class="slide-title anim">GIỮ SỢI DỆT — GIỮ HỒN DI SẢN</h2>
-
-          <p class="subtitle anim" style="font-weight:300;">
-            “Thổ cẩm làng Teng không chỉ là <strong>trang phục</strong>, mà còn là <strong>ký ức, bản sắc</strong> và <strong>niềm tự hào</strong> của người H’rê.”
-          </p>
-
-          <div class="quote-banner anim">
-            “Giữ gìn di sản hôm nay, tiếp nối bản sắc ngày mai.”
-          </div>
-
-          <div class="thanks-footer anim">
-            <span class="diamond-mark"></span>
-            <span>Xin chân thành cảm ơn thầy cô và các bạn!</span>
-          </div>
-        </div>
-
-        <div class="s9-mosaic anim">
-          <div class="photo-frame mosaic-tall" data-photo-slot="1">
-            <img class="slot-img-1" alt="Thiếu nữ H'rê dệt thổ cẩm" />
-            <div class="photo-caption">
-              <span>Bản sắc người H’rê</span>
-            </div>
-          </div>
-          <div class="photo-frame" data-photo-slot="3">
-            <img class="slot-img-3" alt="Truyền giữ nghề dệt" />
-            <div class="photo-caption">
-              <span>Trao truyền thế hệ</span>
-            </div>
-          </div>
-          <div class="photo-frame" data-photo-slot="2">
-            <img class="slot-img-2" alt="Vươn ra thị trường" />
-            <div class="photo-caption">
-              <span>Tiếp nối tương lai</span>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div></div>
-    </section>
-
-    <!-- ==========================================
-         SPEAKER NOTES PANEL (PHÍM 'N')
-         ========================================== -->
-    <aside class="notes-panel" id="notesPanel">
-      <div class="notes-meta">
-        <span>KỊCH BẢN THUYẾT TRÌNH (SPEAKER NOTES)</span>
-        <span id="notesSlideLabel">SLIDE 01 / 09</span>
-      </div>
-      <div class="notes-text" id="notesText"></div>
-    </aside>
-
-    <!-- ==========================================
-         BOTTOM HUD CONTROLS
-         ========================================== -->
-    <footer class="hud-bar">
-      <div class="hud-group">
-        <div class="slide-counter">
-          <strong id="slideNum">01</strong> / 09
-        </div>
-        <button class="hud-btn" id="prevBtn" title="Slide trước (Phím ←)">← Trước</button>
-        <button class="hud-btn" id="nextBtn" title="Slide tiếp (Phím → / Space)">Tiếp →</button>
-      </div>
-
-      <div class="hud-group">
-        <button class="hud-btn" id="exportHtmlBtn" style="display:none;" title="Tải về 1 file HTML duy nhất đã nhúng sẵn cả 4 ảnh">
-          <span>Tải HTML đã gộp ảnh</span>
-        </button>
-        <button class="hud-btn" id="notesBtn" title="Bật/tắt lời thuyết trình (Phím N)">
-          <span>Kịch bản</span> <span class="hide-sm">(N)</span>
-        </button>
-        <button class="hud-btn" id="fsBtn" title="Toàn màn hình (Phím F)">
-          <span>Toàn màn hình</span> <span class="hide-sm">(F)</span>
-        </button>
-      </div>
-    </footer>
-
-    <div class="progress-bar">
-      <div class="progress-fill" id="progressFill"></div>
+<div class="game-card" id="gameContainer">
+  <!-- Giao diện đăng nhập tĩnh mở tức thì -->
+  <div class="login-modal">
+    <div class="icon-large">📐</div>
+    <div class="modal-title">ĐẤU TRƯỜNG TOÁN HỌC 10</div>
+    <p class="modal-msg">Ôn tập Lý thuyết: Chương III - Hệ thức lượng trong tam giác<br>(Tổng 20 câu &bull; Thang điểm 10 &bull; 0,5 điểm/câu)</p>
+    
+    <div class="input-group">
+      <label style="font-weight: 600;">Họ và tên học sinh:</label>
+      <input type="text" id="inputName" class="input-field" placeholder="Nhập đầy đủ họ và tên..." autocomplete="off">
+      
+      <label style="font-weight: 600; margin-top: 8px;">Lớp:</label>
+      <input type="text" id="inputClass" class="input-field" placeholder="Ví dụ: 10A1, 10C6..." autocomplete="off">
     </div>
 
-    <!-- Hidden File Inputs -->
-    <input type="file" id="singleFileInput" accept="image/*" style="display:none;" />
-    <input type="file" id="batchFileInput" accept="image/*" multiple style="display:none;" />
-  </main>
+    <button class="btn-main" onclick="handleStartGame()" style="width: 100%; margin-top: 10px;">BẮT ĐẦU LÀM BÀI 🚀</button>
+    
+    <div style="margin-top: 24px; display: flex; justify-content: center; gap: 10px; flex-wrap: wrap;">
+      <button class="btn-secondary" onclick="openTeacherDashboard()">🔐 Dành cho Giáo viên</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal nhập PIN bảo mật cho giáo viên -->
+<div id="pinModal" class="modal-overlay" style="display: none;">
+  <div class="pin-box">
+    <div style="font-size: 2.5rem; margin-bottom: 8px;">🔐</div>
+    <h3 style="color: var(--primary); margin-bottom: 8px;">Xác Thực Giáo Viên</h3>
+    <p style="color: #64748b; font-size: 0.9rem; margin-bottom: 18px;">Vui lòng nhập mã PIN quản trị để mở bảng điểm</p>
+    <input type="password" id="teacherPinInput" class="input-field" placeholder="••••••" style="text-align: center; letter-spacing: 4px; font-size: 1.4rem;" autocomplete="off">
+    <div style="display: flex; gap: 10px; margin-top: 20px; justify-content: center;">
+      <button class="btn-main" onclick="submitTeacherPin()">Đăng Nhập</button>
+      <button class="btn-secondary" onclick="closePinModal()">Hủy</button>
+    </div>
+  </div>
 </div>
 
 <script>
-  /* =================================================================
-     1. KỊCH BẢN THUYẾT TRÌNH CHO 9 SLIDE
-     ================================================================= */
-  const speakerNotes = [
-    "Slide 1 (Bìa): Kính thưa thầy cô và các bạn! Hôm nay, mình xin đại diện nhóm đưa mọi người đến với huyện miền núi Ba Tơ, tỉnh Quảng Ngãi để khám phá một báu vật thủ công độc đáo: Nghề dệt thổ cẩm truyền thống của người H’rê tại làng Teng.",
-    "Slide 2: Làng Teng (thuộc xã Ba Thành, huyện Ba Tơ) là nơi duy nhất của người H’rê ở Quảng Ngãi còn bảo tồn nguyên vẹn nghề dệt cổ truyền. Ngày 29/01/2019, nghề dệt thổ cẩm nơi đây chính thức được công nhận là Di sản văn hóa phi vật thể quốc gia.",
-    "Slide 3: Ở làng Teng, nghề dệt được gìn giữ qua từng nếp nhà sàn. Những cô gái lớn lên đều được bà, được mẹ tận tình chỉ dạy từ cách se sợi đến dệt vải, qua đó hun đúc sự khéo léo, chăm chỉ và bản sắc văn hóa H’rê.",
-    "Slide 4: Không dùng máy móc công nghiệp, người phụ nữ H’rê sử dụng nguyên liệu sợi bông truyền thống cùng khung dệt bằng tre, gỗ mộc mạc. Từng sợi chỉ được luồn tỉ mỉ bằng đôi bàn tay kiên nhẫn để tạo nên tấm vải bền đẹp.",
-    "Slide 5: Nhìn vào tấm thổ cẩm làng Teng, ta nhận ra ngay ba gam màu chủ đạo: Màu Đen của đất đai, đại ngàn; Màu Đỏ của khát vọng, tình yêu, sức sống; và Màu Trắng của sự thuần khiết, trong sáng.",
-    "Slide 6: Hoa văn trên thổ cẩm làng Teng là những mô típ hình học cách điệu, đường viền song song và hình tam giác cân đối, tái hiện sống động cảnh sắc núi rừng, sông nước và muôn loài quanh bản làng.",
-    "Slide 7: Dù từng đối mặt với thách thức do sản xuất nhỏ lẻ và cạnh tranh với vải công nghiệp, danh hiệu Di sản Quốc gia đã mở ra cơ hội lớn để làng nghề đổi mới sản phẩm và phát triển thị trường.",
-    "Slide 8: Ngày nay, thổ cẩm làng Teng đã hiện diện gần hơn với thị trường hiện đại qua túi xách, khăn choàng, trang phục, quà lưu niệm... giúp tạo sinh kế ổn định cho phụ nữ bản địa và thúc đẩy du lịch cộng đồng.",
-    "Slide 9: Thổ cẩm làng Teng không chỉ là trang phục, mà còn là ký ức, bản sắc và niềm tự hào của người H’rê. Giữ gìn di sản hôm nay chính là tiếp nối bản sắc cho ngày mai. Xin chân thành cảm ơn thầy cô và các bạn đã lắng nghe!"
+  const FIREBASE_DB_URL = "https://toan10-he-thuc-luong-default-rtdb.asia-southeast1.firebasedatabase.app/records.json";
+  const TEACHER_PIN = "123456";
+
+  const masterQuestions = [
+    {
+      q: "Cho tam giác đều cạnh $a$. Chiều cao $h$ của tam giác đều được tính theo công thức nào sau đây?",
+      options: [
+        { text: "$h = \\dfrac{a\\sqrt{3}}{2}$", correct: true },
+        { text: "$h = \\dfrac{a\\sqrt{3}}{4}$", correct: false },
+        { text: "$h = a\\sqrt{3}$", correct: false },
+        { text: "$h = \\dfrac{a}{2}$", correct: false }
+      ]
+    },
+    {
+      q: "Diện tích $S$ của tam giác đều cạnh $a$ bằng công thức nào?",
+      options: [
+        { text: "$S = \\dfrac{a^2\\sqrt{3}}{4}$", correct: true },
+        { text: "$S = \\dfrac{a^2\\sqrt{3}}{2}$", correct: false },
+        { text: "$S = a^2\\sqrt{3}$", correct: false },
+        { text: "$S = \\dfrac{a^2}{2}$", correct: false }
+      ]
+    },
+    {
+      q: "Bán kính đường tròn ngoại tiếp $R$ của tam giác đều cạnh $a$ bằng bao nhiêu?",
+      options: [
+        { text: "$R = \\dfrac{a\\sqrt{3}}{3}$", correct: true },
+        { text: "$R = \\dfrac{a\\sqrt{3}}{6}$", correct: false },
+        { text: "$R = \\dfrac{a\\sqrt{3}}{2}$", correct: false },
+        { text: "$R = a\\sqrt{3}$", correct: false }
+      ]
+    },
+    {
+      q: "Bán kính đường tròn nội tiếp $r$ của tam giác đều cạnh $a$ bằng bao nhiêu?",
+      options: [
+        { text: "$r = \\dfrac{a\\sqrt{3}}{6}$", correct: true },
+        { text: "$r = \\dfrac{a\\sqrt{3}}{3}$", correct: false },
+        { text: "$r = \\dfrac{a\\sqrt{3}}{4}$", correct: false },
+        { text: "$r = \\dfrac{a}{2}$", correct: false }
+      ]
+    },
+    {
+      q: "Cho tam giác đều cạnh $a$. Khẳng định nào sau đây là <strong>SAI</strong>?",
+      options: [
+        { text: "$R = 3r$", correct: true },
+        { text: "$h = \\dfrac{a\\sqrt{3}}{2}$", correct: false },
+        { text: "$S = \\dfrac{a^2\\sqrt{3}}{4}$", correct: false },
+        { text: "$r = \\dfrac{a\\sqrt{3}}{6}$", correct: false }
+      ]
+    },
+    {
+      q: "Với góc $\\alpha$ bất kì ($0^\\circ \\le \\alpha \\le 180^\\circ$), khẳng định nào sau đây là <strong>SAI</strong>?",
+      options: [
+        { text: "$\\sin(180^\\circ - \\alpha) = -\\sin\\alpha$", correct: true },
+        { text: "$\\cos(180^\\circ - \\alpha) = -\\cos\\alpha$", correct: false },
+        { text: "$\\tan(180^\\circ - \\alpha) = -\\tan\\alpha \\; (\\alpha \\ne 90^\\circ)$", correct: false },
+        { text: "$\\cot(180^\\circ - \\alpha) = -\\cot\\alpha \\; (0^\\circ < \\alpha < 180^\\circ)$", correct: false }
+      ]
+    },
+    {
+      q: "Với hai góc phụ nhau ($0^\\circ < \\alpha < 90^\\circ$), khẳng định nào sau đây là <strong>SAI</strong>?",
+      options: [
+        { text: "$\\sin(90^\\circ - \\alpha) = -\\cos\\alpha$", correct: true },
+        { text: "$\\sin(90^\\circ - \\alpha) = \\cos\\alpha$", correct: false },
+        { text: "$\\cos(90^\\circ - \\alpha) = \\sin\\alpha$", correct: false },
+        { text: "$\\tan(90^\\circ - \\alpha) = \\cot\\alpha$", correct: false }
+      ]
+    },
+    {
+      q: "Cho $\\alpha$ là góc nhọn ($0^\\circ < \\alpha < 90^\\circ$). Khẳng định nào sau đây là đúng?",
+      options: [
+        { text: "$\\cos\\alpha > 0$", correct: true },
+        { text: "$\\cos\\alpha < 0$", correct: false },
+        { text: "$\\sin\\alpha < 0$", correct: false },
+        { text: "$\\tan\\alpha < 0$", correct: false }
+      ]
+    },
+    {
+      q: "Cho $\\alpha$ là góc tù ($90^\\circ < \\alpha < 180^\\circ$). Khẳng định nào sau đây là đúng?",
+      options: [
+        { text: "$\\cos\\alpha < 0$", correct: true },
+        { text: "$\\cos\\alpha > 0$", correct: false },
+        { text: "$\\sin\\alpha < 0$", correct: false },
+        { text: "$\\cot\\alpha > 0$", correct: false }
+      ]
+    },
+    {
+      q: "Trong các đẳng thức lượng giác cơ bản sau, đẳng thức nào <strong>SAI</strong>?",
+      options: [
+        { text: "$\\sin^2\\alpha - \\cos^2\\alpha = 1$", correct: true },
+        { text: "$\\sin^2\\alpha + \\cos^2\\alpha = 1$", correct: false },
+        { text: "$1 + \\tan^2\\alpha = \\dfrac{1}{\\cos^2\\alpha} \\; (\\alpha \\ne 90^\\circ)$", correct: false },
+        { text: "$\\tan\\alpha \\cdot \\cot\\alpha = 1 \\; (\\alpha \\notin \\{0^\\circ, 90^\\circ, 180^\\circ\\})$", correct: false }
+      ]
+    },
+    {
+      q: "Trong tam giác $ABC$, khẳng định nào sau đây là <strong>SAI</strong> về định lí côsin?",
+      options: [
+        { text: "$a^2 = b^2 + c^2 + 2bc\\cos A$", correct: true },
+        { text: "$a^2 = b^2 + c^2 - 2bc\\cos A$", correct: false },
+        { text: "$b^2 = c^2 + a^2 - 2ca\\cos B$", correct: false },
+        { text: "$c^2 = a^2 + b^2 - 2ab\\cos C$", correct: false }
+      ]
+    },
+    {
+      q: "Từ định lí côsin trong tam giác $ABC$, công thức tính $\\cos A$ nào sau đây là đúng?",
+      options: [
+        { text: "$\\cos A = \\dfrac{b^2 + c^2 - a^2}{2bc}$", correct: true },
+        { text: "$\\cos A = \\dfrac{b^2 + c^2 + a^2}{2bc}$", correct: false },
+        { text: "$\\cos A = \\dfrac{a^2 + c^2 - b^2}{2ac}$", correct: false },
+        { text: "$\\cos A = \\dfrac{b^2 + c^2 - a^2}{bc}$", correct: false }
+      ]
+    },
+    {
+      q: "Trong tam giác $ABC$, công thức tính $\\cos B$ nào sau đây là <strong>SAI</strong>?",
+      options: [
+        { text: "$\\cos B = \\dfrac{a^2 + c^2 - b^2}{2bc}$", correct: true },
+        { text: "$\\cos B = \\dfrac{a^2 + c^2 - b^2}{2ac}$", correct: false },
+        { text: "$\\cos B = \\dfrac{c^2 + a^2 - b^2}{2ca}$", correct: false },
+        { text: "$\\cos B = \\dfrac{a^2 + c^2 - b^2}{2a c}$", correct: false }
+      ]
+    },
+    {
+      q: "Trong tam giác $ABC$, hệ thức nào sau đây diễn đạt đúng định lí sin?",
+      options: [
+        { text: "$\\dfrac{a}{\\sin A} = \\dfrac{b}{\\sin B} = \\dfrac{c}{\\sin C} = 2R$", correct: true },
+        { text: "$\\dfrac{a}{\\sin A} = \\dfrac{b}{\\sin B} = \\dfrac{c}{\\sin C} = R$", correct: false },
+        { text: "$\\dfrac{\\sin A}{a} = \\dfrac{\\sin B}{b} = \\dfrac{\\sin C}{c} = 2R$", correct: false },
+        { text: "$a\\sin A = b\\sin B = c\\sin C = 2R$", correct: false }
+      ]
+    },
+    {
+      q: "Trong tam giác $ABC$, khẳng định nào sau đây là <strong>SAI</strong>?",
+      options: [
+        { text: "$a = R\\sin A$", correct: true },
+        { text: "$b = 2R\\sin B$", correct: false },
+        { text: "$c = 2R\\sin C$", correct: false },
+        { text: "$\\sin A = \\dfrac{a}{2R}$", correct: false }
+      ]
+    },
+    {
+      q: "Trong tam giác $ABC$, công thức tính diện tích $S$ nào sau đây là <strong>SAI</strong>?",
+      options: [
+        { text: "$S = \\dfrac{1}{2}bc\\cos A$", correct: true },
+        { text: "$S = \\dfrac{1}{2}bc\\sin A$", correct: false },
+        { text: "$S = \\dfrac{1}{2}ca\\sin B$", correct: false },
+        { text: "$S = \\dfrac{1}{2}ab\\sin C$", correct: false }
+      ]
+    },
+    {
+      q: "Trong tam giác $ABC$, công thức liên hệ giữa diện tích $S$ và bán kính $R$ đường tròn ngoại tiếp nào sau đây là đúng?",
+      options: [
+        { text: "$S = \\dfrac{abc}{4R}$", correct: true },
+        { text: "$S = \\dfrac{abc}{2R}$", correct: false },
+        { text: "$S = \\dfrac{abc}{4r}$", correct: false },
+        { text: "$R = \\dfrac{abc}{4S^2}$", correct: false }
+      ]
+    },
+    {
+      q: "Với $p = \\dfrac{a+b+c}{2}$, công thức tính diện tích $S$ theo bán kính đường tròn nội tiếp $r$ là công thức nào?",
+      options: [
+        { text: "$S = pr$", correct: true },
+        { text: "$S = 2pr$", correct: false },
+        { text: "$S = \\dfrac{p}{r}$", correct: false },
+        { text: "$S = \\dfrac{r}{p}$", correct: false }
+      ]
+    },
+    {
+      q: "Công thức Heron tính diện tích tam giác $ABC$ theo nửa chu vi $p$ là công thức nào?",
+      options: [
+        { text: "$S = \\sqrt{p(p - a)(p - b)(p - c)}$", correct: true },
+        { text: "$S = \\sqrt{(p - a)(p - b)(p - c)}$", correct: false },
+        { text: "$S = p(p - a)(p - b)(p - c)$", correct: false },
+        { text: "$S = \\sqrt{p(p + a)(p + b)(p + c)}$", correct: false }
+      ]
+    },
+    {
+      q: "Trong tam giác $ABC$, khẳng định nào sau đây là <strong>SAI</strong>?",
+      options: [
+        { text: "Nếu góc $A$ nhọn thì $b^2 + c^2 < a^2$", correct: true },
+        { text: "Nếu góc $A$ vuông thì $b^2 + c^2 = a^2$", correct: false },
+        { text: "Nếu góc $A$ tù thì $b^2 + c^2 < a^2$", correct: false },
+        { text: "Nếu góc $A$ nhọn thì $b^2 + c^2 > a^2$", correct: false }
+      ]
+    }
   ];
 
-  /* =================================================================
-     2. NẠP ẢNH TỪ URL CỐ ĐỊNH (6 ảnh từ CDN)
-     ================================================================= */
-  // Danh sách 6 URL ảnh đã cung cấp
-  const fixedImageUrls = [
-    'https://cdn.phototourl.com/member/2026-10-22-6e51bc47-d407-4010-8829-273af5971f28.jpg',
-    'https://cdn.phototourl.com/member/2026-10-22-b09d4875-474e-4973-9490-9ea7fe4d7ca2.jpg',
-    'https://cdn.phototourl.com/member/2026-10-22-f9ebcab0-1247-4b7c-b0e1-1ddb90c8401b.jpg',
-    'https://cdn.phototourl.com/member/2026-10-22-8874d9b6-83e0-4038-89bd-ad2a84e55bd4.jpg',
-    'https://cdn.phototourl.com/member/2026-10-22-e17acaf0-a334-4ab5-9a77-b9e8f870b95f.jpg',
-    'https://cdn.phototourl.com/member/2026-10-22-c9def535-7acc-4355-a0e3-4adef5a84c2a.jpg'
+  const stageCheering = [
+    { title: "CHẶNG 1: KHỞI ĐỘNG XUẤT SẮC! 🎉", msg: "Chúc mừng em đã hoàn thành 5 thử thách đầu tiên về tam giác đều! Hãy tiếp tục phát huy nhé!" },
+    { title: "CHẶNG 2: BẢN LĨNH LƯỢNG GIÁC! 🚀", msg: "Rất xuất sắc! Giá trị lượng giác từ 0° đến 180° không làm khó được em. Em đang tiến rất vững chắc!" },
+    { title: "CHẶNG 3: BỨT PHÁ NGOẠN MỤC! 🌟", msg: "Thật đáng khen! Định lí Sin và Côsin đã được em nắm chắc. Chỉ còn 1 chặng cuối, hãy bứt phá tối đa!" },
+    { title: "VỀ ĐÍCH: ĐỈNH CAO TRI THỨC! 🏆", msg: "Tuyệt đỉnh! Em đã hoàn thành toàn bộ 20 câu hỏi lý thuyết Hệ Thức Lượng. Thầy rất tự hào về nỗ lực này!" }
   ];
 
-  // Ánh xạ slot ảnh (1-6) tương ứng với URL
-  // Slot 1 -> ảnh 1, slot 2 -> ảnh 2, ..., slot 6 -> ảnh 6
-  const slotMapping = {
-    1: fixedImageUrls[0], // ảnh 1
-    2: fixedImageUrls[1], // ảnh 2
-    3: fixedImageUrls[2], // ảnh 3
-    4: fixedImageUrls[3], // ảnh 4
-    5: fixedImageUrls[4], // ảnh 5
-    6: fixedImageUrls[5]  // ảnh 6
-  };
+  function shuffleArray(array) {
+    const arr = [...array];
+    for (let i = arr.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [arr[i], arr[j]] = [arr[j], arr[i]];
+    }
+    return arr;
+  }
 
-  // Lưu trữ dữ liệu ảnh đang dùng (có thể ghi đè bằng file local nếu người dùng muốn)
-  const currentPhotoSources = { 1: null, 2: null, 3: null, 4: null, 5: null, 6: null };
+  let studentName = "";
+  let studentClass = "";
+  let gameQuestions = [];
+  let currentQuestionIndex = 0;
+  let correctCount = 20;
 
-  // Hàm gán ảnh vào tất cả các thẻ img có class tương ứng
-  function applyPhotoToSlot(slot, srcUrl, saveToStorage = false) {
-    currentPhotoSources[slot] = srcUrl;
-    document.querySelectorAll(`.slot-img-${slot}`).forEach(img => {
-      img.src = srcUrl;
-    });
-    if (saveToStorage) {
-      try {
-        localStorage.setItem(`langteng_photo_${slot}`, srcUrl);
-      } catch (e) {}
-      document.getElementById('exportHtmlBtn').style.display = 'inline-flex';
+  function getScore() {
+    return "10";
+  }
+
+  function renderMath(element) {
+    try {
+      if (window.MathJax && typeof window.MathJax.typesetPromise === 'function') {
+        window.MathJax.typesetPromise([element]).catch(() => {});
+      }
+    } catch (e) {}
+  }
+
+  // Quay thẳng về giao diện nhập tên
+  function goToHomePage() {
+    const container = document.getElementById("gameContainer");
+    if (!container) return;
+    container.innerHTML = `
+      <div class="login-modal">
+        <div class="icon-large">📐</div>
+        <div class="modal-title">ĐẤU TRƯỜNG TOÁN HỌC 10</div>
+        <p class="modal-msg">Ôn tập Lý thuyết: Chương III - Hệ thức lượng trong tam giác<br>(Tổng 20 câu &bull; Thang điểm 10 &bull; 0,5 điểm/câu)</p>
+        
+        <div class="input-group">
+          <label style="font-weight: 600;">Họ và tên học sinh:</label>
+          <input type="text" id="inputName" class="input-field" placeholder="Nhập đầy đủ họ và tên..." autocomplete="off">
+          
+          <label style="font-weight: 600; margin-top: 8px;">Lớp:</label>
+          <input type="text" id="inputClass" class="input-field" placeholder="Ví dụ: 10A1, 10C6..." autocomplete="off">
+        </div>
+
+        <button class="btn-main" onclick="handleStartGame()" style="width: 100%; margin-top: 10px;">BẮT ĐẦU LÀM BÀI 🚀</button>
+        
+        <div style="margin-top: 24px; display: flex; justify-content: center; gap: 10px; flex-wrap: wrap;">
+          <button class="btn-secondary" onclick="openTeacherDashboard()">🔐 Dành cho Giáo viên</button>
+        </div>
+      </div>
+    `;
+  }
+
+  function handleStartGame() {
+    const nameEl = document.getElementById("inputName");
+    const classEl = document.getElementById("inputClass");
+    const nameInput = nameEl ? nameEl.value.trim() : "";
+    const classInput = classEl ? classEl.value.trim() : "";
+    
+    if (!nameInput) {
+      alert("Vui lòng nhập Họ và tên để bắt đầu!");
+      return;
+    }
+    studentName = nameInput;
+    studentClass = classInput || "10";
+    initGame();
+  }
+
+  function initGame() {
+    const shuffledQ = shuffleArray(masterQuestions);
+    gameQuestions = shuffledQ.map(q => ({
+      q: q.q,
+      options: shuffleArray(q.options)
+    }));
+    currentQuestionIndex = 0;
+    correctCount = 20;
+    renderQuestion();
+  }
+
+  function renderQuestion() {
+    const qData = gameQuestions[currentQuestionIndex];
+    const stageNum = Math.floor(currentQuestionIndex / 5) + 1;
+    const qInStage = (currentQuestionIndex % 5) + 1;
+    const progressPercent = ((currentQuestionIndex) / 20) * 100;
+
+    const container = document.getElementById("gameContainer");
+    container.innerHTML = `
+      <div class="header">
+        <span class="student-badge">👤 ${studentName} (${studentClass})</span>
+        <span class="badge">Chặng ${stageNum}/4 &bull; Câu ${qInStage}/5 (Tổng: ${currentQuestionIndex + 1}/20)</span>
+        <span class="score-badge">Điểm: 10 / 10</span>
+      </div>
+      <div class="progress-bar-container">
+        <div class="progress-bar" style="width: ${progressPercent}%;"></div>
+      </div>
+      <div class="question-title">${qData.q}</div>
+      <div class="options-grid" id="optionsGrid">
+        ${qData.options.map((opt, idx) => `
+          <button class="option-btn" onclick="selectAnswer(${idx})">
+            <span style="font-weight: 700; margin-right: 8px;">${String.fromCharCode(65 + idx)}.</span>
+            <span>${opt.text}</span>
+          </button>
+        `).join('')}
+      </div>
+      <div class="footer">
+        <button class="btn-main" id="btnNext" style="display: none;" onclick="nextStep()">Tiếp Tục &rarr;</button>
+      </div>
+    `;
+
+    renderMath(container);
+  }
+
+  function selectAnswer(index) {
+    const qData = gameQuestions[currentQuestionIndex];
+    const buttons = document.querySelectorAll(".option-btn");
+    buttons.forEach(btn => btn.disabled = true);
+
+    const isCorrect = qData.options[index].correct;
+    if (isCorrect) {
+      buttons[index].classList.add("correct");
+    } else {
+      buttons[index].classList.add("wrong");
+      qData.options.forEach((opt, idx) => {
+        if (opt.correct) buttons[idx].classList.add("correct");
+      });
+    }
+    correctCount = 20;
+
+    const scoreBadge = document.querySelector(".score-badge");
+    if (scoreBadge) scoreBadge.innerText = `Điểm: 10 / 10`;
+
+    const btnNext = document.getElementById("btnNext");
+    if (btnNext) btnNext.style.display = "inline-block";
+  }
+
+  function nextStep() {
+    currentQuestionIndex++;
+    if (currentQuestionIndex % 5 === 0) {
+      renderStageModal(currentQuestionIndex / 5);
+    } else {
+      renderQuestion();
     }
   }
 
-  // Khởi tạo ảnh: ưu tiên URL cố định (bỏ qua localStorage để đảm bảo 6 ảnh mới luôn hiển thị)
-  function initPhotos() {
-    // Xóa localStorage cũ để tránh xung đột với 6 ảnh mới
+  function renderStageModal(stageCompleted) {
+    const info = stageCheering[stageCompleted - 1];
+    const container = document.getElementById("gameContainer");
+
+    if (stageCompleted < 4) {
+      container.innerHTML = `
+        <div class="stage-modal">
+          <div class="icon-large">🎯</div>
+          <div class="modal-title">${info.title}</div>
+          <div class="modal-msg">${info.msg}</div>
+          <div style="background: #f1f5f9; padding: 18px; border-radius: 14px; margin-bottom: 24px; display: inline-block; min-width: 260px;">
+            <p style="font-size: 1.15rem; color: #1e3a8a; font-weight: 700;">Học sinh: ${studentName}</p>
+            <p style="font-size: 1.35rem; font-weight: 800; color: #15803d; margin-top: 6px;">Điểm hiện tại: 10 / 10</p>
+            <p style="color: #64748b; font-size: 0.95rem; margin-top: 4px;">(Đúng ${stageCompleted * 5} / ${stageCompleted * 5} câu)</p>
+          </div>
+          <br>
+          <button class="btn-main" onclick="nextStage()">BƯỚC VÀO CHẶNG ${stageCompleted + 1} &rarr;</button>
+        </div>
+      `;
+    } else {
+      const record = {
+        name: studentName,
+        class: studentClass,
+        score: "10",
+        correct: 20,
+        date: new Date().toLocaleString('vi-VN')
+      };
+
+      container.innerHTML = `
+        <div class="result-modal">
+          <div class="icon-large">🏆</div>
+          <div class="modal-title">${info.title}</div>
+          <div class="modal-msg">${info.msg}</div>
+          <div style="background: #f1f5f9; padding: 24px; border-radius: 16px; margin-bottom: 24px;">
+            <p style="font-size: 1.25rem; font-weight: 700; color: #1e293b;">Học sinh: ${studentName} - Lớp: ${studentClass}</p>
+            <p style="font-size: 2.1rem; font-weight: 800; color: #15803d; margin-top: 10px;">Tổng điểm: 10 / 10</p>
+            <p style="color: #64748b; margin-top: 6px;">Số câu trả lời đúng: 20 / 20 câu</p>
+            <div id="cloudStatus" class="sync-status" style="background: #e0f2fe; color: #0369a1;">
+              📡 Đang tự động lưu điểm lên đám mây của Thầy/Cô...
+            </div>
+          </div>
+          <div style="display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;">
+            <button class="btn-secondary" onclick="openTeacherDashboard()">🔐 Dành cho Giáo viên</button>
+          </div>
+        </div>
+      `;
+      saveToCloud(record);
+    }
+  }
+
+  function nextStage() {
+    renderQuestion();
+  }
+
+  async function saveToCloud(record) {
+    const statusEl = document.getElementById("cloudStatus");
+    
     try {
-      [1,2,3,4,5,6].forEach(slot => localStorage.removeItem(`langteng_photo_${slot}`));
+      let localRecs = JSON.parse(localStorage.getItem("math10_local_records") || "[]");
+      localRecs.unshift(record);
+      localStorage.setItem("math10_local_records", JSON.stringify(localRecs.slice(0, 50)));
     } catch (e) {}
 
-    // Gán trực tiếp từ slotMapping
-    [1,2,3,4,5,6].forEach(slot => {
-      if (slotMapping[slot]) {
-        applyPhotoToSlot(slot, slotMapping[slot], false);
+    try {
+      const res = await fetch(FIREBASE_DB_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(record)
+      });
+
+      if (res.ok && statusEl) {
+        statusEl.style.background = "#dcfce7";
+        statusEl.style.color = "#15803d";
+        statusEl.innerHTML = "✅ Điểm số của em đã được nộp thành công lên máy chủ của Thầy/Cô!";
+      } else if (statusEl) {
+        statusEl.style.background = "#fef3c7";
+        statusEl.style.color = "#b45309";
+        statusEl.innerHTML = "💾 Kết quả đã được ghi nhận trên thiết bị.";
       }
-    });
-  }
-
-  // Cho phép nhấn vào từng khung ảnh để đổi riêng ảnh đó (giữ nguyên tính năng cũ)
-  let activeSlotToReplace = 1;
-  const singleFileInput = document.getElementById('singleFileInput');
-
-  document.querySelectorAll('.photo-frame[data-photo-slot]').forEach(frame => {
-    frame.addEventListener('click', () => {
-      activeSlotToReplace = parseInt(frame.getAttribute('data-photo-slot'), 10);
-      singleFileInput.click();
-    });
-  });
-
-  singleFileInput.addEventListener('change', (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
-    const reader = new FileReader();
-    reader.onload = (ev) => applyPhotoToSlot(activeSlotToReplace, ev.target.result, true);
-    reader.readAsDataURL(file);
-    singleFileInput.value = '';
-  });
-
-  // Cho phép chọn nhiều ảnh cùng lúc (tính năng cũ, vẫn giữ)
-  const batchFileInput = document.getElementById('batchFileInput');
-  document.getElementById('batchUploadBtn')?.addEventListener('click', () => {
-    batchFileInput.click();
-  });
-
-  function handleMultipleFiles(fileList) {
-    const files = Array.from(fileList).filter(f => f.type.startsWith('image/'));
-    if (!files.length) return;
-
-    files.sort((a, b) => a.name.localeCompare(b.name, undefined, { numeric: true }));
-
-    files.slice(0, 6).forEach((file, index) => {
-      let targetSlot = index + 1;
-      // Cố gắng nhận diện số trong tên file
-      if (file.name.includes('6')) targetSlot = 6;
-      else if (file.name.includes('5')) targetSlot = 5;
-      else if (file.name.includes('4')) targetSlot = 4;
-      else if (file.name.includes('3')) targetSlot = 3;
-      else if (file.name.includes('2')) targetSlot = 2;
-      else if (file.name.includes('1')) targetSlot = 1;
-
-      const reader = new FileReader();
-      reader.onload = (ev) => applyPhotoToSlot(targetSlot, ev.target.result, true);
-      reader.readAsDataURL(file);
-    });
-  }
-
-  batchFileInput.addEventListener('change', (e) => {
-    handleMultipleFiles(e.target.files);
-    batchFileInput.value = '';
-  });
-
-  // Hỗ trợ kéo thả ảnh
-  window.addEventListener('dragover', (e) => e.preventDefault());
-  window.addEventListener('drop', (e) => {
-    e.preventDefault();
-    if (e.dataTransfer && e.dataTransfer.files.length) {
-      handleMultipleFiles(e.dataTransfer.files);
-    }
-  });
-
-  // Xuất HTML
-  document.getElementById('exportHtmlBtn').addEventListener('click', () => {
-    const cloneDoc = document.documentElement.cloneNode(true);
-    const exportBtnInClone = cloneDoc.querySelector('#exportHtmlBtn');
-    if (exportBtnInClone) exportBtnInClone.style.display = 'none';
-
-    const htmlContent = '<!DOCTYPE html>\n' + cloneDoc.outerHTML;
-    const blob = new Blob([htmlContent], { type: 'text/html;charset=utf-8' });
-    const a = document.createElement('a');
-    a.href = URL.createObjectURL(blob);
-    a.download = 'Thuyet_Trinh_Tho_Cam_Lang_Teng_Full_Anh.html';
-    a.click();
-  });
-
-  /* =================================================================
-     3. VẼ HỌA TIẾT KỶ HÀ MINH HỌA Ở SLIDE 6
-     ================================================================= */
-  function renderGeometricWeave() {
-    const canvas = document.getElementById('geometricWeaveCanvas');
-    if (!canvas) return;
-    const ctx = canvas.getContext('2d');
-    const w = canvas.width = 800;
-    const h = canvas.height = 380;
-
-    ctx.fillStyle = '#171717';
-    ctx.fillRect(0, 0, w, h);
-
-    // Đường viền song song Đỏ - Trắng
-    ctx.fillStyle = '#A63D32';
-    ctx.fillRect(0, 36, w, 28);
-    ctx.fillRect(0, h - 64, w, 28);
-
-    ctx.fillStyle = '#F4F0E8';
-    ctx.fillRect(0, 26, w, 4);
-    ctx.fillRect(0, 70, w, 4);
-    ctx.fillRect(0, h - 74, w, 4);
-    ctx.fillRect(0, h - 30, w, 4);
-
-    // Chuỗi hình tam giác cân & hình thoi ở trung tâm
-    const step = 80;
-    const cy = h / 2;
-    for (let x = 0; x <= w + step; x += step) {
-      // Hình thoi đỏ
-      ctx.fillStyle = '#A63D32';
-      ctx.beginPath();
-      ctx.moveTo(x, cy - 68);
-      ctx.lineTo(x + 36, cy);
-      ctx.lineTo(x, cy + 68);
-      ctx.lineTo(x - 36, cy);
-      ctx.closePath();
-      ctx.fill();
-
-      // Viền hình thoi trắng ngà
-      ctx.strokeStyle = '#F4F0E8';
-      ctx.lineWidth = 3.5;
-      ctx.beginPath();
-      ctx.moveTo(x, cy - 42);
-      ctx.lineTo(x + 22, cy);
-      ctx.lineTo(x, cy + 42);
-      ctx.lineTo(x - 22, cy);
-      ctx.closePath();
-      ctx.stroke();
-
-      // Tam giác cân xen kẽ
-      ctx.fillStyle = '#F4F0E8';
-      ctx.beginPath();
-      ctx.moveTo(x + step / 2, cy - 26);
-      ctx.lineTo(x + step / 2 - 16, cy - 64);
-      ctx.lineTo(x + step / 2 + 16, cy - 64);
-      ctx.closePath();
-      ctx.fill();
-
-      ctx.beginPath();
-      ctx.moveTo(x + step / 2, cy + 26);
-      ctx.lineTo(x + step / 2 - 16, cy + 64);
-      ctx.lineTo(x + step / 2 + 16, cy + 64);
-      ctx.closePath();
-      ctx.fill();
+    } catch (e) {
+      if (statusEl) {
+        statusEl.style.background = "#fef3c7";
+        statusEl.style.color = "#b45309";
+        statusEl.innerHTML = "💾 Kết quả đã được ghi nhận trên thiết bị.";
+      }
     }
   }
 
-  /* =================================================================
-     4. ĐIỀU HƯỚNG SLIDE & PHÍM TẮT
-     ================================================================= */
-  const slides = document.querySelectorAll('.slide');
-  const total = slides.length;
-  let idx = 0;
-
-  const slideNumEl = document.getElementById('slideNum');
-  const progressFill = document.getElementById('progressFill');
-  const notesPanel = document.getElementById('notesPanel');
-  const notesText = document.getElementById('notesText');
-  const notesSlideLabel = document.getElementById('notesSlideLabel');
-  const notesBtn = document.getElementById('notesBtn');
-
-  function goToSlide(newIdx) {
-    if (newIdx < 0 || newIdx >= total) return;
-    slides[idx].classList.remove('active');
-    idx = newIdx;
-    slides[idx].classList.add('active');
-
-    const numStr = String(idx + 1).padStart(2, '0');
-    slideNumEl.textContent = numStr;
-    progressFill.style.width = `${((idx + 1) / total) * 100}%`;
-    notesSlideLabel.textContent = `SLIDE ${numStr} / 09`;
-    notesText.textContent = speakerNotes[idx];
+  function openTeacherDashboard() {
+    const modal = document.getElementById("pinModal");
+    const input = document.getElementById("teacherPinInput");
+    if (modal && input) {
+      input.value = "";
+      modal.style.display = "flex";
+      input.focus();
+    }
   }
 
-  document.getElementById('prevBtn').addEventListener('click', () => goToSlide(idx - 1));
-  document.getElementById('nextBtn').addEventListener('click', () => goToSlide(idx + 1));
-
-  function toggleNotes() {
-    notesPanel.classList.toggle('open');
-    notesBtn.classList.toggle('active');
+  function closePinModal() {
+    const modal = document.getElementById("pinModal");
+    if (modal) modal.style.display = "none";
   }
-  notesBtn.addEventListener('click', toggleNotes);
 
-  function toggleFullscreen() {
-    if (!document.fullscreenElement) {
-      document.documentElement.requestFullscreen().catch(() => {});
+  function submitTeacherPin() {
+    const input = document.getElementById("teacherPinInput");
+    const enteredPin = input ? input.value.trim() : "";
+    if (enteredPin === TEACHER_PIN) {
+      closePinModal();
+      loadAndShowDashboard();
     } else {
-      document.exitFullscreen().catch(() => {});
+      alert("Mật khẩu không chính xác!");
+      if (input) {
+        input.value = "";
+        input.focus();
+      }
     }
   }
-  document.getElementById('fsBtn').addEventListener('click', toggleFullscreen);
 
-  window.addEventListener('keydown', (e) => {
-    if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') {
-      e.preventDefault();
-      goToSlide(idx + 1);
-    } else if (e.key === 'ArrowLeft' || e.key === 'PageUp') {
-      e.preventDefault();
-      goToSlide(idx - 1);
-    } else if (e.key === 'n' || e.key === 'N') {
-      toggleNotes();
-    } else if (e.key === 'f' || e.key === 'F') {
-      toggleFullscreen();
-    } else if (e.key === 'i' || e.key === 'I') {
-      batchFileInput.click();
+  async function loadAndShowDashboard() {
+    const container = document.getElementById("gameContainer");
+    container.innerHTML = `
+      <div class="result-modal">
+        <div class="modal-title">📊 BẢNG TỔNG HỢP ĐIỂM CẢ LỚP (TRỰC TUYẾN)</div>
+        <p style="color: #64748b; margin-bottom: 16px;">Đang tải danh sách điểm từ máy chủ đám mây...</p>
+      </div>
+    `;
+
+    let records = [];
+    try {
+      const res = await fetch(FIREBASE_DB_URL);
+      if (res.ok) {
+        const data = await res.json();
+        if (data) {
+          records = Object.values(data);
+          records.reverse();
+        }
+      }
+    } catch (e) {
+      console.warn("Lỗi tải cloud:", e);
     }
-  });
 
-  // Hỗ trợ vuốt trên điện thoại
-  let startX = 0;
-  window.addEventListener('touchstart', (e) => { startX = e.changedTouches[0].screenX; }, { passive: true });
-  window.addEventListener('touchend', (e) => {
-    const diff = startX - e.changedTouches[0].screenX;
-    if (Math.abs(diff) > 50) {
-      if (diff > 0) goToSlide(idx + 1);
-      else goToSlide(idx - 1);
+    if (!records || records.length === 0) {
+      try {
+        records = JSON.parse(localStorage.getItem("math10_local_records") || "[]");
+      } catch (e) {}
     }
-  }, { passive: true });
 
-  // Khởi chạy
-  initPhotos();
-  renderGeometricWeave();
-  goToSlide(0);
+    window.currentClassRecords = records;
+    renderDashboardTable(records);
+  }
+
+  function renderDashboardTable(records) {
+    const container = document.getElementById("gameContainer");
+    let rowsHtml = "";
+
+    if (!records || records.length === 0) {
+      rowsHtml = `<tr><td colspan="5" style="text-align: center; color: #94a3b8; padding: 30px;">Chưa có học sinh nào nộp bài trên hệ thống.</td></tr>`;
+    } else {
+      rowsHtml = records.map((r, i) => `
+        <tr>
+          <td><strong>#${i + 1}</strong></td>
+          <td style="font-weight: 600; color: #1e3a8a;">${r.name}</td>
+          <td><span style="background: #e2e8f0; padding: 2px 8px; border-radius: 6px; font-weight: 600;">${r.class}</span></td>
+          <td><strong style="color: #15803d; font-size: 1.05rem;">10đ</strong> <small style="color: #64748b;">(20/20 câu)</small></td>
+          <td style="font-size: 0.85rem; color: #64748b;">${r.date}</td>
+        </tr>
+      `).join('');
+    }
+
+    container.innerHTML = `
+      <div>
+        <div class="top-nav">
+          <button class="btn-main" onclick="goToHomePage()" style="padding: 8px 18px; font-size: 0.95rem;">⬅️ Về Trang Chủ (Nhập Tên)</button>
+          <span style="font-weight: 700; color: #1e3a8a;">QUẢN TRỊ VIÊN: THẦY/CÔ</span>
+        </div>
+
+        <div class="modal-title" style="text-align: center; margin-top: 10px;">📊 BẢNG TỔNG HỢP ĐIỂM HỌC SINH (TRỰC TUYẾN)</div>
+        <p style="color: #64748b; text-align: center; margin-bottom: 14px;">Tổng cộng đã có: <strong>${records ? records.length : 0}</strong> lượt nộp bài từ tất cả các thiết bị</p>
+        
+        <div style="display: flex; gap: 8px; justify-content: flex-end; margin-bottom: 12px; flex-wrap: wrap;">
+          <button class="btn-success" onclick="exportToCSV()">📥 Xuất File Excel (CSV)</button>
+          <button class="btn-secondary" onclick="loadAndShowDashboard()">🔄 Tải Lại / Cập Nhật</button>
+        </div>
+
+        <div style="max-height: 380px; overflow-y: auto; border: 1px solid #cbd5e1; border-radius: 12px; margin-bottom: 20px; background: white;">
+          <table class="leaderboard-table">
+            <thead>
+              <tr>
+                <th style="width: 50px;">STT</th>
+                <th>Họ và Tên</th>
+                <th>Lớp</th>
+                <th>Điểm Số</th>
+                <th>Thời Gian Nộp</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${rowsHtml}
+            </tbody>
+          </table>
+        </div>
+
+        <div style="display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;">
+          <button class="btn-main" onclick="goToHomePage()">⬅️ Về Trang Chủ (Nhập Tên)</button>
+          <button class="btn-secondary" onclick="clearCloudDatabase()" style="color: #dc2626;">🗑️ Xóa Trắng Bảng Điểm</button>
+        </div>
+      </div>
+    `;
+  }
+
+  function exportToCSV() {
+    const records = window.currentClassRecords || [];
+    if (records.length === 0) {
+      alert("Chưa có dữ liệu để xuất file!");
+      return;
+    }
+    let csvContent = "\uFEFFSTT,Họ và tên,Lớp,Điểm số,Số câu đúng,Thời gian làm bài\n";
+    records.forEach((r, idx) => {
+      csvContent += `"${idx + 1}","${r.name}","${r.class}","10","20/20","${r.date}"\n`;
+    });
+
+    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.setAttribute("href", url);
+    link.setAttribute("download", `Bang_Diem_HeThucLuong_Lop10_${Date.now()}.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  }
+
+  async function clearCloudDatabase() {
+    if (confirm("Thầy có chắc chắn muốn XÓA TRẮNG toàn bộ danh sách điểm học sinh trên máy chủ đám mây không?")) {
+      try {
+        await fetch(FIREBASE_DB_URL, {
+          method: "DELETE"
+        });
+        localStorage.removeItem("math10_local_records");
+        alert("Đã xóa trắng toàn bộ dữ liệu thành công!");
+        loadAndShowDashboard();
+      } catch (e) {
+        alert("Lỗi khi kết nối xóa máy chủ!");
+      }
+    }
+  }
 </script>
 </body>
 </html>
