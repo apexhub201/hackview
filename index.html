@@ -14,11 +14,7 @@
             line-height: 1.6;
             padding: 16px;
             min-height: 100vh;
-            transition: filter 0.08s linear;
         }
-        /* Làm mờ toàn trang khi mất focus (chống chụp qua overlay) */
-        body.privacy-blur { filter: blur(24px) brightness(0.15); pointer-events: none; }
-
         .container {
             max-width: 900px;
             margin: 0 auto;
@@ -148,7 +144,7 @@
             border-radius: 0 6px 6px 0;
         }
 
-        /* ===== LỚP CHE ĐEN TOÀN MÀN HÌNH ===== */
+        /* ===== LỚP CHE ĐEN ===== */
         #shield {
             display: none;
             position: fixed;
@@ -168,47 +164,6 @@
         #shield .box { max-width: 480px; }
         #shield h2 { color: #e74c3c; font-size: 22px; margin: 0 0 12px; }
         #shield p { color: #ddd; font-size: 15px; margin: 8px 0; line-height: 1.5; }
-
-        /* ===== THÔNG BÁO NHỎ GÓC ===== */
-        #notice {
-            position: fixed;
-            top: 12px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: rgba(231, 76, 60, 0.95);
-            color: #fff;
-            padding: 10px 18px;
-            border-radius: 30px;
-            font-size: 13px;
-            font-weight: 600;
-            z-index: 999999;
-            display: none;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-            white-space: nowrap;
-        }
-        #notice.show { display: block; animation: fadeInDown 0.25s ease; }
-        @keyframes fadeInDown {
-            from { opacity: 0; transform: translate(-50%, -12px); }
-            to { opacity: 1; transform: translate(-50%, 0); }
-        }
-
-        /* ===== TRẠNG THÁI KHÓA (sau khi reload) ===== */
-        #locked {
-            display: none;
-            position: fixed;
-            inset: 0;
-            background: #111;
-            color: #eee;
-            z-index: 2147483646;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            padding: 24px;
-        }
-        #locked.show { display: flex; }
-        #locked .box { max-width: 480px; }
-        #locked h2 { color: #e74c3c; font-size: 22px; margin: 0 0 12px; }
-        #locked p { color: #ccc; font-size: 15px; margin: 8px 0; }
 
         @media (max-width: 640px) {
             body { padding: 8px; }
@@ -232,25 +187,15 @@
     <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 </head>
 <body>
-    <!-- Lớp khóa sau khi reload do vi phạm -->
-    <div id="locked">
-        <div class="box">
-            <h2>Bài thi đã bị khóa</h2>
-            <p>Hệ thống đã ghi nhận hành vi không hợp lệ trong lần làm bài trước.</p>
-            <p>Vui lòng liên hệ giáo viên để được mở khóa.</p>
-        </div>
-    </div>
 
-    <!-- Lớp che đen tức thời -->
+    <!-- Lớp che đen: hiện khi tự động nộp do rời tab -->
     <div id="shield">
         <div class="box">
             <h2>Bài làm đã được nộp</h2>
-            <p>Hệ thống phát hiện hành vi không hợp lệ trong quá trình làm bài.</p>
-            <p>Bài làm đã được ghi nhận.</p>
+            <p>Hệ thống phát hiện bạn rời khỏi trang làm bài.</p>
+            <p>Vui lòng <b>tải lại trang</b> để xem kết quả bài làm.</p>
         </div>
     </div>
-
-    <div id="notice">Phát hiện hành vi không hợp lệ!</div>
 
     <div class="container" id="examContainer">
         <div class="header">
@@ -569,12 +514,9 @@
 
     <script>
         /* ============================================================
-           HÀM CHẤM ĐIỂM GỐC (chỉ gọi khi bấm nút Nộp bài thủ công)
+           HÀM CHẤM ĐIỂM (dùng chung cho cả nộp tay và tự động nộp)
            ============================================================ */
         function gradeExam() {
-            // Nếu đã bị khóa/che thì không làm gì
-            if (window.__examLocked) return;
-
             let totalScore = 0;
 
             const p1_answers = { q1:'A', q2:'C', q3:'B', q4:'B', q5:'B', q6:'C', q7:'B', q8:'C', q9:'C', q10:'B', q11:'D', q12:'B', q13:'C', q14:'C', q15:'B', q16:'C' };
@@ -611,179 +553,134 @@
             if(sa1 === '5' || sa1 === '5%') totalScore += 0.5;
             if(sa2 === '2') totalScore += 0.5;
 
-            document.getElementById('result-box').style.display = 'block';
-            document.getElementById('final-score').innerText = totalScore.toFixed(2);
-            document.getElementById('result-box').scrollIntoView({ behavior: 'smooth' });
+            // Lưu điểm vào sessionStorage để reload vẫn còn
+            sessionStorage.setItem('examScore', totalScore.toFixed(2));
+            sessionStorage.setItem('examDone', '1');
 
+            // Lưu toàn bộ bài làm để reload vẫn hiển thị
+            saveAnswers();
+
+            // Hiển thị kết quả
+            showResult(totalScore);
+
+            // Khóa form
+            document.querySelectorAll('input, textarea').forEach(el => el.disabled = true);
+            document.querySelector('.submit-btn').style.display = 'none';
+        }
+
+        /* Lưu bài làm vào sessionStorage */
+        function saveAnswers() {
+            const data = {
+                radios: {},
+                texts: {}
+            };
+            document.querySelectorAll('input[type="radio"]').forEach(el => {
+                if (el.checked) data.radios[el.name] = el.value;
+            });
+            document.querySelectorAll('input[type="text"]').forEach(el => {
+                if (el.value) data.texts[el.id] = el.value;
+            });
+            document.querySelectorAll('textarea').forEach((el, i) => {
+                if (el.value) data.texts['essay_' + i] = el.value;
+            });
+            sessionStorage.setItem('examAnswers', JSON.stringify(data));
+        }
+
+        /* Khôi phục bài làm từ sessionStorage */
+        function restoreAnswers() {
+            const raw = sessionStorage.getItem('examAnswers');
+            if (!raw) return;
+            try {
+                const data = JSON.parse(raw);
+                Object.keys(data.radios || {}).forEach(name => {
+                    const el = document.querySelector(`input[name="${name}"][value="${data.radios[name]}"]`);
+                    if (el) el.checked = true;
+                });
+                Object.keys(data.texts || {}).forEach(id => {
+                    if (id.startsWith('essay_')) {
+                        const idx = parseInt(id.replace('essay_', ''));
+                        const tas = document.querySelectorAll('textarea');
+                        if (tas[idx]) tas[idx].value = data.texts[id];
+                    } else {
+                        const el = document.getElementById(id);
+                        if (el) el.value = data.texts[id];
+                    }
+                });
+            } catch(e) {}
+        }
+
+        /* Hiển thị kết quả + đáp án */
+        function showResult(score) {
+            document.getElementById('result-box').style.display = 'block';
+            document.getElementById('final-score').innerText = score.toFixed(2);
+            document.getElementById('result-box').scrollIntoView({ behavior: 'smooth' });
             document.querySelectorAll('.explanation').forEach(el => el.style.display = 'block');
             document.querySelectorAll('.essay-solution').forEach(el => el.style.display = 'block');
             document.querySelectorAll('input, textarea').forEach(el => el.disabled = true);
             document.querySelector('.submit-btn').style.display = 'none';
-
-            // Đánh dấu đã nộp thủ công hợp lệ
-            window.__examLocked = true;
-            sessionStorage.setItem('examSubmittedOK', '1');
         }
 
         /* ============================================================
-           HỆ THỐNG BẢO VỆ
+           TỰ ĐỘNG NỘP KHI RỜI TRANG
            ============================================================ */
         (function () {
             'use strict';
 
-            // Nếu lần trước bị vi phạm -> khóa luôn khi vào trang
-            if (sessionStorage.getItem('examViolated') === '1') {
-                document.getElementById('locked').classList.add('show');
-                document.body.classList.add('privacy-blur');
-                window.__examLocked = true;
-                return;
-            }
-
-            // Nếu đã nộp bài hợp lệ trước đó (F5) -> vẫn cho xem nhưng không làm lại
-            if (sessionStorage.getItem('examSubmittedOK') === '1') {
-                // Giữ nguyên trạng thái đã nộp
-                window.__examLocked = true;
-                // Chấm lại điểm từ dữ liệu đã lưu? Đơn giản: chỉ khóa form
-                document.querySelectorAll('input, textarea').forEach(el => el.disabled = true);
-                document.querySelector('.submit-btn').style.display = 'none';
-                document.querySelectorAll('.explanation').forEach(el => el.style.display = 'block');
-                document.querySelectorAll('.essay-solution').forEach(el => el.style.display = 'block');
-                document.getElementById('result-box').style.display = 'block';
-                document.getElementById('final-score').innerText = sessionStorage.getItem('examScore') || '0.00';
-                return;
-            }
-
             const shieldEl = document.getElementById('shield');
-            const noticeEl = document.getElementById('notice');
-            const bodyEl = document.body;
 
-            let shieldActive = false;
-
-            function showNotice(msg) {
-                noticeEl.textContent = msg;
-                noticeEl.classList.add('show');
-                clearTimeout(noticeEl._t);
-                noticeEl._t = setTimeout(() => noticeEl.classList.remove('show'), 2500);
+            // Nếu đã nộp trước đó (reload) -> khôi phục trạng thái + hiện kết quả
+            if (sessionStorage.getItem('examDone') === '1') {
+                restoreAnswers();
+                const savedScore = parseFloat(sessionStorage.getItem('examScore') || '0');
+                showResult(savedScore);
+                return; // Không gắn sự kiện tự động nộp nữa
             }
 
-            /* KÍCH HOẠT CHE ĐEN + LƯU CỜ VI PHẠM (KHÔNG CHẤM ĐIỂM) */
-            function triggerViolation(reason) {
-                if (window.__examLocked) return;
-                window.__examLocked = true;
+            let autoSubmitted = false;
 
-                // Lưu cờ vi phạm -> reload sẽ bị khóa
-                sessionStorage.setItem('examViolated', '1');
-                sessionStorage.removeItem('examSubmittedOK');
+            // Tự động nộp khi rời tab / mất focus
+            function autoSubmit() {
+                if (autoSubmitted) return;
+                autoSubmitted = true;
 
-                // Làm mờ body ngay lập tức (chống chụp qua overlay của OS)
-                bodyEl.classList.add('privacy-blur');
+                // Chấm điểm + lưu
+                gradeExam();
 
-                // Hiện che đen phủ lên trên
-                if (!shieldActive) {
-                    shieldActive = true;
-                    shieldEl.classList.add('show');
-                }
-
-                // Thông báo nhỏ
-                showNotice(reason || 'Phát hiện hành vi không hợp lệ');
-
-                // Vô hiệu hóa toàn bộ input
-                document.querySelectorAll('input, textarea').forEach(el => el.disabled = true);
-                document.querySelector('.submit-btn').style.display = 'none';
+                // Che đen + thông báo tải lại
+                shieldEl.classList.add('show');
             }
 
-            /* ============ 1. MẤT FOCUS / ẨN TAB ============ */
+            // 1. Chuyển tab / ẩn trang
             document.addEventListener('visibilitychange', function () {
-                if (document.hidden) triggerViolation('Rời khỏi tab làm bài');
-            });
-            window.addEventListener('blur', function () {
-                // Chờ 150ms để tránh nhầm khi bấm vào iframe MathJax... (không có iframe)
-                setTimeout(function () {
-                    if (!document.hasFocus()) triggerViolation('Cửa sổ mất focus');
-                }, 150);
+                if (document.hidden) autoSubmit();
             });
 
-            /* ============ 2. LÀM MỜ NGAY KHI CÓ DẤU HIỆU CHỤP ============ */
-            // Phím PrintScreen
+            // 2. Mất focus cửa sổ
+            window.addEventListener('blur', function () {
+                setTimeout(function () {
+                    if (!document.hasFocus()) autoSubmit();
+                }, 100);
+            });
+
+            // 3. Phím chụp màn hình
             document.addEventListener('keyup', function (e) {
                 if (e.key === 'PrintScreen' || e.keyCode === 44) {
                     if (navigator.clipboard && navigator.clipboard.writeText) {
                         navigator.clipboard.writeText('').catch(() => {});
                     }
-                    triggerViolation('Phát hiện chụp màn hình');
+                    autoSubmit();
                 }
             });
-            // Tổ hợp chụp phổ biến
+
+            // 4. Tổ hợp chụp màn hình
             document.addEventListener('keydown', function (e) {
                 const isMac = navigator.platform.toUpperCase().indexOf('MAC') >= 0;
                 const mod = isMac ? e.metaKey : e.ctrlKey;
-                // Ctrl/Cmd + Shift + S / 3 / 4 / 5
                 if (mod && e.shiftKey && ['S','s','3','4','5'].includes(e.key)) {
                     e.preventDefault();
-                    // Làm mờ ngay trước khi OS kịp capture
-                    bodyEl.classList.add('privacy-blur');
-                    triggerViolation('Phát hiện tổ hợp chụp màn hình');
-                }
-                // Ctrl/Cmd + P (in)
-                if (mod && (e.key === 'p' || e.key === 'P')) {
-                    e.preventDefault();
-                    triggerViolation('Phát hiện lệnh in');
-                }
-                // F12 / DevTools
-                if (e.key === 'F12' ||
-                    (e.ctrlKey && e.shiftKey && ['I','J','C','i','j','c'].includes(e.key))) {
-                    e.preventDefault();
-                    showNotice('Không được mở công cụ phát triển');
+                    autoSubmit();
                 }
             });
-
-            /* ============ 3. MOBILE: GESTURE 3 NGÓN + LONG-PRESS ============ */
-            // 3 ngón chạm -> nghi chụp màn hình (iOS/Android)
-            let touchCount = 0;
-            document.addEventListener('touchstart', function (e) {
-                touchCount = e.touches.length;
-                if (touchCount >= 3) {
-                    bodyEl.classList.add('privacy-blur');
-                    triggerViolation('Phát hiện thao tác chụp màn hình');
-                }
-            }, { passive: true });
-
-            // Long-press (giữ lâu) trên vùng không phải input -> có thể là menu chụp
-            let lpTimer = null;
-            document.addEventListener('touchstart', function (e) {
-                const tag = (e.target.tagName || '').toLowerCase();
-                if (tag === 'input' || tag === 'textarea') return;
-                lpTimer = setTimeout(function () {
-                    bodyEl.classList.add('privacy-blur');
-                    triggerViolation('Phát hiện nhấn giữ bất thường');
-                }, 1200);
-            }, { passive: true });
-            document.addEventListener('touchend', function () {
-                clearTimeout(lpTimer);
-            }, { passive: true });
-            document.addEventListener('touchmove', function () {
-                clearTimeout(lpTimer);
-            }, { passive: true });
-
-            /* ============ 4. CHẶN COPY / CHUỘT PHẢI / KÉO THẢ ============ */
-            ['copy','cut','contextmenu','dragstart'].forEach(function (evt) {
-                document.addEventListener(evt, function (e) {
-                    e.preventDefault();
-                    showNotice('Không được phép sao chép nội dung');
-                    return false;
-                });
-            });
-
-            /* ============ 5. CHẶN CHỌN VĂN BẢN NGOÀI INPUT ============ */
-            document.addEventListener('selectstart', function (e) {
-                const tag = (e.target.tagName || '').toLowerCase();
-                if (tag !== 'input' && tag !== 'textarea') e.preventDefault();
-            });
-
-            /* ============ 6. CHẶN ZOOM CTRL + CUỘN ============ */
-            document.addEventListener('wheel', function (e) {
-                if (e.ctrlKey) e.preventDefault();
-            }, { passive: false });
 
         })();
     </script>
