@@ -1,688 +1,750 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Đề Kiểm Tra Giữa Kì 1 - Vật Lí 10</title>
-    <style>
-        * { -webkit-tap-highlight-color: transparent; box-sizing: border-box; }
-        html, body { margin: 0; padding: 0; }
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f0f2f5;
-            color: #333;
-            line-height: 1.6;
-            padding: 16px;
-            min-height: 100vh;
-        }
-        .container {
-            max-width: 900px;
-            margin: 0 auto;
-            background: #fff;
-            padding: 24px;
-            border-radius: 10px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-        }
-        .header {
-            text-align: center;
-            border-bottom: 2px solid #3498db;
-            padding-bottom: 16px;
-            margin-bottom: 24px;
-        }
-        .header h1 { color: #2c3e50; margin: 0 0 8px 0; font-size: 20px; }
-        .header h2 { color: #34495e; font-size: 15px; margin: 0; font-weight: normal; }
-        .header p { font-size: 13px; margin: 6px 0 0; color: #666; }
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="theme-color" content="#000000" />
+<title>Nhóm 1 — Tính Tự Chủ Trong Sắp Xếp Thời Gian Làm Bài Tập</title>
+<meta name="description" content="Bài thuyết trình về tính tự chủ trong việc sắp xếp thời gian làm bài tập — kỹ năng quan trọng giúp học sinh học tập hiệu quả và làm chủ cuộc sống." />
 
-        .section-title {
-            color: #e74c3c;
-            border-bottom: 1px solid #e74c3c;
-            padding-bottom: 6px;
-            margin-top: 28px;
-            font-size: 16px;
-        }
-        .section-title + p { font-size: 13px; color: #666; }
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%23000000'/%3E%3Ctext x='32' y='43' font-family='Inter,Arial' font-size='24' font-weight='700' text-anchor='middle' fill='%23FFFFFF'%3EN1%3C/text%3E%3C/svg%3E" />
 
-        .question {
-            margin-bottom: 20px;
-            padding: 14px;
-            border-radius: 8px;
-            background-color: #f9f9f9;
-            border: 1px solid #e0e0e0;
-        }
-        .question p { margin-top: 0; font-weight: 600; font-size: 14px; }
-        .options label {
-            display: block;
-            margin-bottom: 6px;
-            cursor: pointer;
-            font-weight: normal;
-            padding: 8px 10px;
-            border-radius: 6px;
-            background: #fff;
-            border: 1px solid #eaeaea;
-            font-size: 14px;
-            transition: background 0.15s;
-        }
-        .options label:active { background: #eaf4fd; }
-        .options input { margin-right: 8px; vertical-align: middle; }
+<style>
+:root{
+  --black:#000000;
+  --txt-1:rgba(255,255,255,.96);
+  --txt-2:rgba(255,255,255,.72);
+  --txt-3:rgba(255,255,255,.5);
+  --glass-bg:linear-gradient(150deg,rgba(255,255,255,.055),rgba(255,255,255,.012));
+  --glass-border:rgba(255,255,255,.1);
+  --r-xl:34px;
+  --r-lg:26px;
+  --r-md:18px;
+  --ease:cubic-bezier(.22,1,.36,1);
+  --shell:min(1280px,94vw);
+  --bar-h:66px;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{
+  background:var(--black);
+  color:var(--txt-1);
+  font-family:'Inter',-apple-system,BlinkMacSystemFont,'SF Pro Display','Segoe UI',Roboto,Helvetica,Arial,sans-serif;
+  font-size:18px;line-height:1.7;
+  -webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;
+  overflow-x:hidden;min-height:100vh;letter-spacing:-.011em;
+}
+body.is-locked{overflow:hidden}
+img,svg{display:block;max-width:100%}
+button{font-family:inherit;color:inherit;border:none;background:none;cursor:pointer}
+a{color:inherit;text-decoration:none}
+h1,h2,h3{line-height:1.15;letter-spacing:-.035em;font-weight:700}
+::selection{background:rgba(255,255,255,.25);color:#fff}
+:focus-visible{outline:2px solid rgba(255,255,255,.7);outline-offset:3px;border-radius:6px}
+*::-webkit-scrollbar{width:9px;height:9px}
+*::-webkit-scrollbar-track{background:transparent}
+*::-webkit-scrollbar-thumb{background:rgba(255,255,255,.12);border-radius:99px;border:2px solid transparent;background-clip:content-box}
 
-        table { width: 100%; border-collapse: collapse; margin-top: 8px; background: white; font-size: 13px; }
-        th, td { border: 1px solid #ddd; padding: 8px 6px; text-align: center; }
-        td.statement { text-align: left; font-weight: normal; }
-        table input { transform: scale(1.2); }
+/* AMBIENT */
+.ambient{position:fixed;inset:0;z-index:0;overflow:hidden;pointer-events:none;
+  background:
+    radial-gradient(1000px 700px at 20% -10%, rgba(255,255,255,.035), transparent 60%),
+    radial-gradient(900px 600px at 85% 90%, rgba(255,255,255,.025), transparent 60%),
+    var(--black);
+}
+.blob{position:absolute;border-radius:50%;filter:blur(110px);will-change:transform;opacity:.35}
+.blob.b1{width:44vw;height:44vw;min-width:340px;min-height:340px;top:-12%;left:-8%;
+  background:radial-gradient(circle at 40% 40%, rgba(255,255,255,.14), rgba(255,255,255,0) 68%);
+  animation:drift1 28s ease-in-out infinite}
+.blob.b2{width:40vw;height:40vw;min-width:300px;min-height:300px;top:40%;right:-12%;
+  background:radial-gradient(circle at 55% 45%, rgba(255,255,255,.1), rgba(255,255,255,0) 68%);
+  animation:drift2 34s ease-in-out infinite}
+@keyframes drift1{0%,100%{transform:translate3d(0,0,0) scale(1)}50%{transform:translate3d(6vw,4vh,0) scale(1.12)}}
+@keyframes drift2{0%,100%{transform:translate3d(0,0,0) scale(1)}50%{transform:translate3d(-5vw,6vh,0) scale(1.08)}}
 
-        .short-answer input {
-            width: 110px;
-            padding: 8px;
-            border: 1px solid #ccc;
-            border-radius: 6px;
-            text-align: center;
-            font-size: 15px;
-            margin-top: 4px;
-        }
-        .essay textarea {
-            width: 100%;
-            height: 110px;
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 6px;
-            font-family: inherit;
-            font-size: 14px;
-            resize: vertical;
-            margin-top: 8px;
-        }
+/* GLASS */
+.glass{position:relative;background:var(--glass-bg);border:1px solid var(--glass-border);
+  border-radius:var(--r-xl);
+  -webkit-backdrop-filter:blur(26px) saturate(140%);backdrop-filter:blur(26px) saturate(140%);
+  box-shadow:0 30px 80px rgba(0,0,0,.75),inset 0 1px 0 rgba(255,255,255,.14),inset 0 -1px 0 rgba(255,255,255,.03);
+  overflow:hidden}
+.glass::before{content:"";position:absolute;top:0;left:0;right:0;height:52%;
+  background:linear-gradient(180deg,rgba(255,255,255,.055),rgba(255,255,255,0));
+  pointer-events:none;border-radius:inherit}
+@supports not ((-webkit-backdrop-filter:blur(1px)) or (backdrop-filter:blur(1px))){
+  .glass,.card{background:rgba(14,14,14,.95) !important}
+  .glass::before,.card::before{opacity:.3}
+}
 
-        .submit-btn {
-            display: block;
-            width: 100%;
-            background-color: #27ae60;
-            color: white;
-            border: none;
-            padding: 14px;
-            font-size: 16px;
-            font-weight: bold;
-            border-radius: 8px;
-            cursor: pointer;
-            margin-top: 32px;
-            transition: background 0.3s;
-        }
-        .submit-btn:hover { background-color: #219150; }
-        .submit-btn:active { background-color: #1c7d46; }
+.eyebrow{display:inline-block;font-size:.85rem;font-weight:600;letter-spacing:.3em;
+  text-transform:uppercase;color:rgba(255,255,255,.75)}
+.grad-text{background:linear-gradient(105deg,#FFFFFF 0%,#D8D8D8 60%,#9A9A9A 100%);
+  -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;color:transparent}
+.lead{font-size:clamp(1.25rem,2vw,1.55rem);color:var(--txt-2);line-height:1.75}
 
-        #result-box {
-            display: none;
-            margin-top: 24px;
-            padding: 20px;
-            border-radius: 10px;
-            background-color: #e8f8f5;
-            border: 2px solid #2ecc71;
-            text-align: center;
-        }
-        #result-box h2 { color: #27ae60; margin-top: 0; font-size: 18px; }
-        #result-box .score { font-size: 34px; font-weight: bold; color: #e74c3c; margin: 10px 0; }
-        #result-box p { font-size: 13px; }
+/* BUTTONS */
+.btn{position:relative;display:inline-flex;align-items:center;justify-content:center;gap:10px;
+  padding:18px 38px;border-radius:999px;font-size:1.1rem;font-weight:600;letter-spacing:-.01em;
+  color:#000;cursor:pointer;overflow:hidden;isolation:isolate;
+  transition:transform .45s var(--ease),box-shadow .45s var(--ease),background .45s var(--ease);
+  white-space:nowrap}
+.btn::after{content:"";position:absolute;top:0;left:-140%;width:55%;height:100%;
+  background:linear-gradient(100deg,transparent,rgba(255,255,255,.6),transparent);
+  transform:skewX(-18deg);transition:left .85s var(--ease);pointer-events:none;z-index:2}
+.btn:hover::after{left:150%}
+.btn-primary{background:#FFFFFF;color:#000;
+  box-shadow:0 14px 44px rgba(255,255,255,.12),0 0 0 1px rgba(255,255,255,.24) inset}
+.btn-primary:hover{transform:translateY(-2px) scale(1.022);
+  box-shadow:0 22px 60px rgba(255,255,255,.18),0 0 0 1px rgba(255,255,255,.34) inset}
+.btn-primary:active{transform:translateY(0) scale(.99)}
 
-        .explanation {
-            display: none;
-            margin-top: 10px;
-            padding: 10px 12px;
-            background-color: #fff3cd;
-            border-left: 4px solid #ffc107;
-            font-size: 13px;
-            font-weight: normal;
-            color: #856404;
-            border-radius: 0 6px 6px 0;
-        }
-        .correct-ans { color: #c0392b; font-weight: bold; }
-        .essay-solution {
-            display: none;
-            margin-top: 12px;
-            padding: 14px;
-            background-color: #e8f4f8;
-            border-left: 4px solid #3498db;
-            font-weight: normal;
-            font-size: 13px;
-            border-radius: 0 6px 6px 0;
-        }
+.icon-btn{display:inline-flex;align-items:center;justify-content:center;width:48px;height:48px;
+  border-radius:50%;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.12);
+  color:var(--txt-1);transition:background .35s var(--ease),transform .35s var(--ease),border-color .35s var(--ease);flex:0 0 auto}
+.icon-btn:hover{background:rgba(255,255,255,.14);border-color:rgba(255,255,255,.34);transform:translateY(-1px)}
+.icon-btn svg{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
 
-        /* ===== LỚP CHE ĐEN ===== */
-        #shield {
-            display: none;
-            position: fixed;
-            inset: 0;
-            background: #000;
-            z-index: 2147483647;
-            color: #fff;
-            font-family: 'Segoe UI', Tahoma, sans-serif;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            padding: 24px;
-            -webkit-user-select: none;
-            user-select: none;
-        }
-        #shield.show { display: flex; }
-        #shield .box { max-width: 480px; }
-        #shield h2 { color: #e74c3c; font-size: 22px; margin: 0 0 12px; }
-        #shield p { color: #ddd; font-size: 15px; margin: 8px 0; line-height: 1.5; }
+/* NAV */
+.nav{position:fixed;top:0;left:0;right:0;z-index:60;height:var(--bar-h);display:flex;align-items:center;
+  padding:0 clamp(16px,4vw,40px);transition:background .5s var(--ease),border-color .5s var(--ease);border-bottom:1px solid transparent}
+.nav.scrolled{background:rgba(0,0,0,.7);-webkit-backdrop-filter:blur(22px) saturate(140%);backdrop-filter:blur(22px) saturate(140%);border-bottom-color:rgba(255,255,255,.06)}
+.nav-inner{width:var(--shell);margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:18px}
+.logo{display:inline-flex;align-items:baseline;gap:2px;font-size:1.5rem;font-weight:800;letter-spacing:-.05em;user-select:none;color:#FFFFFF}
 
-        @media (max-width: 640px) {
-            body { padding: 8px; }
-            .container { padding: 16px; border-radius: 8px; }
-            .header h1 { font-size: 17px; }
-            .header h2 { font-size: 13px; }
-            .section-title { font-size: 15px; }
-            .question { padding: 12px; }
-            .options label { font-size: 13px; padding: 7px 8px; }
-            table { font-size: 12px; }
-            th, td { padding: 6px 4px; }
-            .essay textarea { height: 90px; }
-            #result-box .score { font-size: 28px; }
-        }
-        @media (max-width: 400px) {
-            .options label { font-size: 12.5px; }
-            table { font-size: 11px; }
-        }
-    </style>
-    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
-    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+/* HERO */
+.hero{position:relative;z-index:2;min-height:100svh;display:flex;align-items:center;justify-content:center;
+  padding:calc(var(--bar-h) + 40px) clamp(18px,5vw,48px) 80px;text-align:center;overflow:hidden}
+.hero-inner{width:min(1100px,100%);margin:0 auto;position:relative;z-index:2}
+.hero-logo{font-size:clamp(3rem,7vw,5rem);font-weight:800;letter-spacing:-.06em;line-height:1;
+  margin-bottom:clamp(24px,3.4vh,40px);display:inline-block;color:#FFFFFF;
+  filter:drop-shadow(0 12px 50px rgba(255,255,255,.15))}
+.badge-text{display:block;font-size:.85rem;font-weight:600;letter-spacing:.32em;
+  text-transform:uppercase;color:rgba(255,255,255,.55);margin-bottom:clamp(20px,3vh,30px)}
+.hero h1{font-size:clamp(2.4rem,6vw,5rem);font-weight:800;letter-spacing:-.045em;line-height:1.08;
+  margin-bottom:clamp(18px,2.6vh,26px);text-wrap:balance;color:#FFFFFF}
+.hero-sub{font-size:clamp(1.15rem,2vw,1.5rem);color:var(--txt-2);max-width:820px;
+  margin:0 auto clamp(30px,4.6vh,46px);line-height:1.65;text-wrap:balance}
+.hero-actions{display:flex;flex-wrap:wrap;gap:14px;justify-content:center;align-items:center}
+.hero-anim{opacity:0;transform:translateY(34px);filter:blur(10px);animation:heroIn 1.05s var(--ease) forwards}
+.d1{animation-delay:.12s}.d2{animation-delay:.26s}.d3{animation-delay:.40s}.d4{animation-delay:.54s}.d5{animation-delay:.68s}
+@keyframes heroIn{to{opacity:1;transform:translateY(0);filter:blur(0)}}
+
+/* SECTION */
+.section{position:relative;z-index:2;padding:clamp(64px,10vh,128px) clamp(18px,5vw,48px)}
+.container{width:var(--shell);margin:0 auto}
+.reveal{opacity:0;transform:translateY(30px);filter:blur(6px);
+  transition:opacity .95s var(--ease),transform .95s var(--ease),filter .95s var(--ease);transition-delay:var(--d,0s)}
+.reveal.in{opacity:1;transform:translateY(0);filter:blur(0)}
+
+/* INTRO */
+.intro-card{display:grid;grid-template-columns:1fr;gap:clamp(24px,4vw,54px);
+  padding:clamp(28px,4.5vw,58px);align-items:center}
+.intro-text h2{font-size:clamp(2.2rem,4.2vw,3.4rem);margin:14px 0 22px;color:#FFFFFF}
+.intro-text .lead{margin-bottom:18px}
+.intro-text p.body{color:var(--txt-2);font-size:clamp(1.02rem,1.4vw,1.18rem);line-height:1.75;margin-bottom:16px}
+.stat-row{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:30px}
+.stat{padding:22px 18px;border-radius:var(--r-md);background:rgba(255,255,255,.035);
+  border:1px solid rgba(255,255,255,.08);text-align:center;
+  transition:background .4s var(--ease),border-color .4s var(--ease),transform .4s var(--ease)}
+.stat:hover{background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.2);transform:translateY(-3px)}
+.stat b{display:block;font-size:clamp(1.4rem,2.4vw,1.85rem);font-weight:700;letter-spacing:-.03em;color:#FFFFFF}
+.stat span{display:block;font-size:.78rem;letter-spacing:.16em;text-transform:uppercase;color:var(--txt-3);margin-top:6px}
+
+/* DECK */
+.deck{position:fixed;inset:0;z-index:200;display:flex;flex-direction:column;
+  background:
+    radial-gradient(1000px 620px at 12% 0%,rgba(255,255,255,.04),transparent 62%),
+    radial-gradient(900px 600px at 88% 6%,rgba(255,255,255,.03),transparent 62%),
+    #000000;
+  opacity:0;visibility:hidden;pointer-events:none;transform:scale(1.015);
+  transition:opacity .55s var(--ease),visibility .55s var(--ease),transform .55s var(--ease)}
+.deck.open{opacity:1;visibility:visible;pointer-events:auto;transform:scale(1)}
+.deck-bar{position:relative;z-index:3;display:flex;align-items:center;gap:clamp(10px,2vw,20px);
+  padding:0 clamp(14px,3.2vw,34px);height:var(--bar-h);flex:0 0 auto;
+  background:rgba(0,0,0,.5);-webkit-backdrop-filter:blur(20px) saturate(140%);backdrop-filter:blur(20px) saturate(140%);
+  border-bottom:1px solid rgba(255,255,255,.06)}
+.deck-brand{display:flex;align-items:center;gap:10px;flex:0 0 auto}
+.deck-brand .logo{font-size:1.15rem}
+.deck-meta{display:flex;align-items:center;gap:14px;flex:0 0 auto;margin-left:auto}
+.counter{font-size:.95rem;font-variant-numeric:tabular-nums;letter-spacing:.1em;color:var(--txt-2);white-space:nowrap}
+.counter b{color:#FFFFFF;font-weight:600}
+.counter span{opacity:.4;margin:0 3px}
+.deck-stage{position:relative;z-index:2;flex:1 1 auto;min-height:0;overflow:hidden}
+
+.slide{position:absolute;inset:0;display:flex;padding:clamp(20px,3.4vh,48px) clamp(20px,4.5vw,60px);
+  overflow-y:auto;overflow-x:hidden;opacity:0;visibility:hidden;pointer-events:none;
+  transform:translate3d(var(--tx,0px),18px,0) scale(.975);filter:blur(14px);
+  transition:opacity .62s var(--ease),transform .62s var(--ease),filter .62s var(--ease),visibility .62s var(--ease);
+  will-change:opacity,transform,filter}
+.slide.is-active{opacity:1;visibility:visible;pointer-events:auto;transform:translate3d(0,0,0) scale(1);filter:blur(0)}
+.slide-inner{width:100%;max-width:1240px;margin:auto;position:relative}
+.slide-head{margin-bottom:clamp(22px,3.4vh,42px)}
+.slide-title{font-size:clamp(2rem,4.6vw,3.6rem);letter-spacing:-.04em;margin-top:14px;line-height:1.1;color:#FFFFFF}
+.slide-sub{margin-top:12px;font-size:clamp(1.08rem,1.7vw,1.32rem);color:var(--txt-2);max-width:70ch;line-height:1.65}
+.slide.is-active .stagger{animation:stagIn .85s var(--ease) both}
+.slide.is-active .stagger:nth-child(1){animation-delay:.05s}
+.slide.is-active .stagger:nth-child(2){animation-delay:.13s}
+.slide.is-active .stagger:nth-child(3){animation-delay:.21s}
+.slide.is-active .stagger:nth-child(4){animation-delay:.29s}
+.slide.is-active .stagger:nth-child(5){animation-delay:.37s}
+.slide.is-active .stagger:nth-child(6){animation-delay:.45s}
+@keyframes stagIn{from{opacity:0;transform:translateY(24px);filter:blur(8px)}to{opacity:1;transform:translateY(0);filter:blur(0)}}
+
+.card{position:relative;overflow:hidden;padding:clamp(22px,2.8vw,32px);border-radius:var(--r-lg);
+  background:linear-gradient(155deg,rgba(255,255,255,.055),rgba(255,255,255,.012));
+  border:1px solid rgba(255,255,255,.1);
+  -webkit-backdrop-filter:blur(20px) saturate(140%);backdrop-filter:blur(20px) saturate(140%);
+  box-shadow:0 16px 44px rgba(0,0,0,.55),inset 0 1px 0 rgba(255,255,255,.12);
+  transition:transform .5s var(--ease),border-color .5s var(--ease),box-shadow .5s var(--ease);
+  display:flex;flex-direction:column}
+.card::after{content:"";position:absolute;top:0;left:-140%;width:58%;height:100%;
+  background:linear-gradient(100deg,transparent,rgba(255,255,255,.12),transparent);
+  transform:skewX(-18deg);transition:left .95s var(--ease);pointer-events:none}
+.card:hover::after{left:155%}
+.card:hover{transform:translateY(-6px);border-color:rgba(255,255,255,.3);
+  box-shadow:0 28px 70px rgba(0,0,0,.7),inset 0 1px 0 rgba(255,255,255,.18)}
+.card h3{font-size:clamp(1.3rem,2.2vw,1.65rem);font-weight:700;letter-spacing:-.02em;margin-bottom:10px;color:#FFFFFF}
+.card .role{display:block;font-size:.85rem;letter-spacing:.16em;text-transform:uppercase;color:rgba(255,255,255,.6);margin-bottom:12px;font-weight:600}
+.card p{font-size:clamp(1rem,1.35vw,1.15rem);color:var(--txt-2);line-height:1.7}
+.card-index{position:absolute;top:18px;right:20px;font-size:.9rem;font-weight:700;letter-spacing:.16em;color:rgba(255,255,255,.3);z-index:3}
+
+.grid-3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(16px,2vw,26px)}
+.grid-2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:clamp(16px,2vw,26px)}
+
+.bullets{list-style:none;display:flex;flex-direction:column;gap:16px;margin-top:26px}
+.bullets li{position:relative;padding:22px 26px 22px 60px;border-radius:var(--r-md);
+  background:rgba(255,255,255,.035);border:1px solid rgba(255,255,255,.08);
+  font-size:clamp(1.05rem,1.5vw,1.22rem);color:var(--txt-2);line-height:1.7;
+  transition:background .4s var(--ease),border-color .4s var(--ease),transform .4s var(--ease)}
+.bullets li:hover{background:rgba(255,255,255,.07);border-color:rgba(255,255,255,.22);transform:translateX(4px)}
+.bullets li::before{content:"";position:absolute;left:24px;top:50%;width:12px;height:12px;margin-top:-6px;
+  border-radius:50%;background:rgba(255,255,255,.7)}
+.bullets li b{color:#FFFFFF;font-weight:700}
+
+.type-card{padding:0;overflow:hidden}
+.type-card .type-body{padding:clamp(24px,3vw,36px)}
+.type-card h3{font-size:clamp(1.35rem,2.4vw,1.75rem);margin-bottom:12px}
+.type-card p{font-size:clamp(1rem,1.4vw,1.15rem);color:var(--txt-2);line-height:1.7}
+
+.costume-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:clamp(18px,2.4vw,30px)}
+.costume{position:relative;border-radius:var(--r-lg);overflow:hidden;
+  border:1px solid rgba(255,255,255,.1);
+  background:linear-gradient(155deg,rgba(255,255,255,.05),rgba(255,255,255,.01));
+  -webkit-backdrop-filter:blur(20px) saturate(140%);backdrop-filter:blur(20px) saturate(140%);
+  box-shadow:0 18px 48px rgba(0,0,0,.55),inset 0 1px 0 rgba(255,255,255,.12);
+  transition:transform .5s var(--ease),border-color .5s var(--ease),box-shadow .5s var(--ease);
+  padding:clamp(26px,3.2vw,40px)}
+.costume:hover{transform:translateY(-6px);border-color:rgba(255,255,255,.3);
+  box-shadow:0 30px 74px rgba(0,0,0,.7),inset 0 1px 0 rgba(255,255,255,.18)}
+.costume .role{font-size:.82rem;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,255,.6);margin-bottom:12px;display:block;font-weight:600}
+.costume h3{font-size:clamp(1.4rem,2.4vw,1.8rem);margin-bottom:14px;color:#FFFFFF}
+.costume p{font-size:clamp(1rem,1.4vw,1.15rem);color:var(--txt-2);line-height:1.72}
+
+.conclusion{text-align:center;max-width:1000px;margin:0 auto;padding:clamp(20px,4vh,44px) 0}
+.conclusion h2{font-size:clamp(2.4rem,5.4vw,4.4rem);letter-spacing:-.05em;line-height:1.1;margin:22px 0 32px;color:#FFFFFF}
+.conclusion .quote{font-size:clamp(1.2rem,2vw,1.5rem);color:var(--txt-2);line-height:1.8;max-width:75ch;margin:0 auto 40px;text-wrap:pretty}
+.thanks{display:inline-flex;align-items:center;justify-content:center;
+  padding:20px 42px;border-radius:999px;
+  font-size:clamp(1.1rem,1.8vw,1.3rem);font-weight:600;letter-spacing:-.01em;
+  color:#FFFFFF;
+  background:rgba(255,255,255,.05);
+  border:1px solid rgba(255,255,255,.18);
+  -webkit-backdrop-filter:blur(18px);backdrop-filter:blur(18px);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.12)}
+
+/* RESPONSIVE */
+@media (max-width:1100px){
+  .grid-3{grid-template-columns:1fr}
+  .costume-grid{grid-template-columns:1fr}
+}
+@media (max-width:820px){
+  :root{--bar-h:60px}
+  .grid-2{grid-template-columns:1fr}
+  .stat-row{grid-template-columns:1fr;gap:12px}
+  body{font-size:17px}
+}
+@media (max-width:560px){
+  .hero-actions{flex-direction:column;width:100%}
+  .hero-actions .btn{width:100%}
+  .deck-brand .logo{font-size:.98rem}
+  .counter{font-size:.85rem}
+  .slide{padding:18px 16px}
+  .card{padding:20px}
+  .bullets li{padding:18px 18px 18px 50px}
+  .bullets li::before{left:20px;width:10px;height:10px;margin-top:-5px}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.001ms !important;animation-iteration-count:1 !important;transition-duration:.001ms !important;scroll-behavior:auto !important}
+  .hero-anim,.reveal{opacity:1 !important;transform:none !important;filter:none !important}
+  .slide{filter:none !important}
+}
+</style>
 </head>
 <body>
 
-    <!-- Lớp che đen: hiện khi tự động nộp do rời tab -->
-    <div id="shield">
-        <div class="box">
-            <h2>Bài làm đã được nộp</h2>
-            <p>Hệ thống phát hiện bạn rời khỏi trang làm bài.</p>
-            <p>Vui lòng <b>tải lại trang</b> để xem kết quả bài làm.</p>
-        </div>
+<div class="ambient" aria-hidden="true">
+  <div class="blob b1"></div>
+  <div class="blob b2"></div>
+</div>
+
+<!-- NAV -->
+<header class="nav" id="nav">
+  <div class="nav-inner">
+    <a href="#hero" class="logo" aria-label="Nhóm 1 trang chủ">Nhóm 1</a>
+    <button class="btn btn-primary" id="navPresent" type="button" style="padding:12px 26px;font-size:1rem">Bắt đầu</button>
+  </div>
+</header>
+
+<main>
+
+  <!-- HERO -->
+  <section class="hero" id="hero">
+    <div class="hero-inner">
+      <div class="hero-logo hero-anim d1" aria-label="Nhóm 1">Nhóm 1</div>
+
+      <div class="hero-anim d2">
+        <span class="badge-text">KỸ NĂNG SỐNG · TÍNH TỰ CHỦ</span>
+      </div>
+
+      <h1 class="hero-anim d3">Tính Tự Chủ Trong Việc <span class="grad-text">Sắp Xếp Thời Gian</span> Làm Bài Tập</h1>
+
+      <p class="hero-sub hero-anim d4">Tự giác lập kế hoạch học tập — phân chia thời gian hợp lý — chủ động hoàn thành nhiệm vụ</p>
+
+      <div class="hero-actions hero-anim d5">
+        <button class="btn btn-primary" id="startBtn" type="button">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path d="M8 5.14v13.72a1 1 0 0 0 1.52.85l11.03-6.86a1 1 0 0 0 0-1.7L9.52 4.29A1 1 0 0 0 8 5.14z"/>
+          </svg>
+          Bắt đầu thuyết trình
+        </button>
+      </div>
     </div>
+  </section>
 
-    <div class="container" id="examContainer">
-        <div class="header">
-            <h1>ĐỀ KIỂM TRA GIỮA KÌ I - NĂM HỌC 2026 - 2027</h1>
-            <h2>MÔN: VẬT LÍ 10 - Thời gian làm bài: 45 phút</h2>
-            <p><i>(Biên soạn theo ma trận đặc tả chuẩn)</i></p>
+  <!-- INTRODUCTION -->
+  <section class="section" id="intro">
+    <div class="container">
+      <div class="glass intro-card reveal">
+        <div class="intro-text">
+          <span class="eyebrow">Giới thiệu</span>
+          <h2>Tự chủ trong sắp xếp thời gian là gì?</h2>
+          <p class="lead">
+            “Tự chủ trong việc sắp xếp thời gian làm bài tập là khả năng tự giác xây dựng
+            kế hoạch học tập, phân chia thời gian hợp lý cho từng môn học và chủ động
+            hoàn thành các nhiệm vụ được giao.”
+          </p>
+          <p class="body">
+            Đây là một biểu hiện quan trọng của tính tự chủ, giúp mỗi người hình thành
+            thói quen học tập khoa học và có trách nhiệm với bản thân. Không ai có thể
+            học thay chúng ta — và cũng không ai có thể sắp xếp thời gian thay chúng ta.
+          </p>
+          <p class="body">
+            Khi biết tự chủ, học sinh không còn phụ thuộc vào sự nhắc nhở của cha mẹ hay
+            thầy cô, mà tự mình xây dựng nề nếp, tự đặt mục tiêu và tự chịu trách nhiệm
+            với kết quả học tập của chính mình.
+          </p>
+          <div class="stat-row">
+            <div class="stat"><b>Tự giác</b><span>Lập kế hoạch</span></div>
+            <div class="stat"><b>Khoa học</b><span>Phân chia thời gian</span></div>
+            <div class="stat"><b>Trách nhiệm</b><span>Hoàn thành nhiệm vụ</span></div>
+          </div>
         </div>
-
-        <form id="examForm" autocomplete="off">
-            <!-- PHẦN I -->
-            <h3 class="section-title">PHẦN I. Câu trắc nghiệm nhiều phương án lựa chọn (4,0 điểm)</h3>
-            <p><i>Thí sinh chọn 1 phương án đúng nhất. (Mỗi câu đúng 0,25 điểm)</i></p>
-
-            <div class="question" id="q1_div">
-                <p>Câu 1: Đối tượng nghiên cứu chủ yếu của Vật lí là gì?</p>
-                <div class="options">
-                    <label><input type="radio" name="q1" value="A"> A. Các dạng vận động của vật chất và năng lượng.</label>
-                    <label><input type="radio" name="q1" value="B"> B. Các phản ứng hóa học xảy ra trong tự nhiên.</label>
-                    <label><input type="radio" name="q1" value="C"> C. Cấu tạo và sự phát triển của sinh vật.</label>
-                    <label><input type="radio" name="q1" value="D"> D. Lịch sử hình thành và phát triển của xã hội.</label>
-                </div>
-                <div class="explanation">Đáp án đúng: <span class="correct-ans">A</span></div>
-            </div>
-
-            <div class="question" id="q2_div">
-                <p>Câu 2: Quy tắc nào sau đây đảm bảo an toàn khi làm việc trong phòng thực hành Vật lí?</p>
-                <div class="options">
-                    <label><input type="radio" name="q2" value="A"> A. Rút phích cắm điện bằng cách kéo mạnh dây dẫn.</label>
-                    <label><input type="radio" name="q2" value="B"> B. Cầm tay ướt khi cắm phích điện.</label>
-                    <label><input type="radio" name="q2" value="C"> C. Kiểm tra cẩn thận thiết bị, dây dẫn trước khi cắm điện.</label>
-                    <label><input type="radio" name="q2" value="D"> D. Tự ý sửa chữa thiết bị khi có hiện tượng chập cháy.</label>
-                </div>
-                <div class="explanation">Đáp án đúng: <span class="correct-ans">C</span></div>
-            </div>
-
-            <div class="question" id="q3_div">
-                <p>Câu 3: Sai số hệ thống trong phép đo các đại lượng vật lí là gì?</p>
-                <div class="options">
-                    <label><input type="radio" name="q3" value="A"> A. Sai số do các yếu tố ngẫu nhiên bên ngoài gây ra.</label>
-                    <label><input type="radio" name="q3" value="B"> B. Sai số có tính quy luật, lặp lại giống nhau ở các lần đo, thường do dụng cụ đo.</label>
-                    <label><input type="radio" name="q3" value="C"> C. Sai số do người đo đọc sai kết quả.</label>
-                    <label><input type="radio" name="q3" value="D"> D. Sai số không thể xác định được nguyên nhân.</label>
-                </div>
-                <div class="explanation">Đáp án đúng: <span class="correct-ans">B</span></div>
-            </div>
-
-            <div class="question" id="q4_div">
-                <p>Câu 4: Nhận định nào sau đây là ĐÚNG khi nói về độ dịch chuyển?</p>
-                <div class="options">
-                    <label><input type="radio" name="q4" value="A"> A. Độ dịch chuyển là đại lượng vô hướng.</label>
-                    <label><input type="radio" name="q4" value="B"> B. Độ dịch chuyển là đại lượng vectơ, cho biết độ dài và hướng sự thay đổi vị trí.</label>
-                    <label><input type="radio" name="q4" value="C"> C. Độ dịch chuyển luôn có giá trị dương.</label>
-                    <label><input type="radio" name="q4" value="D"> D. Độ lớn của độ dịch chuyển luôn bằng quãng đường đi được.</label>
-                </div>
-                <div class="explanation">Đáp án đúng: <span class="correct-ans">B</span></div>
-            </div>
-
-            <div class="question" id="q5_div">
-                <p>Câu 5: Công thức tính tốc độ trung bình của một vật chuyển động là:</p>
-                <div class="options">
-                    <label><input type="radio" name="q5" value="A"> A. \( v = \frac{d}{t} \)</label>
-                    <label><input type="radio" name="q5" value="B"> B. \( v = \frac{s}{t} \)</label>
-                    <label><input type="radio" name="q5" value="C"> C. \( v = s \cdot t \)</label>
-                    <label><input type="radio" name="q5" value="D"> D. \( v = d \cdot t \)</label>
-                </div>
-                <div class="explanation">Đáp án đúng: <span class="correct-ans">B</span>. Tốc độ trung bình bằng quãng đường (s) chia thời gian (t).</div>
-            </div>
-
-            <div class="question" id="q6_div">
-                <p>Câu 6: Thiết bị nào sau đây KHÔNG dùng để đo tốc độ trong phòng thí nghiệm?</p>
-                <div class="options">
-                    <label><input type="radio" name="q6" value="A"> A. Đồng hồ đo thời gian hiện số.</label>
-                    <label><input type="radio" name="q6" value="B"> B. Cổng quang điện.</label>
-                    <label><input type="radio" name="q6" value="C"> C. Cân điện tử.</label>
-                    <label><input type="radio" name="q6" value="D"> D. Thước và đồng hồ bấm giây.</label>
-                </div>
-                <div class="explanation">Đáp án đúng: <span class="correct-ans">C</span>. Cân điện tử đo khối lượng.</div>
-            </div>
-
-            <div class="question" id="q7_div">
-                <p>Câu 7: Đồ thị độ dịch chuyển - thời gian (d-t) của một vật chuyển động thẳng đều là:</p>
-                <div class="options">
-                    <label><input type="radio" name="q7" value="A"> A. Đường parabol.</label>
-                    <label><input type="radio" name="q7" value="B"> B. Đường thẳng xiên góc.</label>
-                    <label><input type="radio" name="q7" value="C"> C. Đường tròn.</label>
-                    <label><input type="radio" name="q7" value="D"> D. Đường cong bất kì.</label>
-                </div>
-                <div class="explanation">Đáp án đúng: <span class="correct-ans">B</span></div>
-            </div>
-
-            <div class="question" id="q8_div">
-                <p>Câu 8: Trong hệ SI, đơn vị của gia tốc là:</p>
-                <div class="options">
-                    <label><input type="radio" name="q8" value="A"> A. m/s</label>
-                    <label><input type="radio" name="q8" value="B"> B. km/h</label>
-                    <label><input type="radio" name="q8" value="C"> C. m/s²</label>
-                    <label><input type="radio" name="q8" value="D"> D. m</label>
-                </div>
-                <div class="explanation">Đáp án đúng: <span class="correct-ans">C</span></div>
-            </div>
-
-            <div class="question" id="q9_div">
-                <p>Câu 9: Gia tốc là đại lượng đặc trưng cho:</p>
-                <div class="options">
-                    <label><input type="radio" name="q9" value="A"> A. Quãng đường vật đi được nhanh hay chậm.</label>
-                    <label><input type="radio" name="q9" value="B"> B. Sự thay đổi vị trí của vật trong không gian.</label>
-                    <label><input type="radio" name="q9" value="C"> C. Sự thay đổi nhanh hay chậm của vận tốc.</label>
-                    <label><input type="radio" name="q9" value="D"> D. Vận tốc của vật lớn hay nhỏ.</label>
-                </div>
-                <div class="explanation">Đáp án đúng: <span class="correct-ans">C</span></div>
-            </div>
-
-            <div class="question" id="q10_div">
-                <p>Câu 10: Phương trình liên hệ giữa vận tốc, gia tốc và độ dịch chuyển trong chuyển động thẳng biến đổi đều là:</p>
-                <div class="options">
-                    <label><input type="radio" name="q10" value="A"> A. \( v - v_0 = 2ad \)</label>
-                    <label><input type="radio" name="q10" value="B"> B. \( v^2 - v_0^2 = 2ad \)</label>
-                    <label><input type="radio" name="q10" value="C"> C. \( v^2 + v_0^2 = 2ad \)</label>
-                    <label><input type="radio" name="q10" value="D"> D. \( v^2 - v_0^2 = ad \)</label>
-                </div>
-                <div class="explanation">Đáp án đúng: <span class="correct-ans">B</span></div>
-            </div>
-
-            <div class="question" id="q11_div">
-                <p>Câu 11: Để đảm bảo an toàn, khi thấy có mùi khét hoặc khói bốc lên từ mạch điện trong phòng thực hành, học sinh cần phải:</p>
-                <div class="options">
-                    <label><input type="radio" name="q11" value="A"> A. Tiếp tục làm thí nghiệm vì chưa thấy lửa.</label>
-                    <label><input type="radio" name="q11" value="B"> B. Dùng nước hắt vào mạch điện để dập khói.</label>
-                    <label><input type="radio" name="q11" value="C"> C. Thổi mạnh cho bớt khói.</label>
-                    <label><input type="radio" name="q11" value="D"> D. Ngắt ngay nguồn điện và báo ngay cho giáo viên.</label>
-                </div>
-                <div class="explanation">Đáp án đúng: <span class="correct-ans">D</span></div>
-            </div>
-
-            <div class="question" id="q12_div">
-                <p>Câu 12: Đo chiều dài của một cuốn sách thu được kết quả \( L = 20,0 \pm 0,5 \) cm. Sai số tỉ đối của phép đo này là:</p>
-                <div class="options">
-                    <label><input type="radio" name="q12" value="A"> A. 5%</label>
-                    <label><input type="radio" name="q12" value="B"> B. 2,5%</label>
-                    <label><input type="radio" name="q12" value="C"> C. 0,5%</label>
-                    <label><input type="radio" name="q12" value="D"> D. 20%</label>
-                </div>
-                <div class="explanation">Đáp án đúng: <span class="correct-ans">B</span>. \( \delta = \frac{0.5}{20.0} \times 100\% = 2.5\% \).</div>
-            </div>
-
-            <div class="question" id="q13_div">
-                <p>Câu 13: Một vận động viên chạy đúng 1 vòng quanh sân vận động hình tròn chu vi 400m rồi dừng lại. Quãng đường đi được và độ dịch chuyển của vận động viên đó lần lượt là:</p>
-                <div class="options">
-                    <label><input type="radio" name="q13" value="A"> A. 400 m và 400 m.</label>
-                    <label><input type="radio" name="q13" value="B"> B. 0 m và 400 m.</label>
-                    <label><input type="radio" name="q13" value="C"> C. 400 m và 0 m.</label>
-                    <label><input type="radio" name="q13" value="D"> D. 0 m và 0 m.</label>
-                </div>
-                <div class="explanation">Đáp án đúng: <span class="correct-ans">C</span>. Trở về điểm xuất phát nên độ dịch chuyển d = 0, quãng đường s = 400m.</div>
-            </div>
-
-            <div class="question" id="q14_div">
-                <p>Câu 14: Khi đo thời gian rơi của một viên bi qua 2 cổng quang điện, đồng hồ đo thời gian hiện số hiển thị giá trị là 0,105 s. Độ chia nhỏ nhất đang được sử dụng của đồng hồ này là:</p>
-                <div class="options">
-                    <label><input type="radio" name="q14" value="A"> A. 0,1 s</label>
-                    <label><input type="radio" name="q14" value="B"> B. 0,01 s</label>
-                    <label><input type="radio" name="q14" value="C"> C. 0,001 s</label>
-                    <label><input type="radio" name="q14" value="D"> D. 0,5 s</label>
-                </div>
-                <div class="explanation">Đáp án đúng: <span class="correct-ans">C</span>. Có 3 chữ số thập phân nên ĐCNN là 0,001s.</div>
-            </div>
-
-            <div class="question" id="q15_div">
-                <p>Câu 15: Một chiếc thuyền máy chạy ngược dòng nước. Vận tốc của thuyền so với nước là 6 m/s, vận tốc của nước chảy so với bờ là 2 m/s. Vận tốc của thuyền so với bờ có độ lớn là:</p>
-                <div class="options">
-                    <label><input type="radio" name="q15" value="A"> A. 8 m/s</label>
-                    <label><input type="radio" name="q15" value="B"> B. 4 m/s</label>
-                    <label><input type="radio" name="q15" value="C"> C. 3 m/s</label>
-                    <label><input type="radio" name="q15" value="D"> D. 12 m/s</label>
-                </div>
-                <div class="explanation">Đáp án đúng: <span class="correct-ans">B</span>. Ngược dòng: v_tb = v_tn - v_nb = 6 - 2 = 4 m/s.</div>
-            </div>
-
-            <div class="question" id="q16_div">
-                <p>Câu 16: Đồ thị độ dịch chuyển – thời gian của một chuyển động thẳng là một đường thẳng đi qua gốc toạ độ và đi qua điểm M có toạ độ \( (t=4\text{s}, d=20\text{m}) \). Tốc độ của vật là:</p>
-                <div class="options">
-                    <label><input type="radio" name="q16" value="A"> A. 80 m/s</label>
-                    <label><input type="radio" name="q16" value="B"> B. 16 m/s</label>
-                    <label><input type="radio" name="q16" value="C"> C. 5 m/s</label>
-                    <label><input type="radio" name="q16" value="D"> D. 24 m/s</label>
-                </div>
-                <div class="explanation">Đáp án đúng: <span class="correct-ans">C</span>. Tốc độ v = d / t = 20 / 4 = 5 m/s.</div>
-            </div>
-
-            <!-- PHẦN II -->
-            <h3 class="section-title">PHẦN II. Câu trắc nghiệm đúng sai (2,0 điểm)</h3>
-            <p><i>Trong mỗi ý a), b), c), d) ở mỗi câu, thí sinh chọn Đúng hoặc Sai. (Đúng 1 ý: 0,1đ; 2 ý: 0,25đ; 3 ý: 0,5đ; 4 ý: 1,0đ)</i></p>
-
-            <div class="question">
-                <p>Câu 1 (1,0 điểm): Một vật chuyển động trên quỹ đạo bất kì. Các nhận định sau về độ dịch chuyển và quãng đường là Đúng hay Sai?</p>
-                <table>
-                    <tr>
-                        <th style="width:70%;">Phát biểu</th>
-                        <th style="width:15%;">Đúng</th>
-                        <th style="width:15%;">Sai</th>
-                    </tr>
-                    <tr>
-                        <td class="statement">a) Độ dịch chuyển là đại lượng vô hướng.</td>
-                        <td><input type="radio" name="tf1a" value="T"></td>
-                        <td><input type="radio" name="tf1a" value="F"></td>
-                    </tr>
-                    <tr>
-                        <td class="statement">b) Quãng đường là đại lượng vô hướng và không âm.</td>
-                        <td><input type="radio" name="tf1b" value="T"></td>
-                        <td><input type="radio" name="tf1b" value="F"></td>
-                    </tr>
-                    <tr>
-                        <td class="statement">c) Độ lớn của độ dịch chuyển luôn bằng quãng đường đi được trong mọi trường hợp.</td>
-                        <td><input type="radio" name="tf1c" value="T"></td>
-                        <td><input type="radio" name="tf1c" value="F"></td>
-                    </tr>
-                    <tr>
-                        <td class="statement">d) Nếu vật đi rồi quay về đúng vị trí xuất phát thì độ dịch chuyển bằng 0.</td>
-                        <td><input type="radio" name="tf1d" value="T"></td>
-                        <td><input type="radio" name="tf1d" value="F"></td>
-                    </tr>
-                </table>
-                <div class="explanation" id="exp_tf1">Đáp án: <b>a) Sai, b) Đúng, c) Sai, d) Đúng</b>.</div>
-            </div>
-
-            <div class="question">
-                <p>Câu 2 (1,0 điểm): Một vật chuyển động thẳng có đồ thị độ dịch chuyển - thời gian (d-t) là một đường thẳng xiên góc hướng lên, cắt trục tung (trục độ dịch chuyển) tại điểm có giá trị dương d₀ > 0.</p>
-                <table>
-                    <tr>
-                        <th style="width:70%;">Phát biểu</th>
-                        <th style="width:15%;">Đúng</th>
-                        <th style="width:15%;">Sai</th>
-                    </tr>
-                    <tr>
-                        <td class="statement">a) Vật đang chuyển động thẳng đều.</td>
-                        <td><input type="radio" name="tf2a" value="T"></td>
-                        <td><input type="radio" name="tf2a" value="F"></td>
-                    </tr>
-                    <tr>
-                        <td class="statement">b) Giao điểm của đồ thị với trục tung cho biết vật xuất phát từ gốc toạ độ (vị trí d=0).</td>
-                        <td><input type="radio" name="tf2b" value="T"></td>
-                        <td><input type="radio" name="tf2b" value="F"></td>
-                    </tr>
-                    <tr>
-                        <td class="statement">c) Độ dốc của đồ thị (d-t) trong trường hợp này có giá trị âm.</td>
-                        <td><input type="radio" name="tf2c" value="T"></td>
-                        <td><input type="radio" name="tf2c" value="F"></td>
-                    </tr>
-                    <tr>
-                        <td class="statement">d) Nếu phương trình độ dịch chuyển của vật là \( d = 5 + 2t \) (m, s) thì quãng đường vật đi được sau 3 giây là 6 m.</td>
-                        <td><input type="radio" name="tf2d" value="T"></td>
-                        <td><input type="radio" name="tf2d" value="F"></td>
-                    </tr>
-                </table>
-                <div class="explanation" id="exp_tf2">Đáp án: <b>a) Đúng, b) Sai</b> (xuất phát ở d > 0)<b>, c) Sai</b> (hướng lên nên dốc dương, vận tốc dương)<b>, d) Đúng</b> (v = 2 m/s, s = vt = 2*3 = 6m).</div>
-            </div>
-
-            <!-- PHẦN III -->
-            <h3 class="section-title">PHẦN III. Câu trắc nghiệm trả lời ngắn (1,0 điểm)</h3>
-            <p><i>Thí sinh nhập đáp án số vào ô trống. (Mỗi câu đúng 0,5 điểm)</i></p>
-
-            <div class="question short-answer">
-                <p>Câu 1: Một học sinh dùng vôn kế đo điện áp hai đầu đoạn mạch thu được giá trị trung bình là 12,0 V và sai số tuyệt đối là 0,6 V. Tính sai số tỉ đối (theo đơn vị %) của phép đo này.</p>
-                <p><i>(Chỉ điền số, không điền kí hiệu %): </i><input type="text" id="sa1" autocomplete="off" inputmode="decimal"></p>
-                <div class="explanation" id="exp_sa1">Đáp án đúng: <b>5</b> (Giải thích: \(\delta = \frac{0.6}{12.0} \times 100\% = 5\%\))</div>
-            </div>
-
-            <div class="question short-answer">
-                <p>Câu 2: Một ô tô đang chạy với vận tốc 15 m/s thì hãm phanh chuyển động chậm dần đều. Sau 5 giây, vận tốc của ô tô giảm xuống còn 5 m/s. Gia tốc của ô tô có ĐỘ LỚN là bao nhiêu (m/s²)?</p>
-                <p><i>(Chỉ điền số): </i><input type="text" id="sa2" autocomplete="off" inputmode="decimal"></p>
-                <div class="explanation" id="exp_sa2">Đáp án đúng: <b>2</b> (Giải thích: \(a = \frac{5 - 15}{5} = -2\) m/s². Độ lớn là 2 m/s²)</div>
-            </div>
-
-            <!-- PHẦN IV -->
-            <h3 class="section-title">PHẦN IV. Tự luận (3,0 điểm)</h3>
-            <p><i>Thí sinh có thể nháp hoặc trình bày ngắn gọn ở đây. Phần này học sinh tự đối chiếu với đáp án sau khi nộp bài.</i></p>
-
-            <div class="question essay">
-                <p>Câu 1 (1,5 điểm): Một người đi bộ về hướng Bắc 3 km, sau đó rẽ sang hướng Đông đi tiếp 4 km.<br>
-                a. Tính quãng đường tổng cộng mà người đó đã đi. (0,5 điểm)<br>
-                b. Xác định độ lớn của độ dịch chuyển tổng hợp của người đó. (1,0 điểm)</p>
-                <textarea placeholder="Nhập bài làm của em..."></textarea>
-                <div class="essay-solution">
-                    <b>Hướng dẫn chấm Câu 1:</b><br>
-                    - a) Quãng đường tổng cộng đi được: \( s = s_1 + s_2 = 3 + 4 = 7 \) (km) [0,5đ]<br>
-                    - b) Do hai hướng đi vuông góc với nhau, độ lớn độ dịch chuyển tổng hợp được tính theo định lí Pythagore:<br>
-                    \( d = \sqrt{d_1^2 + d_2^2} = \sqrt{3^2 + 4^2} = 5 \) (km) [1,0đ]
-                </div>
-            </div>
-
-            <div class="question essay">
-                <p>Câu 2 (1,5 điểm): Một máy bay bắt đầu chạy trên đường băng với gia tốc \( a = 2 \text{ m/s}^2 \) để cất cánh.<br>
-                a. Tính vận tốc của máy bay sau 10 giây kể từ khi bắt đầu chạy đà. (0,5 điểm)<br>
-                b. Biết máy bay cần đạt vận tốc 80 m/s thì mới có thể cất cánh. Tính quãng đường chạy đà tối thiểu của máy bay trên đường băng. (1,0 điểm)</p>
-                <textarea placeholder="Nhập bài làm của em..."></textarea>
-                <div class="essay-solution">
-                    <b>Hướng dẫn chấm Câu 2:</b><br>
-                    - Vận tốc ban đầu \( v_0 = 0 \) m/s.<br>
-                    - a) Vận tốc sau 10s: \( v = v_0 + at = 0 + 2 \times 10 = 20 \) (m/s) [0,5đ]<br>
-                    - b) Quãng đường cất cánh (với v = 80 m/s):<br>
-                    Áp dụng công thức \( v^2 - v_0^2 = 2as \)<br>
-                    \( \Rightarrow s = \frac{v^2 - v_0^2}{2a} = \frac{80^2 - 0}{2 \times 2} = \frac{6400}{4} = 1600 \) (m) [1,0đ]
-                </div>
-            </div>
-
-            <button type="button" class="submit-btn" onclick="gradeExam()">NỘP BÀI & XEM KẾT QUẢ</button>
-        </form>
-
-        <div id="result-box">
-            <h2>KẾT QUẢ CỦA BẠN</h2>
-            <p>Tổng điểm phần Trắc nghiệm (Phần I, II, III):</p>
-            <div class="score"><span id="final-score">0</span> / 7.0</div>
-            <p><i>* Điểm phần tự luận (Phần IV - 3.0 điểm) vui lòng đối chiếu ở phần Hướng dẫn giải bên dưới.</i></p>
-        </div>
+      </div>
     </div>
+  </section>
 
-    <script>
-        /* ============================================================
-           HÀM CHẤM ĐIỂM (dùng chung cho cả nộp tay và tự động nộp)
-           ============================================================ */
-        function gradeExam() {
-            let totalScore = 0;
+</main>
 
-            const p1_answers = { q1:'A', q2:'C', q3:'B', q4:'B', q5:'B', q6:'C', q7:'B', q8:'C', q9:'C', q10:'B', q11:'D', q12:'B', q13:'C', q14:'C', q15:'B', q16:'C' };
-            for(let i=1; i<=16; i++) {
-                let qName = 'q' + i;
-                let selected = document.querySelector(`input[name="${qName}"]:checked`);
-                if(selected && selected.value === p1_answers[qName]) {
-                    totalScore += 0.25;
-                }
-            }
+<!-- PRESENTATION DECK -->
+<div class="deck" id="deck" role="dialog" aria-modal="true" aria-label="Bài thuyết trình về tính tự chủ" aria-hidden="true">
 
-            const tf_ans = {
-                tf1a: 'F', tf1b: 'T', tf1c: 'F', tf1d: 'T',
-                tf2a: 'T', tf2b: 'F', tf2c: 'F', tf2d: 'T'
-            };
-            function gradeTF(prefix) {
-                let correctCount = 0;
-                ['a','b','c','d'].forEach(letter => {
-                    let key = prefix + letter;
-                    let selected = document.querySelector(`input[name="${key}"]:checked`);
-                    if(selected && selected.value === tf_ans[key]) correctCount++;
-                });
-                if(correctCount === 1) return 0.1;
-                if(correctCount === 2) return 0.25;
-                if(correctCount === 3) return 0.5;
-                if(correctCount === 4) return 1.0;
-                return 0;
-            }
-            totalScore += gradeTF('tf1');
-            totalScore += gradeTF('tf2');
+  <div class="deck-bar top">
+    <div class="deck-brand">
+      <span class="logo">Nhóm 1</span>
+    </div>
+    <div class="deck-meta">
+      <span class="counter"><b id="curSlide">01</b><span>/</span><b id="totalSlide">06</b></span>
+      <button class="icon-btn" id="btnFullscreen" type="button" aria-label="Bật/tắt toàn màn hình" title="Toàn màn hình (F)">
+        <svg viewBox="0 0 24 24" id="fsIcon"><path d="M8 3H5a2 2 0 0 0-2 2v3M16 3h3a2 2 0 0 1 2 2v3M16 21h3a2 2 0 0 0 2-2v-3M8 21H5a2 2 0 0 1-2-2v-3"/></svg>
+      </button>
+      <button class="icon-btn" id="btnClose" type="button" aria-label="Đóng bài thuyết trình" title="Đóng (Esc)">
+        <svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg>
+      </button>
+    </div>
+  </div>
 
-            const sa1 = document.getElementById('sa1').value.trim();
-            const sa2 = document.getElementById('sa2').value.trim();
-            if(sa1 === '5' || sa1 === '5%') totalScore += 0.5;
-            if(sa2 === '2') totalScore += 0.5;
+  <div class="deck-stage" id="deckStage">
 
-            // Lưu điểm vào sessionStorage để reload vẫn còn
-            sessionStorage.setItem('examScore', totalScore.toFixed(2));
-            sessionStorage.setItem('examDone', '1');
+    <!-- SLIDE 1 -->
+    <section class="slide" data-index="0" aria-label="Slide 1: Khái niệm">
+      <div class="slide-inner">
+        <div class="slide-head stagger">
+          <span class="eyebrow">Slide 01 — Khái niệm</span>
+          <h2 class="slide-title">Tự chủ là gì?</h2>
+          <p class="slide-sub">Khả năng tự giác xây dựng kế hoạch học tập và chủ động hoàn thành nhiệm vụ</p>
+        </div>
+        <ul class="bullets">
+          <li class="stagger"><b>Tự chủ trong sắp xếp thời gian</b> là khả năng tự giác xây dựng kế hoạch học tập, phân chia thời gian hợp lý cho từng môn học và chủ động hoàn thành các nhiệm vụ được giao</li>
+          <li class="stagger"><b>Đây là biểu hiện quan trọng của tính tự chủ</b>, giúp mỗi người hình thành thói quen học tập khoa học và có trách nhiệm với bản thân</li>
+          <li class="stagger"><b>Tự chủ không phải là làm việc nhiều hơn</b>, mà là làm việc đúng lúc, đúng thứ tự ưu tiên và có kế hoạch rõ ràng</li>
+          <li class="stagger"><b>Người tự chủ biết mình cần làm gì</b>, khi nào cần làm và hoàn thành đúng thời hạn mà không cần ai nhắc nhở</li>
+        </ul>
+      </div>
+    </section>
 
-            // Lưu toàn bộ bài làm để reload vẫn hiển thị
-            saveAnswers();
+    <!-- SLIDE 2 -->
+    <section class="slide" data-index="1" aria-label="Slide 2: Cách rèn luyện">
+      <div class="slide-inner">
+        <div class="slide-head stagger">
+          <span class="eyebrow">Slide 02 — Cách rèn luyện</span>
+          <h2 class="slide-title">Làm thế nào để tự chủ?</h2>
+          <p class="slide-sub">Ba việc cần làm để xây dựng thói quen sắp xếp thời gian khoa học</p>
+        </div>
+        <div class="grid-3">
+          <article class="card stagger">
+            <span class="card-index">01</span>
+            <h3>Sắp xếp thứ tự ưu tiên</h3>
+            <span class="role">Xác định việc quan trọng</span>
+            <p>Mỗi học sinh cần biết sắp xếp công việc theo mức độ quan trọng, xác định thời gian bắt đầu và kết thúc cho từng nhiệm vụ</p>
+          </article>
+          <article class="card stagger">
+            <span class="card-index">02</span>
+            <h3>Tập trung khi học</h3>
+            <span class="role">Hạn chế xao nhãng</span>
+            <p>Khi học tập, cần tập trung làm bài, hạn chế sử dụng điện thoại, xem mạng xã hội hoặc tham gia những hoạt động gây mất tập trung</p>
+          </article>
+          <article class="card stagger">
+            <span class="card-index">03</span>
+            <h3>Cân đối thời gian</h3>
+            <span class="role">Học — nghỉ — chơi</span>
+            <p>Cần cân đối thời gian giữa học tập, nghỉ ngơi và giải trí để tránh tình trạng học tập quá tải hoặc trì hoãn công việc</p>
+          </article>
+        </div>
+      </div>
+    </section>
 
-            // Hiển thị kết quả
-            showResult(totalScore);
+    <!-- SLIDE 3 -->
+    <section class="slide" data-index="2" aria-label="Slide 3: Ví dụ thực tế">
+      <div class="slide-inner">
+        <div class="slide-head stagger">
+          <span class="eyebrow">Slide 03 — Ví dụ thực tế</span>
+          <h2 class="slide-title">Một ngày học tập tự chủ</h2>
+          <p class="slide-sub">Câu chuyện thực tế của một học sinh biết sắp xếp thời gian làm bài tập</p>
+        </div>
+        <div class="grid-2">
+          <article class="card type-card stagger">
+            <div class="type-body">
+              <h3>Bắt đầu sau giờ học</h3>
+              <p>Sau khi đi học về, em chủ động dành thời gian nghỉ ngơi, sau đó lập danh sách những bài tập cần hoàn thành trong ngày</p>
+            </div>
+          </article>
+          <article class="card type-card stagger">
+            <div class="type-body">
+              <h3>Ưu tiên bài khó</h3>
+              <p>Em ưu tiên làm những bài khó trước, tiếp đến là những bài dễ hơn, đồng thời dành thời gian ôn lại kiến thức và chuẩn bị bài mới</p>
+            </div>
+          </article>
+          <article class="card type-card stagger">
+            <div class="type-body">
+              <h3>Chủ động khi gặp khó</h3>
+              <p>Nếu gặp bài tập khó, em sẽ chủ động tìm hiểu, suy nghĩ và nhờ thầy cô hoặc bạn bè hướng dẫn khi cần thiết</p>
+            </div>
+          </article>
+          <article class="card type-card stagger">
+            <div class="type-body">
+              <h3>Đúng hạn, không nhắc nhở</h3>
+              <p>Em cố gắng hoàn thành tất cả bài tập đúng thời hạn mà không cần cha mẹ hay thầy cô nhắc nhở</p>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
 
-            // Khóa form
-            document.querySelectorAll('input, textarea').forEach(el => el.disabled = true);
-            document.querySelector('.submit-btn').style.display = 'none';
-        }
+    <!-- SLIDE 4 -->
+    <section class="slide" data-index="3" aria-label="Slide 4: Ý nghĩa">
+      <div class="slide-inner">
+        <div class="slide-head stagger">
+          <span class="eyebrow">Slide 04 — Ý nghĩa</span>
+          <h2 class="slide-title">Vì sao điều này quan trọng?</h2>
+          <p class="slide-sub">Lợi ích của việc tự chủ sắp xếp thời gian làm bài tập</p>
+        </div>
+        <div class="grid-3">
+          <article class="card stagger">
+            <span class="card-index">01</span>
+            <h3>Nâng cao hiệu quả</h3>
+            <span class="role">Học tốt hơn</span>
+            <p>Việc tự chủ sắp xếp thời gian giúp học sinh nâng cao hiệu quả học tập và tránh tình trạng trì hoãn công việc</p>
+          </article>
+          <article class="card stagger">
+            <span class="card-index">02</span>
+            <h3>Hình thành kỷ luật</h3>
+            <span class="role">Tinh thần tự giác</span>
+            <p>Thói quen này hình thành tính kỷ luật và tinh thần tự giác — những phẩm chất quan trọng cho cả cuộc đời</p>
+          </article>
+          <article class="card stagger">
+            <span class="card-index">03</span>
+            <h3>Làm chủ cuộc sống</h3>
+            <span class="role">Trách nhiệm bản thân</span>
+            <p>Không chỉ giúp đạt kết quả tốt hơn, thói quen này còn giúp mỗi người biết quản lý thời gian, làm chủ cuộc sống và có trách nhiệm hơn với mục tiêu của bản thân</p>
+          </article>
+        </div>
+      </div>
+    </section>
 
-        /* Lưu bài làm vào sessionStorage */
-        function saveAnswers() {
-            const data = {
-                radios: {},
-                texts: {}
-            };
-            document.querySelectorAll('input[type="radio"]').forEach(el => {
-                if (el.checked) data.radios[el.name] = el.value;
-            });
-            document.querySelectorAll('input[type="text"]').forEach(el => {
-                if (el.value) data.texts[el.id] = el.value;
-            });
-            document.querySelectorAll('textarea').forEach((el, i) => {
-                if (el.value) data.texts['essay_' + i] = el.value;
-            });
-            sessionStorage.setItem('examAnswers', JSON.stringify(data));
-        }
+    <!-- SLIDE 5 -->
+    <section class="slide" data-index="4" aria-label="Slide 5: Bài học">
+      <div class="slide-inner">
+        <div class="slide-head stagger">
+          <span class="eyebrow">Slide 05 — Bài học</span>
+          <h2 class="slide-title">Từ lý thuyết đến thói quen</h2>
+          <p class="slide-sub">Những điều mỗi học sinh cần ghi nhớ và thực hành mỗi ngày</p>
+        </div>
+        <div class="costume-grid">
+          <article class="costume stagger">
+            <span class="role">Bước 1 · Lập kế hoạch</span>
+            <h3>Biết mình cần làm gì</h3>
+            <p>Mỗi ngày, hãy dành vài phút để liệt kê những bài tập cần hoàn thành, sắp xếp theo thứ tự ưu tiên và ghi rõ thời gian bắt đầu — kết thúc cho từng việc</p>
+          </article>
+          <article class="costume stagger">
+            <span class="role">Bước 2 · Thực hiện</span>
+            <h3>Làm đúng lúc, đúng việc</h3>
+            <p>Tập trung làm bài trong khoảng thời gian đã định, tránh xa điện thoại và mạng xã hội, và tự nhắc mình hoàn thành đúng hạn mà không cần ai thúc giục</p>
+          </article>
+          <article class="costume stagger">
+            <span class="role">Bước 3 · Điều chỉnh</span>
+            <h3>Học từ chính mình</h3>
+            <p>Cuối mỗi ngày, hãy nhìn lại xem mình đã làm tốt điều gì và điều gì cần cải thiện — đó chính là cách rèn luyện tính tự chủ bền vững nhất</p>
+          </article>
+        </div>
+      </div>
+    </section>
 
-        /* Khôi phục bài làm từ sessionStorage */
-        function restoreAnswers() {
-            const raw = sessionStorage.getItem('examAnswers');
-            if (!raw) return;
-            try {
-                const data = JSON.parse(raw);
-                Object.keys(data.radios || {}).forEach(name => {
-                    const el = document.querySelector(`input[name="${name}"][value="${data.radios[name]}"]`);
-                    if (el) el.checked = true;
-                });
-                Object.keys(data.texts || {}).forEach(id => {
-                    if (id.startsWith('essay_')) {
-                        const idx = parseInt(id.replace('essay_', ''));
-                        const tas = document.querySelectorAll('textarea');
-                        if (tas[idx]) tas[idx].value = data.texts[id];
-                    } else {
-                        const el = document.getElementById(id);
-                        if (el) el.value = data.texts[id];
-                    }
-                });
-            } catch(e) {}
-        }
+    <!-- SLIDE 6 -->
+    <section class="slide" data-index="5" aria-label="Slide 6: Kết luận">
+      <div class="slide-inner">
+        <div class="conclusion">
+          <div class="stagger"><span class="eyebrow">Slide 06 — Kết luận</span></div>
+          <h2 class="stagger">Tự chủ hôm nay — Làm chủ ngày mai</h2>
+          <p class="quote stagger">
+            “Việc tự chủ sắp xếp thời gian làm bài tập giúp học sinh nâng cao hiệu quả học tập,
+            tránh tình trạng trì hoãn, hình thành tính kỷ luật và tinh thần tự giác. Không chỉ
+            giúp đạt kết quả tốt hơn trong học tập, thói quen này còn giúp mỗi người biết quản
+            lý thời gian, làm chủ cuộc sống và có trách nhiệm hơn với những mục tiêu của bản thân.”
+          </p>
+          <div class="stagger">
+            <span class="thanks">Cảm ơn cô và các bạn đã lắng nghe!</span>
+          </div>
+        </div>
+      </div>
+    </section>
 
-        /* Hiển thị kết quả + đáp án */
-        function showResult(score) {
-            document.getElementById('result-box').style.display = 'block';
-            document.getElementById('final-score').innerText = score.toFixed(2);
-            document.getElementById('result-box').scrollIntoView({ behavior: 'smooth' });
-            document.querySelectorAll('.explanation').forEach(el => el.style.display = 'block');
-            document.querySelectorAll('.essay-solution').forEach(el => el.style.display = 'block');
-            document.querySelectorAll('input, textarea').forEach(el => el.disabled = true);
-            document.querySelector('.submit-btn').style.display = 'none';
-        }
+  </div>
 
-        /* ============================================================
-           TỰ ĐỘNG NỘP KHI RỜI TRANG
-           ============================================================ */
-        (function () {
-            'use strict';
+</div>
 
-            const shieldEl = document.getElementById('shield');
+<script>
+(function () {
+  'use strict';
 
-            // Nếu đã nộp trước đó (reload) -> khôi phục trạng thái + hiện kết quả
-            if (sessionStorage.getItem('examDone') === '1') {
-                restoreAnswers();
-                const savedScore = parseFloat(sessionStorage.getItem('examScore') || '0');
-                showResult(savedScore);
-                return; // Không gắn sự kiện tự động nộp nữa
-            }
+  const $  = (sel, ctx) => (ctx || document).querySelector(sel);
+  const $$ = (sel, ctx) => Array.prototype.slice.call((ctx || document).querySelectorAll(sel));
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const pad2 = n => String(n).padStart(2, '0');
 
-            let autoSubmitted = false;
+  /* NAV SCROLL */
+  const nav = $('#nav');
+  function onScroll() {
+    if (window.scrollY > 24) nav.classList.add('scrolled');
+    else nav.classList.remove('scrolled');
+  }
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
 
-            // Tự động nộp khi rời tab / mất focus
-            function autoSubmit() {
-                if (autoSubmitted) return;
-                autoSubmitted = true;
+  /* REVEAL */
+  const revealEls = $$('.reveal');
+  if ('IntersectionObserver' in window && !reduceMotion) {
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) { entry.target.classList.add('in'); io.unobserve(entry.target); }
+      });
+    }, { threshold: 0.12, rootMargin: '0px 0px -8% 0px' });
+    revealEls.forEach(el => io.observe(el));
+  } else {
+    revealEls.forEach(el => el.classList.add('in'));
+  }
 
-                // Chấm điểm + lưu
-                gradeExam();
+  /* DECK */
+  const deck        = $('#deck');
+  const stage       = $('#deckStage');
+  const slides      = $$('.slide', deck);
+  const curSlideEl  = $('#curSlide');
+  const totalSlideEl= $('#totalSlide');
+  const btnClose    = $('#btnClose');
+  const btnFullscr  = $('#btnFullscreen');
+  const fsIcon      = $('#fsIcon');
 
-                // Che đen + thông báo tải lại
-                shieldEl.classList.add('show');
-            }
+  const TOTAL = slides.length;
+  let current = 0;
+  let isOpen = false;
+  let lastFocused = null;
 
-            // 1. Chuyển tab / ẩn trang
-            document.addEventListener('visibilitychange', function () {
-                if (document.hidden) autoSubmit();
-            });
+  totalSlideEl.textContent = pad2(TOTAL);
 
-            // 2. Mất focus cửa sổ
-            window.addEventListener('blur', function () {
-                setTimeout(function () {
-                    if (!document.hasFocus()) autoSubmit();
-                }, 100);
-            });
+  function updateUI() {
+    curSlideEl.textContent = pad2(current + 1);
+  }
 
-            // 3. Phím chụp màn hình
-            document.addEventListener('keyup', function (e) {
-                if (e.key === 'PrintScreen' || e.keyCode === 44) {
-                    if (navigator.clipboard && navigator.clipboard.writeText) {
-                        navigator.clipboard.writeText('').catch(() => {});
-                    }
-                    autoSubmit();
-                }
-            });
+  function goTo(index, forcedDir) {
+    if (index < 0) index = 0;
+    if (index > TOTAL - 1) index = TOTAL - 1;
+    if (index === current && isOpen) return;
 
-            // 4. Tổ hợp chụp màn hình
-            document.addEventListener('keydown', function (e) {
-                const isMac = navigator.platform.toUpperCase().indexOf('MAC') >= 0;
-                const mod = isMac ? e.metaKey : e.ctrlKey;
-                if (mod && e.shiftKey && ['S','s','3','4','5'].includes(e.key)) {
-                    e.preventDefault();
-                    autoSubmit();
-                }
-            });
+    const dir = typeof forcedDir === 'number' ? forcedDir : (index >= current ? 1 : -1);
+    const prevEl = slides[current];
+    const nextEl = slides[index];
 
-        })();
-    </script>
+    if (prevEl && prevEl !== nextEl) {
+      prevEl.style.setProperty('--tx', (-dir * 46) + 'px');
+      prevEl.classList.remove('is-active');
+    }
+    if (nextEl) {
+      nextEl.style.setProperty('--tx', (dir * 46) + 'px');
+      void nextEl.offsetWidth;
+      nextEl.classList.add('is-active');
+      nextEl.scrollTop = 0;
+    }
+    current = index;
+    updateUI();
+  }
+
+  function nextSlide() { if (current < TOTAL - 1) goTo(current + 1, 1); }
+  function prevSlide() { if (current > 0) goTo(current - 1, -1); }
+
+  function openDeck(startIndex) {
+    if (isOpen) { if (typeof startIndex === 'number') goTo(startIndex); return; }
+    lastFocused = document.activeElement;
+    isOpen = true;
+    deck.classList.add('open');
+    deck.setAttribute('aria-hidden', 'false');
+    document.body.classList.add('is-locked');
+
+    const idx = typeof startIndex === 'number' ? startIndex : 0;
+    slides.forEach(s => {
+      s.classList.remove('is-active');
+      s.style.setProperty('--tx', '0px');
+    });
+    current = idx;
+    const target = slides[current];
+    if (target) {
+      target.style.setProperty('--tx', '0px');
+      void target.offsetWidth;
+      target.classList.add('is-active');
+      target.scrollTop = 0;
+    }
+    updateUI();
+  }
+
+  function closeDeck() {
+    if (!isOpen) return;
+    isOpen = false;
+    deck.classList.remove('open');
+    deck.setAttribute('aria-hidden', 'true');
+    document.body.classList.remove('is-locked');
+    if (document.fullscreenElement || document.webkitFullscreenElement) exitFullscreen();
+    if (lastFocused && typeof lastFocused.focus === 'function') lastFocused.focus({ preventScroll: true });
+  }
+
+  function isFullscreen() {
+    return !!(document.fullscreenElement || document.webkitFullscreenElement || document.msFullscreenElement);
+  }
+  function enterFullscreen() {
+    const el = deck;
+    const req = el.requestFullscreen || el.webkitRequestFullscreen || el.msRequestFullscreen;
+    if (req) { try { const p = req.call(el); if (p && p.catch) p.catch(() => {}); } catch (e) {} }
+  }
+  function exitFullscreen() {
+    const ex = document.exitFullscreen || document.webkitExitFullscreen || document.msExitFullscreen;
+    if (ex) { try { const p = ex.call(document); if (p && p.catch) p.catch(() => {}); } catch (e) {} }
+  }
+  function toggleFullscreen() { isFullscreen() ? exitFullscreen() : enterFullscreen(); }
+  function syncFullscreenIcon() {
+    if (!fsIcon) return;
+    if (isFullscreen()) {
+      fsIcon.innerHTML = '<path d="M8 3v3a2 2 0 0 1-2 2H3M16 3v3a2 2 0 0 0 2 2h3M16 21v-3a2 2 0 0 1 2-2h3M8 21v-3a2 2 0 0 0-2-2H3"/>';
+      btnFullscr.setAttribute('aria-label', 'Thoát toàn màn hình');
+    } else {
+      fsIcon.innerHTML = '<path d="M8 3H5a2 2 0 0 0-2 2v3M16 3h3a2 2 0 0 1 2 2v3M16 21h3a2 2 0 0 0 2-2v-3M8 21H5a2 2 0 0 1-2-2v-3"/>';
+      btnFullscr.setAttribute('aria-label', 'Bật toàn màn hình');
+    }
+  }
+  ['fullscreenchange','webkitfullscreenchange','msfullscreenchange'].forEach(ev => {
+    document.addEventListener(ev, syncFullscreenIcon);
+  });
+
+  btnClose.addEventListener('click', closeDeck);
+  btnFullscr.addEventListener('click', toggleFullscreen);
+
+  const startBtn = $('#startBtn');
+  const navPresent = $('#navPresent');
+  if (startBtn) startBtn.addEventListener('click', () => openDeck(0));
+  if (navPresent) navPresent.addEventListener('click', () => openDeck(0));
+
+  document.addEventListener('keydown', (e) => {
+    if (!isOpen) return;
+    const key = e.key;
+    if (key === 'ArrowRight' || key === ' ' || key === 'Spacebar' || key === 'PageDown') {
+      e.preventDefault(); nextSlide();
+    } else if (key === 'ArrowLeft' || key === 'PageUp') {
+      e.preventDefault(); prevSlide();
+    } else if (key === 'Home') {
+      e.preventDefault(); goTo(0, -1);
+    } else if (key === 'End') {
+      e.preventDefault(); goTo(TOTAL - 1, 1);
+    } else if (key === 'Escape') {
+      e.preventDefault(); closeDeck();
+    } else if (key === 'f' || key === 'F') {
+      e.preventDefault(); toggleFullscreen();
+    }
+  });
+
+  let touchStartX = 0, touchStartY = 0, touchActive = false;
+  stage.addEventListener('touchstart', (e) => {
+    if (!isOpen || e.touches.length !== 1) return;
+    touchStartX = e.touches[0].clientX;
+    touchStartY = e.touches[0].clientY;
+    touchActive = true;
+  }, { passive: true });
+  stage.addEventListener('touchend', (e) => {
+    if (!isOpen || !touchActive) return;
+    touchActive = false;
+    const t = e.changedTouches[0];
+    if (!t) return;
+    const dx document = t.clientX - touchStartX;
+.querySelector    const dy = t.clientY -(id touchStartY;
+    if (Math.abs(dx) > 60 && Math.abs(dx) > Math.abs(dy) * 1.4) {
+     );
+ dx < 0 ? nextSlide     () : prevSlide();
+    }
+  }, if { passive: true });
+
+  updateUI();
+
+  $$('a[href^="#"]').forEach(link => {
+    link.addEventListener('click', (e) => {
+      const id = link.getAttribute('href');
+      if (!id || id === '#') return;
+      const target = (!target) return;
+      e.preventDefault();
+      const top = target.getBoundingClientRect().top + window.scrollY - (parseInt(getComputedStyle(document.documentElement).getPropertyValue('--bar-h'), 10) || 66);
+      window.scrollTo({ top: Math.max(0, top), behavior: reduceMotion ? 'auto' : 'smooth' });
+    });
+  });
+
+})();
+</script>
+
 </body>
 </html>
