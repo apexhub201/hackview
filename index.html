@@ -2,698 +2,2051 @@
 <html lang="vi">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Mod Menu Injector Pro v2 — Real Menu</title>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Mod Menu Injector Pro v3 — Real WebView Injector</title>
 <script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
 <style>
-  *{box-sizing:border-box;margin:0;padding:0}
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
   :root{
-    --bg:#0b0d14;--panel:#12151f;--panel2:#161a26;--border:#232838;
-    --text:#e6e9f2;--muted:#6e7794;--accent:#3d6bff;--accent2:#2a4fd4;
-    --ok:#3ddc97;--err:#ff5c72;--warn:#ffb84d;--info:#5b9dff;
-    --radius:10px;--mono:ui-monospace,"SF Mono",Consolas,monospace;
+    --bg:#090b11;--bg2:#0e121b;--panel:#121723;--panel2:#171d2c;--panel3:#1c2436;
+    --border:#242c40;--border2:#2f3a54;
+    --text:#e9edf7;--muted:#828da8;--dim:#56607a;
+    --accent:#4475ff;--accent-h:#3360e6;--accent-soft:rgba(68,117,255,.14);
+    --ok:#35d492;--ok-soft:rgba(53,212,146,.13);
+    --warn:#f5b446;--warn-soft:rgba(245,180,70,.14);
+    --err:#ff5c72;--err-soft:rgba(255,92,114,.14);
+    --info:#62a8ff;
+    --radius:12px;--radius-sm:8px;
+    --mono:ui-monospace,"SF Mono",SFMono-Regular,Consolas,Menlo,monospace;
   }
-  body{font-family:-apple-system,"Segoe UI",Roboto,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;padding:28px 32px;font-size:14px;line-height:1.5}
-  header{margin-bottom:24px;display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:12px}
-  h1{font-size:20px;font-weight:600;letter-spacing:-.3px}
-  .sub{color:var(--muted);font-size:13px;margin-top:4px}
-  .badge{font-size:11px;color:var(--muted);border:1px solid var(--border);padding:3px 10px;border-radius:20px}
-  .grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
-  @media(max-width:900px){.grid{grid-template-columns:1fr}}
-  .panel{background:var(--panel);border:1px solid var(--border);border-radius:var(--radius);padding:16px;display:flex;flex-direction:column}
-  .panel-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
-  .panel-title{font-size:12px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.8px}
-  .panel-meta{font-size:11px;color:var(--muted);font-family:var(--mono)}
-  #drop{flex:1;border:1px dashed var(--border);border-radius:8px;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:32px 20px;color:var(--muted);cursor:pointer;min-height:160px;transition:.15s;text-align:center;gap:6px}
-  #drop:hover{border-color:var(--accent);color:var(--text)}
-  #drop.drag{border-color:var(--accent);background:rgba(61,107,255,.06)}
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+    background:radial-gradient(circle at 12% 0%,rgba(68,117,255,.08),transparent 42%),var(--bg);
+    color:var(--text);min-height:100vh;padding:20px 24px 40px;font-size:14px;line-height:1.5;
+  }
+  .wrap{max-width:1360px;margin:0 auto}
+
+  /* Header */
+  header{
+    display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:14px;
+    padding-bottom:18px;margin-bottom:18px;border-bottom:1px solid var(--border);
+  }
+  .brand h1{font-size:21px;font-weight:700;letter-spacing:-.4px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+  .ver-pill{
+    font-size:11px;font-weight:700;font-family:var(--mono);letter-spacing:.4px;
+    color:var(--ok);background:var(--ok-soft);border:1px solid rgba(53,212,146,.32);
+    padding:2px 9px;border-radius:999px;
+  }
+  .sub{color:var(--muted);font-size:13px;margin-top:5px}
+  .scope-note{
+    font-size:11.5px;color:var(--muted);background:var(--panel);border:1px solid var(--border);
+    padding:7px 12px;border-radius:8px;max-width:390px;line-height:1.45;
+  }
+  .scope-note b{color:var(--text)}
+
+  /* Lifecycle Pipeline */
+  .pipeline{
+    display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:16px;
+  }
+  @media(max-width:860px){.pipeline{grid-template-columns:repeat(2,1fr)}}
+  @media(max-width:480px){.pipeline{grid-template-columns:1fr}}
+  .pipe-step{
+    background:var(--panel);border:1px solid var(--border);border-radius:10px;
+    padding:11px 13px;display:flex;flex-direction:column;gap:4px;transition:.2s;
+  }
+  .pipe-step.ok{border-color:rgba(53,212,146,.42);background:linear-gradient(180deg,rgba(53,212,146,.07),var(--panel))}
+  .pipe-step.warn{border-color:rgba(245,180,70,.42);background:linear-gradient(180deg,rgba(245,180,70,.07),var(--panel))}
+  .pipe-step.err{border-color:rgba(255,92,114,.42);background:linear-gradient(180deg,rgba(255,92,114,.07),var(--panel))}
+  .pipe-step.active{border-color:var(--accent)}
+  .pipe-top{display:flex;justify-content:space-between;align-items:center;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--muted)}
+  .pipe-badge{font-family:var(--mono);font-size:10.5px;padding:2px 7px;border-radius:5px;background:var(--panel2);color:var(--muted)}
+  .pipe-step.ok .pipe-badge{background:var(--ok-soft);color:var(--ok)}
+  .pipe-step.warn .pipe-badge{background:var(--warn-soft);color:var(--warn)}
+  .pipe-step.err .pipe-badge{background:var(--err-soft);color:var(--err)}
+  .pipe-step.active .pipe-badge{background:var(--accent-soft);color:var(--info)}
+  .pipe-desc{font-size:12px;color:var(--text);font-weight:500}
+
+  /* Main Grid */
+  .grid{display:grid;grid-template-columns:1.02fr 1fr;gap:16px}
+  @media(max-width:960px){.grid{grid-template-columns:1fr}}
+  .panel{
+    background:var(--panel);border:1px solid var(--border);border-radius:var(--radius);
+    padding:16px;display:flex;flex-direction:column;gap:12px;
+  }
+  .panel-head{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+  .panel-title{font-size:12px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.8px}
+  .panel-meta{font-size:11.5px;color:var(--muted);font-family:var(--mono)}
+
+  /* Dropzone */
+  #drop{
+    border:1.5px dashed var(--border2);border-radius:10px;background:var(--bg2);
+    display:flex;flex-direction:column;align-items:center;justify-content:center;
+    padding:26px 18px;color:var(--muted);cursor:pointer;min-height:132px;
+    transition:.18s;text-align:center;gap:5px;
+  }
+  #drop:hover,#drop.drag{border-color:var(--accent);background:rgba(68,117,255,.07);color:var(--text)}
   #drop .fname{color:var(--text);font-weight:600;font-family:var(--mono);font-size:13px;word-break:break-all}
-  #drop .fsize{font-size:11px;color:var(--muted)}
-  #drop .state{font-size:11px;margin-top:6px;padding:2px 10px;border-radius:20px;background:var(--panel2);border:1px solid var(--border)}
-  #drop .state.ok{color:var(--ok);border-color:rgba(61,220,151,.3)}
-  #drop .state.err{color:var(--err);border-color:rgba(255,92,114,.3)}
-  textarea{flex:1;width:100%;background:#0a0c13;color:#cdd6f0;border:1px solid var(--border);border-radius:8px;padding:12px 14px;font-family:var(--mono);font-size:12.5px;resize:vertical;min-height:160px;line-height:1.55;outline:none}
+  #drop .fsize{font-size:12px;color:var(--muted)}
+  .pill-state{
+    font-size:11px;font-weight:600;margin-top:4px;padding:3px 10px;border-radius:999px;
+    background:var(--panel2);border:1px solid var(--border);color:var(--muted);
+  }
+  .pill-state.ok{color:var(--ok);background:var(--ok-soft);border-color:rgba(53,212,146,.35)}
+  .pill-state.warn{color:var(--warn);background:var(--warn-soft);border-color:rgba(245,180,70,.35)}
+  .pill-state.err{color:var(--err);background:var(--err-soft);border-color:rgba(255,92,114,.35)}
+
+  /* Compatibility Banner */
+  .compat-box{
+    padding:11px 13px;border-radius:9px;border:1px solid var(--border);background:var(--bg2);
+    font-size:12.5px;line-height:1.5;color:var(--muted);
+  }
+  .compat-box.ok{border-color:rgba(53,212,146,.38);background:var(--ok-soft);color:#cdf7e4}
+  .compat-box.warn{border-color:rgba(245,180,70,.38);background:var(--warn-soft);color:#fde8bf}
+  .compat-box.err{border-color:rgba(255,92,114,.38);background:var(--err-soft);color:#ffd0d7}
+
+  /* Bundle Info Table */
+  .info-table{width:100%;border-collapse:collapse;font-size:12.5px}
+  .info-table tr{border-bottom:1px solid rgba(36,44,64,.65)}
+  .info-table tr:last-child{border-bottom:0}
+  .info-table th{
+    text-align:left;color:var(--muted);font-weight:500;padding:7px 8px 7px 0;width:38%;vertical-align:top;
+  }
+  .info-table td{
+    color:var(--text);font-family:var(--mono);font-size:12px;padding:7px 0;word-break:break-word;
+  }
+
+  /* Entry Point Selector */
+  .entry-box{
+    background:var(--bg2);border:1px solid var(--border);border-radius:9px;padding:10px;
+    max-height:150px;overflow:auto;
+  }
+  .entry-item{
+    display:flex;align-items:center;gap:8px;padding:5px 6px;border-radius:6px;
+    font-family:var(--mono);font-size:11.5px;color:var(--text);
+  }
+  .entry-item:hover{background:var(--panel2)}
+  .entry-item input{accent-color:var(--accent);width:15px;height:15px;cursor:pointer}
+  .entry-tag{
+    margin-left:auto;font-size:10px;padding:1px 6px;border-radius:4px;
+    background:var(--accent-soft);color:var(--info);font-weight:700;
+  }
+
+  /* Code & Functions */
+  textarea{
+    width:100%;background:var(--bg2);color:#d7e0f7;border:1px solid var(--border);
+    border-radius:9px;padding:12px 13px;font-family:var(--mono);font-size:12.5px;
+    resize:vertical;min-height:190px;line-height:1.55;outline:none;tab-size:2;
+  }
   textarea:focus{border-color:var(--accent)}
-  select{background:#0a0c13;color:#cdd6f0;border:1px solid var(--border);border-radius:8px;padding:9px 12px;font-family:inherit;font-size:13px;outline:none}
-  #menuList{margin-top:12px;background:#0a0c13;border:1px solid var(--border);border-radius:8px;padding:8px;max-height:180px;overflow:auto;font-size:12.5px}
-  #menuList .empty{color:var(--muted);padding:14px;text-align:center;font-size:12px}
-  .fn{display:grid;grid-template-columns:24px 1fr auto auto;gap:10px;align-items:center;padding:8px 10px;border-radius:6px;margin-bottom:3px;background:var(--panel2)}
+  .code-actions{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+  #menuList{
+    background:var(--bg2);border:1px solid var(--border);border-radius:9px;
+    padding:8px;max-height:210px;overflow:auto;font-size:12.5px;
+  }
+  .empty{color:var(--dim);padding:14px;text-align:center;font-size:12px}
+  .fn{
+    display:grid;grid-template-columns:26px 1fr auto auto auto;gap:8px;align-items:center;
+    padding:8px 10px;border-radius:7px;margin-bottom:4px;background:var(--panel2);
+    border:1px solid transparent;
+  }
+  .fn.bad{border-color:rgba(255,92,114,.45);background:rgba(255,92,114,.08)}
   .fn .idx{font-family:var(--mono);font-size:11px;color:var(--muted);text-align:center}
-  .fn .name{font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-  .fn .type{font-size:10px;color:var(--info);background:rgba(91,157,255,.1);padding:2px 8px;border-radius:4px;text-transform:uppercase;font-family:var(--mono);font-weight:600}
-  .fn .size{font-size:11px;color:var(--muted);font-family:var(--mono);min-width:52px;text-align:right}
-  .toolbar{display:flex;gap:10px;margin-top:16px;flex-wrap:wrap;align-items:center}
-  button{background:var(--accent);color:#fff;border:0;padding:9px 18px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;transition:.15s;font-family:inherit}
-  button:hover:not(:disabled){background:var(--accent2)}
+  .fn .name{font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .fn .kind{
+    font-size:10px;color:var(--info);background:var(--accent-soft);
+    padding:2px 7px;border-radius:4px;text-transform:uppercase;font-family:var(--mono);font-weight:700;
+  }
+  .fn .syn{font-size:10px;padding:2px 7px;border-radius:4px;font-family:var(--mono);font-weight:700}
+  .fn .syn.ok{color:var(--ok);background:var(--ok-soft)}
+  .fn .syn.err{color:var(--err);background:var(--err-soft)}
+  .fn .size{font-size:11px;color:var(--muted);font-family:var(--mono);min-width:46px;text-align:right}
+  .fn-err-msg{
+    grid-column:2 / -1;font-size:11px;color:var(--err);font-family:var(--mono);margin-top:2px;
+  }
+
+  /* Controls & Progress */
+  .controls-bar{
+    margin-top:16px;background:var(--panel);border:1px solid var(--border);
+    border-radius:var(--radius);padding:14px 16px;display:flex;flex-direction:column;gap:12px;
+  }
+  .control-row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+  .field-inline{display:flex;align-items:center;gap:8px;font-size:12.5px;color:var(--muted)}
+  select{
+    background:var(--bg2);color:var(--text);border:1px solid var(--border);
+    border-radius:8px;padding:8px 11px;font-size:12.5px;font-family:inherit;outline:none;
+  }
+  select:focus{border-color:var(--accent)}
+  button{
+    background:var(--accent);color:#fff;border:0;padding:9px 16px;border-radius:8px;
+    font-size:13px;font-weight:600;cursor:pointer;transition:.15s;font-family:inherit;
+    display:inline-flex;align-items:center;gap:6px;
+  }
+  button:hover:not(:disabled){background:var(--accent-h)}
   button.ghost{background:var(--panel2);color:var(--text);border:1px solid var(--border)}
-  button.ghost:hover:not(:disabled){background:#1c2130}
-  button:disabled{opacity:.35;cursor:not-allowed}
+  button.ghost:hover:not(:disabled){background:var(--panel3)}
+  button.warn-btn{background:var(--warn);color:#171100}
+  button.warn-btn:hover:not(:disabled){filter:brightness(1.06)}
+  button.ok-btn{background:var(--ok);color:#061b12}
+  button.ok-btn:hover:not(:disabled){filter:brightness(1.06)}
+  button.sm{padding:6px 11px;font-size:12px}
+  button:disabled{opacity:.38;cursor:not-allowed}
   .spacer{flex:1}
-  .mode-row{display:flex;gap:10px;align-items:center;margin-top:12px;flex-wrap:wrap}
-  .mode-row label{font-size:12px;color:var(--muted)}
-  #log{margin-top:18px;background:#080a10;border:1px solid var(--border);border-radius:var(--radius);padding:14px 16px;font-family:var(--mono);font-size:12px;white-space:pre-wrap;max-height:280px;overflow:auto;line-height:1.65}
+
+  .progress-wrap{display:flex;flex-direction:column;gap:6px}
+  .progress-meta{display:flex;justify-content:space-between;font-size:11.5px;color:var(--muted);font-family:var(--mono)}
+  .progress-track{height:7px;background:var(--bg2);border-radius:999px;overflow:hidden;border:1px solid var(--border)}
+  .progress-fill{height:100%;width:0%;background:linear-gradient(90deg,var(--accent),var(--ok));transition:width .2s ease}
+
+  /* Lower Section: Verification + Logs */
+  .bottom-grid{display:grid;grid-template-columns:1fr 1.2fr;gap:16px;margin-top:16px}
+  @media(max-width:960px){.bottom-grid{grid-template-columns:1fr}}
+
+  .verify-list{display:flex;flex-direction:column;gap:6px}
+  .v-item{
+    display:flex;justify-content:space-between;align-items:flex-start;gap:10px;
+    padding:8px 10px;border-radius:8px;background:var(--bg2);border:1px solid var(--border);font-size:12.5px;
+  }
+  .v-detail{font-size:11px;color:var(--muted);margin-top:2px;font-family:var(--mono);word-break:break-word}
+  .v-status{
+    font-size:10.5px;font-weight:700;font-family:var(--mono);padding:2px 8px;border-radius:5px;
+    flex-shrink:0;background:var(--panel2);color:var(--muted);
+  }
+  .v-status.pass{background:var(--ok-soft);color:var(--ok)}
+  .v-status.fail{background:var(--err-soft);color:var(--err)}
+  .v-status.warn{background:var(--warn-soft);color:var(--warn)}
+
+  #log{
+    background:#07090f;border:1px solid var(--border);border-radius:9px;
+    padding:12px 14px;font-family:var(--mono);font-size:11.8px;
+    height:310px;overflow:auto;line-height:1.65;
+  }
   #log .line{display:flex;gap:10px}
-  #log .ts{color:#3a4157;flex-shrink:0}
+  #log .ts{color:#414b66;flex-shrink:0}
   .ok{color:var(--ok)}.err{color:var(--err)}.info{color:var(--info)}.warn{color:var(--warn)}.dim{color:var(--muted)}
-  .stat-bar{display:flex;gap:20px;margin-top:14px;padding-top:14px;border-top:1px solid var(--border);font-size:12px;color:var(--muted);flex-wrap:wrap}
-  .stat-bar b{color:var(--text);font-family:var(--mono);font-weight:600}
-  #manualWrap{margin-top:10px;display:none}
-  #manualWrap button{background:var(--warn);color:#1a1200}
-  .hint{font-size:11px;color:var(--muted);margin-top:6px;line-height:1.5}
-  .hint b{color:var(--warn)}
+
+  #manualWrap{
+    display:none;margin-top:10px;padding:12px;border-radius:9px;
+    background:rgba(245,180,70,.08);border:1px solid rgba(245,180,70,.35);
+    gap:10px;flex-wrap:wrap;align-items:center;
+  }
+  #manualWrap.show{display:flex}
+  .sign-guide{
+    margin-top:16px;background:var(--panel);border:1px solid var(--border);
+    border-radius:var(--radius);padding:14px 16px;font-size:12.5px;color:var(--muted);
+  }
+  .sign-guide pre{
+    margin-top:8px;background:var(--bg2);border:1px solid var(--border);border-radius:8px;
+    padding:10px 12px;font-family:var(--mono);font-size:11.5px;color:#cfe0ff;overflow:auto;
+  }
+  @media(max-width:600px){
+    body{padding:14px 12px 32px}
+    .panel{padding:13px}
+    .fn{grid-template-columns:22px 1fr auto}
+    .fn .size{display:none}
+  }
 </style>
 </head>
 <body>
-
-<header>
-  <div>
-    <h1>Mod Menu Injector Pro <span style="color:var(--ok);font-size:13px">v2</span></h1>
-    <div class="sub">Sinh menu UI thật + inject vào app WebView → <b style="color:var(--ok)">menu hiện thật khi mở app</b></div>
-  </div>
-  <div class="badge">REAL MENU BUILD</div>
-</header>
-
-<div class="grid">
-  <div class="panel">
-    <div class="panel-head">
-      <span class="panel-title">Tệp IPA</span>
-      <span class="panel-meta" id="metaFile">—</span>
+<div class="wrap">
+  <header>
+    <div class="brand">
+      <h1>Mod Menu Injector Pro <span class="ver-pill">v3 REAL WEBVIEW</span></h1>
+      <div class="sub">Phân tích cấu trúc IPA/WebView, kiểm lỗi JS, tích hợp Shadow DOM Menu thật vào entry point và kiểm toàn vẹn ZIP.</div>
     </div>
-    <div id="drop">
-      <div class="fname">Kéo thả file vào đây</div>
-      <div class="fsize">hoặc bấm để chọn (.ipa)</div>
+    <div class="scope-note">
+      <b>Phạm vi hợp lệ:</b> Chỉ dùng cho ứng dụng WebView bạn sở hữu hoặc có quyền kiểm thử. Không sửa Mach-O binary, không bypass DRM hay bảo vệ hệ thống.
     </div>
-    <input id="file" type="file" hidden>
-    <div class="hint" id="appKind">Chưa phát hiện loại app</div>
+  </header>
+
+  <!-- 4 trạng thái tách biệt rõ ràng -->
+  <section class="pipeline" aria-label="Tiến trình xử lý">
+    <div class="pipe-step" id="psInject">
+      <div class="pipe-top"><span>1. Inject WebView</span><span class="pipe-badge" id="pbInject">CHƯA CHẠY</span></div>
+      <div class="pipe-desc" id="pdInject">Chờ nạp IPA &amp; phân tích code</div>
+    </div>
+    <div class="pipe-step" id="psPack">
+      <div class="pipe-top"><span>2. Đóng gói IPA</span><span class="pipe-badge" id="pbPack">CHƯA XUẤT</span></div>
+      <div class="pipe-desc" id="pdPack">Chưa tạo tệp IPA mới</div>
+    </div>
+    <div class="pipe-step" id="psSign">
+      <div class="pipe-top"><span>3. Ký lại IPA</span><span class="pipe-badge" id="pbSign">BẮT BUỘC NGOÀI</span></div>
+      <div class="pipe-desc" id="pdSign">Trình duyệt không ký chứng chỉ Apple</div>
+    </div>
+    <div class="pipe-step" id="psRun">
+      <div class="pipe-top"><span>4. Chạy thử thiết bị</span><span class="pipe-badge" id="pbRun">CHƯA KIỂM CHỨNG</span></div>
+      <div class="pipe-desc" id="pdRun">Cần cài IPA đã ký lên thiết bị</div>
+    </div>
+  </section>
+
+  <!-- Khu vực chính -->
+  <div class="grid">
+    <!-- Cột trái: IPA & Bundle -->
+    <section class="panel">
+      <div class="panel-head">
+        <span class="panel-title">1. Tệp IPA &amp; Phân tích WebView</span>
+        <span class="panel-meta" id="metaFile">Chưa nạp tệp</span>
+      </div>
+
+      <div id="drop" role="button" tabindex="0">
+        <div class="fname">Kéo thả tệp .IPA vào đây</div>
+        <div class="fsize">hoặc chạm để chọn tệp (file gốc luôn được giữ nguyên)</div>
+      </div>
+      <input id="file" type="file" accept=".ipa,.zip,application/octet-stream" hidden>
+
+      <div class="compat-box" id="compatBox">
+        Chưa phân loại ứng dụng. Nạp tệp IPA để kiểm tra Cordova, Capacitor, WKWebView, Unity hoặc Native iOS.
+      </div>
+
+      <table class="info-table">
+        <tbody>
+          <tr><th>Bundle Identifier</th><td id="biBundleId">—</td></tr>
+          <tr><th>Tên ứng dụng / App</th><td id="biAppName">—</td></tr>
+          <tr><th>Phiên bản / iOS tối thiểu</th><td id="biVersion">—</td></tr>
+          <tr><th>Loại ứng dụng</th><td id="biKind">—</td></tr>
+          <tr><th>Web Root phát hiện</th><td id="biWebRoot">—</td></tr>
+          <tr><th>Thư mục Menu sẽ tạo</th><td id="biMenuDir">—</td></tr>
+        </tbody>
+      </table>
+
+      <div>
+        <div class="panel-head" style="margin-bottom:6px">
+          <span class="panel-title">Entry Points HTML sẽ chèn Loader</span>
+          <span class="panel-meta" id="metaEntries">0 tệp</span>
+        </div>
+        <div class="entry-box" id="entryList">
+          <div class="empty">Chưa phát hiện file HTML</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Cột phải: Function Engine -->
+    <section class="panel">
+      <div class="panel-head">
+        <span class="panel-title">2. Function Engine (JavaScript)</span>
+        <span class="panel-meta" id="metaCode">0 ký tự</span>
+      </div>
+
+      <textarea id="code" spellcheck="false" placeholder="Dán code JavaScript chức năng vào đây. Hỗ trợ:
+• === Chức năng: Tên ===
+• // @func: Tên
+• function tenHam(enabled, ctx) { ... }
+• const tenHam = async (enabled) => { ... }
+• JSON { &quot;functions&quot;: [{ &quot;name&quot;: &quot;...&quot;, &quot;code&quot;: &quot;...&quot; }] }
+
+Lưu ý:
+- Trả về false hoặc ném lỗi => công tắc KHÔNG chuyển sang ON.
+- Có thể trả về hàm dọn dẹp () => { ... } để tự gọi khi tắt OFF."></textarea>
+
+      <div class="code-actions">
+        <button id="parse" class="sm">Phân tích &amp; Kiểm cú pháp</button>
+        <button id="loadSample" class="ghost sm" type="button">Nạp mẫu kiểm thử WebView</button>
+        <button id="clearCode" class="ghost sm" type="button">Xóa code</button>
+      </div>
+
+      <div class="panel-head" style="margin-top:2px">
+        <span class="panel-title">Danh sách Module sau phân tích</span>
+        <span class="panel-meta" id="metaFuncs">0 hợp lệ / 0 tổng</span>
+      </div>
+      <div id="menuList"><div class="empty">Chưa phân tích code chức năng</div></div>
+    </section>
   </div>
 
-  <div class="panel">
-    <div class="panel-head">
-      <span class="panel-title">Code chức năng</span>
-      <span class="panel-meta" id="metaCode">0 ký tự</span>
+  <!-- Thanh điều khiển & Tiến trình -->
+  <section class="controls-bar">
+    <div class="control-row">
+      <div class="field-inline">
+        <label for="mode">Chế độ:</label>
+        <select id="mode">
+          <option value="webview">Real WebView Inject (Khuyến nghị cho Cordova/Capacitor/WKWebView)</option>
+          <option value="bundle">Bundle Only (Chỉ đóng gói tài nguyên, không sửa HTML)</option>
+          <option value="native">Native Reference (Xuất template Theos — không build dylib)</option>
+        </select>
+      </div>
+
+      <div class="field-inline">
+        <label for="compress">Đóng gói ZIP:</label>
+        <select id="compress">
+          <option value="fast">Tối ưu RAM / Safari iOS (STORE)</option>
+          <option value="deflate">Nén chuẩn (DEFLATE mức 5)</option>
+        </select>
+      </div>
+
+      <div class="spacer"></div>
+
+      <button id="run" disabled>Thực hiện Inject</button>
+      <button id="rollbackBtn" class="ghost" disabled>Hoàn tác (Rollback)</button>
+      <button id="export" class="ok-btn" disabled>Đóng gói &amp; Xuất IPA</button>
     </div>
-    <textarea id="code" placeholder="Dán code chức năng vào đây. Tool sẽ sinh MENU UI THẬT.
 
-Định dạng hỗ trợ:
-  === Chức năng: Tên ===
-  // @func: Tên
-  function tenHam() {...}
-  const tenHam = () => {...}
-  {"functions":[{"name":"...","code":"..."}]}
+    <div class="progress-wrap">
+      <div class="progress-meta">
+        <span id="progLabel">Sẵn sàng</span>
+        <span id="progPct">0%</span>
+      </div>
+      <div class="progress-track"><div class="progress-fill" id="progFill"></div></div>
+    </div>
 
-Mỗi chức năng sẽ thành 1 nút bấm trong menu thật."></textarea>
-    <div id="menuList"><div class="empty">Chưa phân tích</div></div>
+    <div id="manualWrap">
+      <span style="font-size:12.5px;color:#fde8bf">Tải thủ công (hữu ích cho Safari iOS):</span>
+      <button id="manualDownloadBtn" class="warn-btn sm" type="button">Tải file IPA</button>
+      <button id="shareBtn" class="ghost sm" type="button" style="display:none">Chia sẻ / Lưu vào Tệp (iOS)</button>
+    </div>
+  </section>
+
+  <!-- Kiểm tra sau Inject & Log -->
+  <div class="bottom-grid">
+    <section class="panel">
+      <div class="panel-head">
+        <span class="panel-title">3. Kiểm tra sau Inject (7 tiêu chí)</span>
+        <span class="panel-meta" id="verifySummary">Chưa kiểm tra</span>
+      </div>
+      <div class="verify-list" id="verifyList"></div>
+    </section>
+
+    <section class="panel">
+      <div class="panel-head">
+        <span class="panel-title">4. Nhật ký xử lý thời gian thực</span>
+        <button id="clearLog" class="ghost sm" type="button">Xóa log</button>
+      </div>
+      <div id="log" aria-live="polite"></div>
+    </section>
   </div>
-</div>
 
-<div class="mode-row">
-  <label>Chế độ inject:</label>
-  <select id="mode">
-    <option value="webview">WebView — inject vào www/ hoặc index.html (HIỆN THẬT)</option>
-    <option value="bundle">Bundle — chỉ chèn file (dùng cho app tự phát triển)</option>
-    <option value="native">Native — sinh template Theos dylib (không build hộ)</option>
-  </select>
-</div>
-
-<div class="toolbar">
-  <button id="parse" disabled>Phân tích code</button>
-  <button id="run" disabled>Chèn vào IPA</button>
-  <div class="spacer"></div>
-  <button id="export" class="ghost" disabled>Xuất & Tải file</button>
-</div>
-
-<div id="manualWrap"></div>
-<div id="log"></div>
-
-<div class="stat-bar">
-  <span>Chức năng: <b id="stFuncs">0</b></span>
-  <span>Tệp chèn: <b id="stFiles">0</b></span>
-  <span>Bundle: <b id="stBundle">—</b></span>
-  <span>Trạng thái: <b id="stState">Idle</b></span>
+  <!-- Hướng dẫn ký lại bắt buộc -->
+  <section class="sign-guide">
+    <b style="color:var(--text)">Hướng dẫn ký lại IPA trước khi cài đặt (bắt buộc sau khi chỉnh sửa nội dung gói):</b>
+    Mọi IPA xuất từ công cụ này đều ở trạng thái <b>CHƯA KÝ (Unsigned / Invalidated Signature)</b> vì nội dung trong <code>Payload/*.app</code> đã thay đổi. Dùng một trong các công cụ sau:
+    <pre>zsign -k cert.p12 -p "MAT_KHAU" -m profile.mobileprovision -o app-signed.ipa app-modmenu-v3.ipa
+# Hoặc cài trực tiếp qua Sideloadly / AltStore / SideStore / TrollStore (thiết bị hỗ trợ).</pre>
+  </section>
 </div>
 
 <script>
-const { JSZip } = window;
-let ipaFile = null, zip = null, parsedFuncs = [], lastBlob = null, lastName = '';
-const $ = s => document.querySelector(s);
-const log = (m,c='info')=>{const el=$('#log');const t=new Date().toTimeString().slice(0,8);el.innerHTML+=`<div class="line"><span class="ts">${t}</span><span class="${c}">${escapeHtml(m)}</span></div>`;el.scrollTop=el.scrollHeight;};
-const setState = s => $('#stState').textContent = s;
-function escapeHtml(s){return String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]))}
-
-function triggerDownload(url, filename) {
-  const a = document.createElement('a');
-  a.href = url; a.download = filename; a.rel='noopener';
-  a.style.display='none'; document.body.appendChild(a); a.click();
-  document.body.removeChild(a);
-}
-function showManualDownload(blob, filename) {
-  lastBlob = blob; lastName = filename;
-  const wrap = $('#manualWrap');
-  wrap.style.display = 'block'; wrap.innerHTML = '';
-  const btn = document.createElement('button');
-  btn.textContent = 'Tải thủ công: ' + filename + ' (' + (blob.size/1024/1024).toFixed(2) + ' MB)';
-  btn.onclick = () => {
-    const url = URL.createObjectURL(lastBlob);
-    triggerDownload(url, lastName);
-    setTimeout(() => URL.revokeObjectURL(url), 5000);
-  };
-  wrap.appendChild(btn);
-}
-
-// ===== NẠP FILE =====
-const drop = $('#drop'), fi = $('#file');
-drop.onclick = () => fi.click();
-drop.ondragover = e => { e.preventDefault(); drop.classList.add('drag'); };
-drop.ondragleave = () => drop.classList.remove('drag');
-drop.ondrop = e => { e.preventDefault(); drop.classList.remove('drag'); if (e.dataTransfer.files[0]) setFile(e.dataTransfer.files[0]); };
-fi.onchange = () => fi.files[0] && setFile(fi.files[0]);
-
-async function setFile(f) {
-  ipaFile = f; zip = null;
-  $('#parse').disabled = true; $('#run').disabled = true; $('#export').disabled = true;
-  $('#log').innerHTML = ''; $('#manualWrap').style.display='none';
-  drop.innerHTML = `<div class="fname">${escapeHtml(f.name)}</div><div class="fsize">${(f.size/1024/1024).toFixed(2)} MB</div><div class="state">Đang kiểm tra...</div>`;
-  $('#metaFile').textContent = (f.size/1024/1024).toFixed(2) + ' MB';
-  log('Đã nạp: ' + f.name, 'ok');
-
-  try {
-    const head = new Uint8Array(await f.slice(0,4).arrayBuffer());
-    if (!(head[0]===0x50 && head[1]===0x4B)) throw new Error('Không phải ZIP/IPA (magic bytes sai)');
-    log('Magic bytes ZIP hợp lệ.', 'ok');
-  } catch(e) {
-    drop.querySelector('.state').className='state err';
-    drop.querySelector('.state').textContent='Không phải IPA';
-    log('Lỗi: ' + e.message, 'err');
-    setState('Invalid'); return;
-  }
-
-  try {
-    log('Đang giải nén...', 'dim');
-    zip = await JSZip.loadAsync(f);
-    const files = Object.keys(zip.files).filter(n => !zip.files[n].dir);
-    const appFile = files.find(n => /^Payload\/[^/]+\.app\//.test(n));
-    if (!appFile) {
-      drop.querySelector('.state').className='state err';
-      drop.querySelector('.state').textContent='Thiếu Payload/';
-      log('Không tìm thấy Payload/*.app — không phải IPA iOS.', 'err');
-      setState('Invalid'); return;
-    }
-    const bundlePath = appFile.match(/^(Payload\/[^/]+\.app)/)[1];
-    const bundleName = bundlePath.split('/').pop().replace(/\.app$/, '');
-
-    // Phát hiện loại app
-    const isWebView = files.some(n => n.includes('.app/www/') || n.endsWith('.app/index.html') || n.includes('.app/public/'));
-    const isUnity = files.some(n => n.endsWith('.app/Data/') || n.includes('UnityFramework'));
-    $('#appKind').innerHTML = isWebView
-      ? `✅ <b style="color:var(--ok)">WebView app</b> — menu sẽ HIỆN THẬT`
-      : isUnity
-        ? `⚠️ <b style="color:var(--warn)">Unity game</b> — cần build dylib (chế độ Native)`
-        : `❓ App native — chỉ chèn bundle được`;
-
-    drop.querySelector('.state').className='state ok';
-    drop.querySelector('.state').textContent='IPA hợp lệ';
-    log(`IPA hợp lệ. Bundle: ${bundleName}`, 'ok');
-    if (isWebView) log('Phát hiện WebView content → có thể inject menu thật!', 'ok');
-    if (isUnity) log('App Unity → chế độ WebView sẽ không hiện menu, dùng chế độ Native.', 'warn');
-    $('#parse').disabled = false;
-    setState('File OK');
-  } catch(e) {
-    drop.querySelector('.state').className='state err';
-    drop.querySelector('.state').textContent='Lỗi đọc';
-    log('Lỗi giải nén: ' + e.message, 'err');
-    setState('Error');
-  }
-}
-
-$('#code').addEventListener('input', () => {
-  $('#metaCode').textContent = $('#code').value.length.toLocaleString() + ' ký tự';
-});
-
-// ===== PHÂN TÍCH =====
-function detectType(code) {
-  const t = code.trim();
-  if (/^<\?xml|^<!DOCTYPE plist|^<plist/i.test(t)) return 'plist';
-  if (/^<[a-z][\s\S]*>$/i.test(t) && /<\/[a-z]/i.test(t)) return 'xml';
-  if (/^[{[]/.test(t)) { try { JSON.parse(t); return 'json'; } catch(e){} }
-  if (/\bfunction\b|=>|\bconst\b|\blet\b|\bvar\b|\bclass\b/.test(t)) return 'js';
-  return 'text';
-}
-function sanitize(s) {
-  return (s||'func').normalize('NFD').replace(/[\u0300-\u036f]/g,'')
-    .replace(/[^\w\-]+/g,'_').replace(/^_+|_+$/g,'').slice(0,40) || 'func';
-}
-function parseCode(src) {
-  const funcs = [];
-  const re1 = /^=+\s*(?:Chức năng|Function|Func)\s*[:\-]\s*(.+?)\s*=+$/gim;
-  let m, idxs=[];
-  while((m=re1.exec(src))) idxs.push({name:m[1].trim(),start:m.index,end:re1.lastIndex});
-  if(idxs.length){
-    idxs.forEach((it,i)=>{
-      const end = i+1<idxs.length ? idxs[i+1].start : src.length;
-      const body = src.slice(it.end,end).trim();
-      if(body) funcs.push({name:it.name,code:body,type:detectType(body)});
-    });
-    if(funcs.length) return funcs;
-  }
-  const re2 = /^[ \t]*(?:\/\/|#)\s*@(?:func|function|chucnang|chức năng|fn)\s*:?\s*(.+)$/gim;
-  const lines = src.split('\n'); let cur=null;
-  for(const line of lines){
-    const mm = line.match(re2);
-    if(mm){
-      if(cur && cur.code.trim()) funcs.push({name:cur.name,code:cur.code.trim(),type:detectType(cur.code)});
-      cur = {name:mm[1].trim(),code:''};
-    } else if(cur) cur.code += line+'\n';
-  }
-  if(cur && cur.code.trim()) funcs.push({name:cur.name,code:cur.code.trim(),type:detectType(cur.code)});
-  if(funcs.length) return funcs;
-  const re3 = /(?:function\s+([A-Za-z_$][\w$]*)\s*\([^)]*\)\s*\{|(?:const|let|var)\s+([A-Za-z_$][\w$]*)\s*=\s*(?:function\b|\([^)]*\)\s*=>|[A-Za-z_$][\w$]*\s*=>))/g;
-  let mm3;
-  while((mm3=re3.exec(src))){
-    const name = mm3[1]||mm3[2];
-    const sb = src.indexOf('{',mm3.index); if(sb<0) continue;
-    let d=0,end=-1;
-    for(let i=sb;i<src.length;i++){
-      if(src[i]==='{')d++; else if(src[i]==='}'){d--;if(d===0){end=i+1;break;}}
-    }
-    if(end>sb){ funcs.push({name,code:src.slice(mm3.index,end).trim(),type:'js'}); re3.lastIndex=end; }
-  }
-  if(funcs.length) return funcs;
-  try{
-    const j = JSON.parse(src);
-    if(Array.isArray(j.functions)) return j.functions.map((f,i)=>({name:f.name||('Func'+(i+1)),code:f.code||JSON.stringify(f),type:f.type||'js'}));
-    if(Array.isArray(j)) return j.map((f,i)=>({name:f.name||('Func'+(i+1)),code:f.code||JSON.stringify(f,null,2),type:'js'}));
-  }catch(e){}
-  if(src.trim()) return [{name:'CustomPatch',code:src.trim(),type:detectType(src)}];
-  return [];
-}
-
-$('#parse').onclick = () => {
-  const src = $('#code').value;
-  if(!src.trim()) return log('Ô code trống.', 'err');
-  parsedFuncs = parseCode(src);
-  const list = $('#menuList');
-  if(!parsedFuncs.length){
-    list.innerHTML = '<div class="empty" style="color:#ff5c72">Không tách được chức năng</div>'; return;
-  }
-  list.innerHTML = parsedFuncs.map((f,i)=>
-    `<div class="fn"><span class="idx">${String(i+1).padStart(2,'0')}</span>
-      <span class="name">${escapeHtml(f.name)}</span>
-      <span class="type">${f.type}</span>
-      <span class="size">${f.code.length}b</span></div>`
-  ).join('');
-  $('#stFuncs').textContent = parsedFuncs.length;
-  log(`Phân tích: ${parsedFuncs.length} chức năng`, 'ok');
-  parsedFuncs.forEach(f=>log(`  ${f.name}  [${f.type}]`, 'dim'));
-  $('#run').disabled = false;
-  setState('Parsed');
-};
-
-// ===== SINH MENU HTML THẬT =====
-function buildRealMenuHTML(bundleName) {
-  const buttons = parsedFuncs.map((f, i) => {
-    const safeName = escapeHtml(f.name);
-    return `
-    <button class="mm-btn" data-idx="${i}">
-      <span class="mm-name">${safeName}</span>
-      <span class="mm-state" id="st-${i}">OFF</span>
-    </button>`;
-  }).join('\n');
-
-  const handlers = parsedFuncs.map((f, i) => {
-    const safeCode = f.code.replace(/<\/script>/gi, '<\\/script>');
-    return `
-  window.__mm_funcs[${i}] = {
-    name: ${JSON.stringify(f.name)},
-    run: function() {
-      try {
-${safeCode}
-      } catch(e) { console.error('[ModMenu] ' + ${JSON.stringify(f.name)} + ':', e); return false; }
-      return true;
-    }
-  };`;
-  }).join('\n');
-
-  return `<!DOCTYPE html>
-<html lang="vi">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<title>Mod Menu — ${escapeHtml(bundleName)}</title>
-<style>
-  *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
-  body{font-family:-apple-system,"Segoe UI",Roboto,sans-serif;background:transparent;color:#e6e9f2;font-size:14px}
-  #mm-fab{position:fixed;right:16px;bottom:16px;width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,#3d6bff,#2a4fd4);color:#fff;border:0;font-size:22px;font-weight:700;box-shadow:0 8px 24px rgba(61,107,255,.5);z-index:2147483646;cursor:pointer;transition:.2s;display:flex;align-items:center;justify-content:center}
-  #mm-fab:active{transform:scale(.92)}
-  #mm-panel{position:fixed;right:16px;bottom:84px;width:280px;max-height:70vh;overflow-y:auto;background:rgba(18,21,31,.97);border:1px solid #232838;border-radius:14px;padding:14px;box-shadow:0 20px 60px rgba(0,0,0,.7);z-index:2147483647;display:none;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}
-  #mm-panel.show{display:block;animation:mmIn .2s ease}
-  @keyframes mmIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
-  #mm-panel h3{font-size:13px;font-weight:600;color:#6e7794;text-transform:uppercase;letter-spacing:.8px;margin-bottom:10px;display:flex;justify-content:space-between;align-items:center}
-  #mm-close{background:#161a26;border:1px solid #232838;color:#e6e9f2;width:24px;height:24px;border-radius:6px;font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center}
-  .mm-btn{width:100%;display:flex;justify-content:space-between;align-items:center;background:#161a26;color:#e6e9f2;border:1px solid #232838;padding:11px 13px;border-radius:9px;margin-bottom:7px;font-size:13px;font-family:inherit;cursor:pointer;transition:.15s;text-align:left}
-  .mm-btn:active{background:#1c2130;transform:scale(.98)}
-  .mm-btn.on{background:rgba(61,220,151,.12);border-color:rgba(61,220,151,.4)}
-  .mm-name{font-weight:500;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;margin-right:10px}
-  .mm-state{font-size:10px;font-weight:700;font-family:ui-monospace,monospace;padding:3px 8px;border-radius:5px;background:#232838;color:#6e7794;letter-spacing:.5px}
-  .mm-btn.on .mm-state{background:rgba(61,220,151,.2);color:#3ddc97}
-  #mm-toast{position:fixed;left:50%;top:20px;transform:translateX(-50%) translateY(-100px);background:rgba(61,220,151,.95);color:#0b0d14;padding:9px 18px;border-radius:20px;font-size:13px;font-weight:600;z-index:2147483648;transition:.3s;box-shadow:0 8px 24px rgba(0,0,0,.4)}
-  #mm-toast.show{transform:translateX(-50%) translateY(0)}
-</style>
-</head>
-<body>
-<button id="mm-fab" aria-label="Mod Menu">☰</button>
-<div id="mm-panel">
-  <h3>Mod Menu <button id="mm-close" aria-label="Đóng">✕</button></h3>
-  ${buttons || '<div style="color:#6e7794;font-size:12px;padding:10px;text-align:center">Không có chức năng</div>'}
-</div>
-<div id="mm-toast"></div>
-
-<script>
-(function(){
+(() => {
   'use strict';
-  window.__mm_funcs = window.__mm_funcs || {};
-  window.__mm_on = window.__mm_on || {};
 
-  // Đăng ký hàm
-${handlers}
+  const { JSZip } = window;
+  const $ = s => document.querySelector(s);
 
-  // UI
-  var fab = document.getElementById('mm-fab');
-  var panel = document.getElementById('mm-panel');
-  var close = document.getElementById('mm-close');
-  var toast = document.getElementById('mm-toast');
-  var toastT = null;
+  // ===== TRẠNG THÁI ỨNG DỤNG =====
+  const state = {
+    originalFile: null,      // Giữ nguyên file gốc
+    workZip: null,           // Bản sao làm việc
+    analysis: null,          // Kết quả phân tích IPA & WebView
+    parsedFuncs: [],         // Danh sách module đã kiểm cú pháp
+    rollback: null,          // Snapshot để hoàn tác nguyên tử
+    injected: false,         // Đã inject và qua kiểm tra 1-4, 6-7
+    packagedBlob: null,      // Blob IPA sau đóng gói
+    packagedName: '',
+    objectUrl: null,         // Quản lý vòng đời ObjectURL tránh rò rỉ RAM
+    verify: {}
+  };
 
-  function showToast(msg){
-    toast.textContent = msg;
-    toast.classList.add('show');
-    clearTimeout(toastT);
-    toastT = setTimeout(function(){ toast.classList.remove('show'); }, 1600);
+  // ===== TIỆN ÍCH CƠ BẢN =====
+  function escapeHtml(s) {
+    return String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
   }
 
-  fab.onclick = function(){ panel.classList.toggle('show'); };
-  close.onclick = function(){ panel.classList.remove('show'); };
+  function sanitizeName(s) {
+    return (s || 'func')
+      .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+      .replace(/[^\w-]+/g, '_').replace(/^_+|_+$/g, '').slice(0, 42) || 'func';
+  }
 
-  var btns = panel.querySelectorAll('.mm-btn');
-  for (var i=0; i<btns.length; i++){
-    (function(btn){
-      var idx = parseInt(btn.getAttribute('data-idx'), 10);
-      btn.onclick = function(){
-        var fn = window.__mm_funcs[idx];
-        if(!fn){ showToast('Chức năng không tồn tại'); return; }
-        var st = document.getElementById('st-' + idx);
-        if(window.__mm_on[idx]){
-          window.__mm_on[idx] = false;
-          btn.classList.remove('on');
-          if(st) st.textContent = 'OFF';
-          showToast('Tắt: ' + fn.name);
-        } else {
-          try {
-            var ok = fn.run();
-            if(ok !== false){
-              window.__mm_on[idx] = true;
-              btn.classList.add('on');
-              if(st) st.textContent = 'ON';
-              showToast('Bật: ' + fn.name);
-            } else {
-              showToast('Lỗi khi chạy: ' + fn.name);
-            }
-          } catch(e){
-            console.error(e);
-            showToast('Lỗi: ' + (e.message || e));
+  function formatBytes(n) {
+    if (n < 1024) return n + ' B';
+    if (n < 1024 * 1024) return (n / 1024).toFixed(1) + ' KB';
+    return (n / 1024 / 1024).toFixed(2) + ' MB';
+  }
+
+  function log(msg, cls = 'info') {
+    const el = $('#log');
+    const t = new Date().toTimeString().slice(0, 8);
+    const row = document.createElement('div');
+    row.className = 'line';
+    row.innerHTML = `<span class="ts">${t}</span><span class="${cls}">${escapeHtml(msg)}</span>`;
+    el.appendChild(row);
+    el.scrollTop = el.scrollHeight;
+  }
+
+  function setProgress(pct, label) {
+    const clamped = Math.max(0, Math.min(100, Math.round(pct)));
+    $('#progFill').style.width = clamped + '%';
+    $('#progPct').textContent = clamped + '%';
+    if (label !== undefined) $('#progLabel').textContent = label;
+  }
+
+  function setPipe(id, statusClass, badgeText, descText) {
+    const el = $(`#ps${id}`);
+    el.className = 'pipe-step' + (statusClass ? ' ' + statusClass : '');
+    $(`#pb${id}`).textContent = badgeText;
+    $(`#pd${id}`).textContent = descText;
+  }
+
+  // ===== HIỂN THỊ 7 TIÊU CHÍ KIỂM TRA =====
+  const VERIFY_DEFS = [
+    { key: 'menuFiles',   label: '1. Tệp Menu (ModMenu.html, loader.js, modules) đã được tạo' },
+    { key: 'entryInject', label: '2. Loader đã tích hợp đúng vào Entry Point HTML' },
+    { key: 'relPaths',    label: '3. Đường dẫn tài nguyên tương đối hợp lệ trong ZIP' },
+    { key: 'jsSyntax',    label: '4. Toàn bộ JavaScript không có lỗi cú pháp' },
+    { key: 'zipValid',    label: '5. Tệp IPA sau đóng gói giải nén kiểm toàn vẹn thành công' },
+    { key: 'manifestOk',  label: '6. Manifest phản ánh chính xác danh sách chức năng' },
+    { key: 'signGuide',   label: '7. Đã nhúng hướng dẫn ký lại IPA (README_SIGNING.txt)' }
+  ];
+
+  function resetVerifyUI() {
+    state.verify = {};
+    const list = $('#verifyList');
+    list.innerHTML = VERIFY_DEFS.map(d => `
+      <div class="v-item" id="v-${d.key}">
+        <div>
+          <div>${escapeHtml(d.label)}</div>
+          <div class="v-detail" id="vd-${d.key}">Chờ thực hiện</div>
+        </div>
+        <span class="v-status" id="vs-${d.key}">PENDING</span>
+      </div>
+    `).join('');
+    $('#verifySummary').textContent = 'Chưa kiểm tra';
+  }
+
+  function setVerifyItem(key, status, detail) {
+    state.verify[key] = { status, detail };
+    const badge = $(`#vs-${key}`);
+    const det = $(`#vd-${key}`);
+    if (!badge || !det) return;
+    badge.className = 'v-status ' + (status === 'PASS' ? 'pass' : status === 'FAIL' ? 'fail' : status === 'WARN' ? 'warn' : '');
+    badge.textContent = status;
+    det.textContent = detail;
+
+    const vals = Object.values(state.verify);
+    const passCount = vals.filter(v => v.status === 'PASS').length;
+    const failCount = vals.filter(v => v.status === 'FAIL').length;
+    $('#verifySummary').textContent = `${passCount}/${VERIFY_DEFS.length} PASS` + (failCount ? ` · ${failCount} FAIL` : '');
+  }
+
+  resetVerifyUI();
+
+  // ===== TÍNH & CHUẨN HÓA ĐƯỜNG DẪN TƯƠNG ĐỐI =====
+  function dirname(p) {
+    const i = p.lastIndexOf('/');
+    return i < 0 ? '' : p.slice(0, i);
+  }
+
+  function computeRelativePath(fromFile, toFile) {
+    const fromParts = dirname(fromFile).split('/').filter(Boolean);
+    const toParts = toFile.split('/').filter(Boolean);
+    let common = 0;
+    while (common < fromParts.length && common < toParts.length - 1 && fromParts[common] === toParts[common]) {
+      common++;
+    }
+    const up = fromParts.length - common;
+    const rest = toParts.slice(common);
+    return (up > 0 ? '../'.repeat(up) : './') + rest.join('/');
+  }
+
+  function resolveRelativePath(fromFile, relPath) {
+    const stack = dirname(fromFile).split('/').filter(Boolean);
+    const cleanRel = relPath.split(/[?#]/)[0];
+    for (const seg of cleanRel.split('/')) {
+      if (!seg || seg === '.') continue;
+      if (seg === '..') {
+        if (!stack.length) return null;
+        stack.pop();
+      } else {
+        stack.push(seg);
+      }
+    }
+    return stack.join('/');
+  }
+
+  // ===== GIẢI MÃ INFO.PLIST (HỖ TRỢ CẢ BPLIST00 NHỊ PHÂN & XML PLIST) =====
+  function parseBinaryPlist(bytes) {
+    if (bytes.length < 40) throw new Error('bplist quá ngắn');
+    const view = new DataView(bytes.buffer, bytes.byteOffset, bytes.byteLength);
+    const header = String.fromCharCode(...bytes.slice(0, 8));
+    if (!header.startsWith('bplist0')) throw new Error('Header bplist không hợp lệ');
+
+    const trailer = bytes.length - 32;
+    const offsetSize = view.getUint8(trailer + 6);
+    const objectRefSize = view.getUint8(trailer + 7);
+    const numObjects = readUIntBE(view, trailer + 8, 8);
+    const topObject = readUIntBE(view, trailer + 16, 8);
+    const offsetTableOffset = readUIntBE(view, trailer + 24, 8);
+
+    if (offsetSize < 1 || offsetSize > 8 || objectRefSize < 1 || objectRefSize > 8) {
+      throw new Error('Kích thước offset/ref bplist không hợp lệ');
+    }
+    if (offsetTableOffset + numObjects * offsetSize > trailer) {
+      throw new Error('Offset table vượt biên bplist');
+    }
+
+    const offsets = new Array(numObjects);
+    for (let i = 0; i < numObjects; i++) {
+      offsets[i] = readUIntBE(view, offsetTableOffset + i * offsetSize, offsetSize);
+    }
+
+    function readUIntBE(dv, pos, len) {
+      let val = 0;
+      for (let i = 0; i < len; i++) val = val * 256 + dv.getUint8(pos + i);
+      return val;
+    }
+
+    function readLengthAndStart(pos, info) {
+      if (info !== 0x0f) return { length: info, start: pos + 1 };
+      const intMarker = view.getUint8(pos + 1);
+      const intSize = 1 << (intMarker & 0x0f);
+      const length = readUIntBE(view, pos + 2, intSize);
+      return { length, start: pos + 2 + intSize };
+    }
+
+    const cache = new Map();
+    function parseObj(idx, depth) {
+      if (depth > 32) return null;
+      if (cache.has(idx)) return cache.get(idx);
+      const pos = offsets[idx];
+      if (pos === undefined || pos >= offsetTableOffset) return null;
+      const marker = view.getUint8(pos);
+      const type = marker & 0xf0;
+      const info = marker & 0x0f;
+
+      let res = null;
+      if (marker === 0x00) res = null;
+      else if (marker === 0x08) res = false;
+      else if (marker === 0x09) res = true;
+      else if (type === 0x10) {
+        const size = 1 << info;
+        res = readUIntBE(view, pos + 1, size);
+      } else if (type === 0x20) {
+        const size = 1 << info;
+        res = size === 4 ? view.getFloat32(pos + 1, false) : view.getFloat64(pos + 1, false);
+      } else if (marker === 0x33) {
+        res = new Date((view.getFloat64(pos + 1, false) + 978307200) * 1000).toISOString();
+      } else if (type === 0x40) {
+        const { length, start } = readLengthAndStart(pos, info);
+        res = bytes.slice(start, start + length);
+      } else if (type === 0x50) {
+        const { length, start } = readLengthAndStart(pos, info);
+        res = new TextDecoder('utf-8').decode(bytes.slice(start, start + length));
+      } else if (type === 0x60) {
+        const { length, start } = readLengthAndStart(pos, info);
+        let out = '';
+        for (let i = 0; i < length; i++) {
+          out += String.fromCharCode(view.getUint16(start + i * 2, false));
+        }
+        res = out;
+      } else if (type === 0xa0) {
+        const { length, start } = readLengthAndStart(pos, info);
+        const arr = [];
+        cache.set(idx, arr);
+        for (let i = 0; i < length; i++) {
+          const ref = readUIntBE(view, start + i * objectRefSize, objectRefSize);
+          arr.push(parseObj(ref, depth + 1));
+        }
+        return arr;
+      } else if (type === 0xd0) {
+        const { length, start } = readLengthAndStart(pos, info);
+        const dict = {};
+        cache.set(idx, dict);
+        const valOffset = start + length * objectRefSize;
+        for (let i = 0; i < length; i++) {
+          const kRef = readUIntBE(view, start + i * objectRefSize, objectRefSize);
+          const vRef = readUIntBE(view, valOffset + i * objectRefSize, objectRefSize);
+          const key = parseObj(kRef, depth + 1);
+          if (typeof key === 'string') dict[key] = parseObj(vRef, depth + 1);
+        }
+        return dict;
+      }
+      cache.set(idx, res);
+      return res;
+    }
+
+    return parseObj(topObject, 0) || {};
+  }
+
+  function parseXmlPlist(text) {
+    const doc = new DOMParser().parseFromString(text, 'application/xml');
+    if (doc.querySelector('parsererror')) throw new Error('XML Plist không hợp lệ');
+    function readNode(node) {
+      if (!node) return null;
+      const tag = node.tagName;
+      if (tag === 'dict') {
+        const obj = {};
+        const kids = Array.from(node.children);
+        for (let i = 0; i < kids.length; i += 2) {
+          if (kids[i].tagName === 'key' && kids[i + 1]) {
+            obj[kids[i].textContent.trim()] = readNode(kids[i + 1]);
           }
         }
-      };
-    })(btns[i]);
+        return obj;
+      }
+      if (tag === 'array') return Array.from(node.children).map(readNode);
+      if (tag === 'string' || tag === 'date' || tag === 'data') return node.textContent;
+      if (tag === 'integer') return parseInt(node.textContent, 10);
+      if (tag === 'real') return parseFloat(node.textContent);
+      if (tag === 'true') return true;
+      if (tag === 'false') return false;
+      return null;
+    }
+    const rootDict = doc.querySelector('plist > dict');
+    return rootDict ? readNode(rootDict) : {};
   }
 
-  console.log('[ModMenu] Loaded ' + Object.keys(window.__mm_funcs).length + ' functions');
-})();
-<\/script>
-</body>
-</html>`;
+  function parsePlistBytes(bytes) {
+    const magic = String.fromCharCode(...bytes.slice(0, 6));
+    if (magic === 'bplist') return parseBinaryPlist(bytes);
+    const text = new TextDecoder('utf-8').decode(bytes);
+    if (text.includes('<plist')) return parseXmlPlist(text);
+    throw new Error('Không nhận diện được định dạng Info.plist');
+  }
+
+  // ===== PHÂN TÍCH CẤU TRÚC IPA & TƯƠNG THÍCH WEBVIEW =====
+  async function analyzeIPA(zipObj) {
+    const allFiles = Object.keys(zipObj.files).filter(n => !zipObj.files[n].dir);
+    const appMatchFile = allFiles.find(n => /^Payload\/[^/]+\.app\//.test(n));
+    if (!appMatchFile) {
+      throw new Error('Không tìm thấy thư mục Payload/*.app — tệp không phải IPA iOS hợp lệ.');
+    }
+    const bundlePath = appMatchFile.match(/^(Payload\/[^/]+\.app)\//)[1];
+    const appFolderName = bundlePath.split('/').pop().replace(/\.app$/, '');
+    const prefix = bundlePath + '/';
+    const appFiles = allFiles.filter(n => n.startsWith(prefix));
+
+    // Đọc Info.plist
+    let plist = {};
+    const plistEntry = zipObj.file(prefix + 'Info.plist');
+    if (plistEntry) {
+      try {
+        const raw = await plistEntry.async('uint8array');
+        plist = parsePlistBytes(raw);
+        log('Đã giải mã Info.plist thành công.', 'ok');
+      } catch (e) {
+        log('Cảnh báo không đọc được Info.plist: ' + e.message, 'warn');
+      }
+    } else {
+      log('Cảnh báo: Không tìm thấy Info.plist trong bundle.', 'warn');
+    }
+
+    // Quét dấu hiệu các framework / engine
+    const has = fn => appFiles.some(fn);
+    const isCordova =
+      has(f => f.endsWith('/www/cordova.js')) ||
+      has(f => f.endsWith('/www/cordova_plugins.js')) ||
+      has(f => f === prefix + 'config.xml') ||
+      has(f => /Cordova\.framework/i.test(f));
+
+    const isCapacitor =
+      has(f => f === prefix + 'capacitor.config.json') ||
+      has(f => f === prefix + 'public/capacitor.config.json') ||
+      has(f => /Capacitor\.framework/i.test(f)) ||
+      has(f => f.endsWith('/public/capacitor-runtime.js'));
+
+    const isUnity =
+      has(f => /UnityFramework\.framework/i.test(f)) ||
+      has(f => f.startsWith(prefix + 'Data/Managed/')) ||
+      has(f => f === prefix + 'Data/globalgamemanagers');
+
+    // Tìm tất cả file HTML trong app (bỏ qua __modmenu và các framework hệ thống)
+    const htmlFiles = appFiles.filter(f => {
+      const rel = f.slice(prefix.length);
+      if (!/\.html?$/i.test(rel)) return false;
+      if (rel.includes('__modmenu/') || rel.includes('ModMenu/')) return false;
+      if (/^Frameworks\/|^PlugIns\/|^Watch\/|^_CodeSignature\//.test(rel)) return false;
+      return true;
+    });
+
+    // Tìm Web Root chuẩn
+    const candidateRoots = [
+      prefix + 'www',
+      prefix + 'public',
+      prefix + 'web',
+      prefix + 'assets/www',
+      prefix + 'Resources/www',
+      prefix + 'dist',
+      prefix + 'build',
+      bundlePath
+    ];
+
+    let webRoot = null;
+    for (const root of candidateRoots) {
+      const hasHtmlInside = htmlFiles.some(h => h.startsWith(root + '/'));
+      if (hasHtmlInside) {
+        webRoot = root;
+        break;
+      }
+    }
+    if (!webRoot && htmlFiles.length) {
+      // Lấy thư mục chung gần nhất của các file HTML
+      const sorted = [...htmlFiles].sort((a, b) => a.split('/').length - b.split('/').length);
+      webRoot = dirname(sorted[0]);
+    }
+
+    // Xếp hạng entry points (ưu tiên index.html ở gốc webRoot)
+    const entryPoints = htmlFiles
+      .map(f => {
+        const relFromRoot = webRoot && f.startsWith(webRoot + '/')
+          ? f.slice(webRoot.length + 1)
+          : f.slice(prefix.length);
+        const depth = relFromRoot.split('/').length - 1;
+        const isIndex = /(^|\/)index\.html?$/i.test(relFromRoot);
+        const score = (isIndex ? 100 : 10) - depth * 10;
+        return {
+          path: f,
+          relFromApp: f.slice(prefix.length),
+          relFromRoot,
+          isPrimary: isIndex && depth === 0,
+          score,
+          selected: isIndex || htmlFiles.length <= 3
+        };
+      })
+      .sort((a, b) => b.score - a.score);
+
+    // Đảm bảo ít nhất 1 entry point được chọn nếu có HTML
+    if (entryPoints.length && !entryPoints.some(e => e.selected)) {
+      entryPoints[0].selected = true;
+    }
+
+    // Phân loại tương thích
+    const hasNativeArtifacts =
+      has(f => f.endsWith('.storyboardc') || f.endsWith('.nib') || f.includes('Swift')) ||
+      Boolean(plist.CFBundleExecutable);
+
+    let kind = 'Không xác định';
+    let compatible = false;
+    let compatLevel = 'err';
+    let compatMessage = '';
+
+    if (isCapacitor && entryPoints.length) {
+      kind = 'Capacitor WebView';
+      compatible = true;
+      compatLevel = 'ok';
+      compatMessage = `Tương thích cao: Phát hiện Capacitor WebView với ${entryPoints.length} tệp HTML tại "${webRoot.slice(prefix.length) || '/'}". Menu Shadow DOM sẽ được tích hợp vào entry point thực tế.`;
+    } else if (isCordova && entryPoints.length) {
+      kind = 'Cordova WebView';
+      compatible = true;
+      compatLevel = 'ok';
+      compatMessage = `Tương thích cao: Phát hiện Cordova WebView với ${entryPoints.length} tệp HTML tại "${webRoot.slice(prefix.length) || '/'}". Loader sẽ được chèn trực tiếp vào web root.`;
+    } else if (entryPoints.length && !isUnity) {
+      kind = 'WKWebView';
+      compatible = true;
+      compatLevel = 'ok';
+      compatMessage = `Tương thích WebView: Tìm thấy ${entryPoints.length} tệp HTML nội bộ tại "${webRoot.slice(prefix.length) || '/'}". Nếu ứng dụng nạp các tệp HTML này bằng WKWebView, menu sẽ hiển thị khi chạy.`;
+    } else if (isUnity) {
+      kind = 'Unity';
+      compatible = false;
+      compatLevel = 'warn';
+      compatMessage = 'Cảnh báo: Ứng dụng Unity không chạy giao diện trên WebView. Chế độ WebView Inject KHÔNG thể bảo đảm hiển thị menu. Công cụ không sửa binary/IL2CPP; chỉ hỗ trợ xuất tài liệu tham khảo Theos (chế độ Native Reference).';
+    } else if (hasNativeArtifacts) {
+      kind = 'Native iOS';
+      compatible = false;
+      compatLevel = 'warn';
+      compatMessage = 'Cảnh báo: Ứng dụng Native iOS (không tìm thấy HTML WebView nội bộ). Chế độ WebView Inject không thể bảo đảm hoạt động và không sửa file thực thi Mach-O.';
+    } else {
+      kind = 'Không xác định';
+      compatible = false;
+      compatLevel = 'err';
+      compatMessage = 'Không xác định được cấu trúc WebView hay entry point HTML trong gói IPA này.';
+    }
+
+    const menuDir = webRoot ? `${webRoot}/__modmenu` : `${bundlePath}/__modmenu`;
+
+    return {
+      bundlePath,
+      appFolderName,
+      bundleId: plist.CFBundleIdentifier || 'Không xác định',
+      displayName: plist.CFBundleDisplayName || plist.CFBundleName || appFolderName,
+      version: plist.CFBundleShortVersionString
+        ? `${plist.CFBundleShortVersionString} (${plist.CFBundleVersion || '?'})`
+        : (plist.CFBundleVersion || '—'),
+      minOS: plist.MinimumOSVersion || '—',
+      kind,
+      compatible,
+      compatLevel,
+      compatMessage,
+      webRoot,
+      menuDir,
+      entryPoints,
+      totalFiles: appFiles.length
+    };
+  }
+
+  function renderAnalysis(a) {
+    $('#biBundleId').textContent = a.bundleId;
+    $('#biAppName').textContent = `${a.displayName} (${a.appFolderName}.app)`;
+    $('#biVersion').textContent = `${a.version} / iOS ${a.minOS}`;
+    $('#biKind').textContent = a.kind;
+    $('#biWebRoot').textContent = a.webRoot ? a.webRoot.replace(a.bundlePath, '.app') : 'Không có';
+    $('#biMenuDir').textContent = a.menuDir.replace(a.bundlePath, '.app');
+
+    const box = $('#compatBox');
+    box.className = 'compat-box ' + a.compatLevel;
+    box.textContent = a.compatMessage;
+
+    const list = $('#entryList');
+    $('#metaEntries').textContent = `${a.entryPoints.length} tệp`;
+    if (!a.entryPoints.length) {
+      list.innerHTML = '<div class="empty">Không có tệp HTML nào trong bundle để chèn loader</div>';
+    } else {
+      list.innerHTML = a.entryPoints.map((ep, idx) => `
+        <label class="entry-item">
+          <input type="checkbox" data-ep="${idx}" ${ep.selected ? 'checked' : ''}>
+          <span>${escapeHtml(ep.relFromApp)}</span>
+          ${ep.isPrimary ? '<span class="entry-tag">PRIMARY</span>' : ''}
+        </label>
+      `).join('');
+      list.querySelectorAll('input[type="checkbox"]').forEach(cb => {
+        cb.addEventListener('change', () => {
+          const i = parseInt(cb.dataset.ep, 10);
+          a.entryPoints[i].selected = cb.checked;
+        });
+      });
+    }
+
+    // Tự đề xuất chế độ phù hợp mà không ép sửa binary
+    if (a.compatible) {
+      $('#mode').value = 'webview';
+    } else if (a.kind === 'Unity' || a.kind === 'Native iOS') {
+      $('#mode').value = 'native';
+    }
+  }
+
+  // ===== NẠP FILE IPA (GIỮ NGUYÊN FILE GỐC, TẠO BẢN SAO LÀM VIỆC) =====
+  const drop = $('#drop');
+  const fileInput = $('#file');
+  drop.onclick = () => fileInput.click();
+  drop.onkeydown = e => { if (e.key === 'Enter' || e.key === ' ') fileInput.click(); };
+  drop.ondragover = e => { e.preventDefault(); drop.classList.add('drag'); };
+  drop.ondragleave = () => drop.classList.remove('drag');
+  drop.ondrop = e => {
+    e.preventDefault();
+    drop.classList.remove('drag');
+    if (e.dataTransfer.files[0]) handleFileSelect(e.dataTransfer.files[0]);
+  };
+  fileInput.onchange = () => { if (fileInput.files[0]) handleFileSelect(fileInput.files[0]); };
+
+  function revokeOldUrl() {
+    if (state.objectUrl) {
+      URL.revokeObjectURL(state.objectUrl);
+      state.objectUrl = null;
+    }
+  }
+
+  async function handleFileSelect(file) {
+    revokeOldUrl();
+    state.originalFile = file;
+    state.workZip = null;
+    state.analysis = null;
+    state.rollback = null;
+    state.injected = false;
+    state.packagedBlob = null;
+    $('#manualWrap').classList.remove('show');
+    $('#run').disabled = true;
+    $('#rollbackBtn').disabled = true;
+    $('#export').disabled = true;
+    resetVerifyUI();
+
+    setPipe('Inject', '', 'CHƯA CHẠY', 'Đang đọc cấu trúc IPA...');
+    setPipe('Pack', '', 'CHƯA XUẤT', 'Chưa tạo tệp IPA mới');
+    setPipe('Sign', 'warn', 'BẮT BUỘC NGOÀI', 'Trình duyệt không ký chứng chỉ Apple');
+    setPipe('Run', '', 'CHƯA KIỂM CHỨNG', 'Cần cài IPA đã ký lên thiết bị');
+
+    $('#metaFile').textContent = formatBytes(file.size);
+    drop.innerHTML = `
+      <div class="fname">${escapeHtml(file.name)}</div>
+      <div class="fsize">${formatBytes(file.size)} · Bản gốc được bảo toàn</div>
+      <div class="pill-state">Đang kiểm tra magic bytes...</div>
+    `;
+    setProgress(10, 'Đọc header ZIP...');
+    log(`Đã chọn tệp: ${file.name} (${formatBytes(file.size)})`, 'info');
+
+    // Cảnh báo bộ nhớ với IPA lớn trên Safari/di động
+    if (file.size > 150 * 1024 * 1024) {
+      $('#compress').value = 'fast';
+      log('IPA lớn hơn 150 MB: đã tự chọn chế độ đóng gói STORE để giảm nguy cơ tràn RAM trên Safari iOS.', 'warn');
+    }
+
+    try {
+      const head = new Uint8Array(await file.slice(0, 4).arrayBuffer());
+      const isZipMagic = head[0] === 0x50 && head[1] === 0x4B && (head[2] === 0x03 || head[2] === 0x05);
+      if (!isZipMagic) {
+        throw new Error('Magic bytes không khớp định dạng ZIP/IPA (cần 50 4B 03 04).');
+      }
+      log('Xác thực ZIP magic bytes hợp lệ (PK\\x03\\x04).', 'ok');
+      setProgress(35, 'Đang tạo bản sao làm việc từ IPA...');
+
+      // Tạo bản sao làm việc trong bộ nhớ, tuyệt đối không chỉnh sửa file gốc
+      state.workZip = await JSZip.loadAsync(file);
+      setProgress(70, 'Đang phân tích cấu trúc WebView & Info.plist...');
+
+      state.analysis = await analyzeIPA(state.workZip);
+      renderAnalysis(state.analysis);
+
+      const pill = drop.querySelector('.pill-state');
+      pill.className = 'pill-state ' + state.analysis.compatLevel;
+      pill.textContent = `${state.analysis.kind} · ${state.analysis.totalFiles} tệp`;
+
+      log(`Phân loại: ${state.analysis.kind} | Bundle ID: ${state.analysis.bundleId}`, state.analysis.compatible ? 'ok' : 'warn');
+      if (state.analysis.entryPoints.length) {
+        log(`Tìm thấy ${state.analysis.entryPoints.length} entry point HTML trong web root "${state.analysis.webRoot}".`, 'ok');
+      }
+
+      setProgress(100, 'Phân tích IPA hoàn tất');
+      setPipe('Inject', 'active', 'SẴN SÀNG', 'Chờ phân tích code chức năng');
+      updateActionButtons();
+    } catch (e) {
+      const pill = drop.querySelector('.pill-state');
+      if (pill) { pill.className = 'pill-state err'; pill.textContent = 'IPA không hợp lệ'; }
+      log('Lỗi đọc IPA: ' + e.message, 'err');
+      setProgress(0, 'Lỗi nạp IPA');
+      setPipe('Inject', 'err', 'LỖI IPA', e.message);
+    }
+  }
+
+  // ===== FUNCTION ENGINE: PARSER LEXICAL + KIỂM TRA CÚ PHÁP AN TOÀN =====
+  function findBalancedBlockEnd(src, openBraceIndex) {
+    let depth = 0;
+    let stateMode = 'normal'; // normal | sq | dq | tpl | lineC | blockC
+    for (let i = openBraceIndex; i < src.length; i++) {
+      const ch = src[i];
+      const next = src[i + 1];
+
+      if (stateMode === 'lineC') {
+        if (ch === '\n') stateMode = 'normal';
+        continue;
+      }
+      if (stateMode === 'blockC') {
+        if (ch === '*' && next === '/') { stateMode = 'normal'; i++; }
+        continue;
+      }
+      if (stateMode === 'sq') {
+        if (ch === '\\') { i++; continue; }
+        if (ch === "'") stateMode = 'normal';
+        continue;
+      }
+      if (stateMode === 'dq') {
+        if (ch === '\\') { i++; continue; }
+        if (ch === '"') stateMode = 'normal';
+        continue;
+      }
+      if (stateMode === 'tpl') {
+        if (ch === '\\') { i++; continue; }
+        if (ch === '`') stateMode = 'normal';
+        continue;
+      }
+
+      // normal mode
+      if (ch === '/' && next === '/') { stateMode = 'lineC'; i++; continue; }
+      if (ch === '/' && next === '*') { stateMode = 'blockC'; i++; continue; }
+      if (ch === "'") { stateMode = 'sq'; continue; }
+      if (ch === '"') { stateMode = 'dq'; continue; }
+      if (ch === '`') { stateMode = 'tpl'; continue; }
+
+      if (ch === '{') depth++;
+      else if (ch === '}') {
+        depth--;
+        if (depth === 0) return i + 1;
+      }
+    }
+    return -1;
+  }
+
+  function detectCallableName(code) {
+    const trimmed = code.trim();
+    const fnMatch = trimmed.match(/^(?:async\s+)?function\s*\*?\s+([A-Za-z_$][\w$]*)\s*\(/);
+    if (fnMatch) return { kind: 'function', callableName: fnMatch[1] };
+
+    const varFnMatch = trimmed.match(/^(?:const|let|var)\s+([A-Za-z_$][\w$]*)\s*=\s*(?:async\s*)?(?:function\b|\([^)]*\)\s*=>|[A-Za-z_$][\w$]*\s*=>)/);
+    if (varFnMatch) return { kind: 'arrow/fn', callableName: varFnMatch[1] };
+
+    if (/^\(?\{[\s\S]*\bon\s*[:(]/.test(trimmed)) return { kind: 'lifecycle', callableName: null };
+    return { kind: 'script', callableName: null };
+  }
+
+  // Kiểm tra cú pháp JS thuần túy bằng biên dịch Function — KHÔNG thực thi code
+  function validateJsSyntax(code, kind) {
+    try {
+      if (kind === 'lifecycle') {
+        new Function('enabled', 'ctx', `return (${code.trim()});`);
+      } else {
+        new Function('enabled', 'ctx', code);
+      }
+      return { ok: true, error: null };
+    } catch (e) {
+      return { ok: false, error: e.message };
+    }
+  }
+
+  function parseFunctionsSource(src) {
+    const trimmed = src.trim();
+    if (!trimmed) return [];
+    const rawItems = [];
+
+    // 1. Định dạng JSON { functions: [...] } hoặc [...]
+    if (trimmed.startsWith('{') || trimmed.startsWith('[')) {
+      try {
+        const parsed = JSON.parse(trimmed);
+        const list = Array.isArray(parsed) ? parsed : (Array.isArray(parsed.functions) ? parsed.functions : null);
+        if (list) {
+          list.forEach((item, idx) => {
+            if (item && typeof item === 'object') {
+              rawItems.push({
+                name: String(item.name || `ChucNang_${idx + 1}`).trim(),
+                code: String(item.code || '').trim()
+              });
+            }
+          });
+          if (rawItems.length) return finalizeParsedItems(rawItems);
+        }
+      } catch (_) {
+        // Không phải JSON hợp lệ -> chuyển sang parser JS
+      }
+    }
+
+    // 2. Định dạng tiêu đề === Chức năng: Tên ===
+    const reHeader = /^=+\s*(?:Chức năng|Function|Func|Module)\s*[:\-]\s*(.+?)\s*=+$/gim;
+    const markers = [];
+    let m;
+    while ((m = reHeader.exec(src))) {
+      markers.push({ name: m[1].trim(), start: m.index, end: reHeader.lastIndex });
+    }
+    if (markers.length) {
+      markers.forEach((mk, idx) => {
+        const end = idx + 1 < markers.length ? markers[idx + 1].start : src.length;
+        const body = src.slice(mk.end, end).trim();
+        if (body) rawItems.push({ name: mk.name, code: body });
+      });
+      if (rawItems.length) return finalizeParsedItems(rawItems);
+    }
+
+    // 3. Định dạng chú thích // @func: Tên
+    const reTag = /^[ \t]*(?:\/\/|#)\s*@(?:func|function|chucnang|chức năng|fn|module)\s*:?\s*(.+)$/i;
+    const lines = src.split('\n');
+    let cur = null;
+    for (const line of lines) {
+      const mt = line.match(reTag);
+      if (mt) {
+        if (cur && cur.code.trim()) rawItems.push({ name: cur.name, code: cur.code.trim() });
+        cur = { name: mt[1].trim(), code: '' };
+      } else if (cur) {
+        cur.code += line + '\n';
+      }
+    }
+    if (cur && cur.code.trim()) rawItems.push({ name: cur.name, code: cur.code.trim() });
+    if (rawItems.length) return finalizeParsedItems(rawItems);
+
+    // 4. Tách tự động các function / async function / arrow function cấp ngoài cùng
+    const reDecl = /(?:^|\n)[ \t]*(?:(?:async\s+)?function\s*\*?\s+([A-Za-z_$][\w$]*)\s*\([^)]*\)\s*\{|(?:const|let|var)\s+([A-Za-z_$][\w$]*)\s*=\s*(?:async\s*)?(?:function\s*\([^)]*\)\s*\{|\([^)]*\)\s*=>\s*\{|[A-Za-z_$][\w$]*\s*=>\s*\{))/g;
+    let md;
+    let searchFrom = 0;
+    while ((md = reDecl.exec(src))) {
+      if (md.index < searchFrom) continue;
+      const startIdx = md[0].startsWith('\n') ? md.index + 1 : md.index;
+      const name = md[1] || md[2];
+      const braceIdx = src.indexOf('{', md.index + md[0].length - 1);
+      if (braceIdx < 0) continue;
+      const endIdx = findBalancedBlockEnd(src, braceIdx);
+      if (endIdx > braceIdx) {
+        let finalEnd = endIdx;
+        if (src[finalEnd] === ';') finalEnd++;
+        rawItems.push({ name, code: src.slice(startIdx, finalEnd).trim() });
+        searchFrom = finalEnd;
+        reDecl.lastIndex = finalEnd;
+      }
+    }
+    if (rawItems.length) return finalizeParsedItems(rawItems);
+
+    // 5. Fallback: 1 module duy nhất
+    return finalizeParsedItems([{ name: 'CustomModule', code: trimmed }]);
+  }
+
+  function finalizeParsedItems(items) {
+    return items.filter(it => it.code).map((it, idx) => {
+      const meta = detectCallableName(it.code);
+      const syn = validateJsSyntax(it.code, meta.kind);
+      return {
+        id: idx + 1,
+        name: it.name,
+        fileName: `func_${String(idx + 1).padStart(2, '0')}_${sanitizeName(it.name)}.js`,
+        code: it.code,
+        kind: meta.kind,
+        callableName: meta.callableName,
+        syntaxOk: syn.ok,
+        syntaxError: syn.error
+      };
+    });
+  }
+
+  function renderParsedFunctions() {
+    const list = $('#menuList');
+    const funcs = state.parsedFuncs;
+    const validCount = funcs.filter(f => f.syntaxOk).length;
+    $('#metaFuncs').textContent = `${validCount} hợp lệ / ${funcs.length} tổng`;
+
+    if (!funcs.length) {
+      list.innerHTML = '<div class="empty">Không tách được chức năng nào</div>';
+      return;
+    }
+
+    list.innerHTML = funcs.map(f => `
+      <div class="fn ${f.syntaxOk ? '' : 'bad'}">
+        <span class="idx">${String(f.id).padStart(2, '0')}</span>
+        <span class="name" title="${escapeHtml(f.name)}">${escapeHtml(f.name)}</span>
+        <span class="kind">${escapeHtml(f.kind)}</span>
+        <span class="syn ${f.syntaxOk ? 'ok' : 'err'}">${f.syntaxOk ? 'OK' : 'LỖI JS'}</span>
+        <span class="size">${formatBytes(f.code.length)}</span>
+        ${f.syntaxOk ? '' : `<div class="fn-err-msg">SyntaxError: ${escapeHtml(f.syntaxError)}</div>`}
+      </div>
+    `).join('');
+  }
+
+  function updateActionButtons() {
+    const hasZip = Boolean(state.workZip && state.analysis);
+    const hasFuncs = state.parsedFuncs.length > 0;
+    const allSyntaxOk = hasFuncs && state.parsedFuncs.every(f => f.syntaxOk);
+    $('#run').disabled = !(hasZip && allSyntaxOk);
+    $('#rollbackBtn').disabled = !state.rollback;
+    $('#export').disabled = !state.injected;
+  }
+
+  $('#code').addEventListener('input', () => {
+    $('#metaCode').textContent = $('#code').value.length.toLocaleString('vi-VN') + ' ký tự';
+  });
+
+  $('#parse').onclick = () => {
+    const src = $('#code').value;
+    if (!src.trim()) {
+      log('Ô code đang trống — hãy dán mã chức năng JavaScript trước.', 'err');
+      return;
+    }
+    state.parsedFuncs = parseFunctionsSource(src);
+    renderParsedFunctions();
+    const invalid = state.parsedFuncs.filter(f => !f.syntaxOk);
+    if (invalid.length) {
+      log(`Phát hiện ${invalid.length} chức năng lỗi cú pháp JS. Cần sửa trước khi Inject.`, 'err');
+      invalid.forEach(f => log(`  [LỖI] ${f.name}: ${f.syntaxError}`, 'err'));
+    } else {
+      log(`Phân tích thành công ${state.parsedFuncs.length} chức năng (tất cả đạt kiểm tra cú pháp, không tự thực thi).`, 'ok');
+    }
+    updateActionButtons();
+  };
+
+  $('#clearCode').onclick = () => {
+    $('#code').value = '';
+    $('#metaCode').textContent = '0 ký tự';
+    state.parsedFuncs = [];
+    renderParsedFunctions();
+    updateActionButtons();
+  };
+
+  $('#loadSample').onclick = () => {
+    $('#code').value = `// @func: Chế độ Tối WebView (Dark Invert)
+function toggleDarkMode(enabled) {
+  const id = '__mm_dark_style';
+  let st = document.getElementById(id);
+  if (enabled) {
+    if (!st) {
+      st = document.createElement('style');
+      st.id = id;
+      st.textContent = 'html { filter: invert(0.92) hue-rotate(180deg); } img, video { filter: invert(1) hue-rotate(180deg); }';
+      document.head.appendChild(st);
+    }
+    return () => { const el = document.getElementById(id); if (el) el.remove(); };
+  }
 }
 
-// ===== SINH LOADER (tự inject menu vào WebView) =====
-function buildWebViewLoader(menuFileName) {
-  return `/* Mod Menu WebView Loader
- * Tự động mở menu khi app khởi động WebView.
- * Nếu app là WebView-based (Cordova, Capacitor, WKWebView...), loader này chạy
- * ngay sau khi DOMContentLoaded và hiện nút ☰ ở góc phải dưới.
+// @func: Hiển thị bộ đếm FPS nổi
+const showFPSCounter = (enabled) => {
+  if (!enabled) return true;
+  const box = document.createElement('div');
+  box.id = '__mm_fps_badge';
+  box.style.cssText = 'position:fixed;left:12px;top:calc(env(safe-area-inset-top,12px) + 8px);z-index:2147483640;background:rgba(10,14,24,.82);color:#35d492;font:700 12px monospace;padding:4px 9px;border-radius:999px;border:1px solid rgba(53,212,146,.4);pointer-events:none;';
+  box.textContent = 'FPS: --';
+  document.body.appendChild(box);
+  let frames = 0, last = performance.now(), rafId = 0;
+  function tick(now) {
+    frames++;
+    if (now - last >= 500) {
+      box.textContent = 'FPS: ' + Math.round((frames * 1000) / (now - last));
+      frames = 0;
+      last = now;
+    }
+    rafId = requestAnimationFrame(tick);
+  }
+  rafId = requestAnimationFrame(tick);
+  return () => { cancelAnimationFrame(rafId); box.remove(); };
+};
+
+// @func: Ghi thông tin WebView vào Log
+function inspectWebViewEnv() {
+  console.log('[WebView Info]', {
+    url: location.href,
+    viewport: window.innerWidth + 'x' + window.innerHeight,
+    ua: navigator.userAgent
+  });
+  return true;
+}`;
+    $('#metaCode').textContent = $('#code').value.length.toLocaleString('vi-VN') + ' ký tự';
+    $('#parse').click();
+  };
+
+  // ===== SINH MÃ MODULE, LOADER SHADOW DOM & MODMENU.HTML =====
+  function buildCompiledModuleSource(f) {
+    const safeCode = f.code.replace(/<\/script>/gi, '<\\/script>');
+    if (f.kind === 'lifecycle') {
+      return `function(enabled, ctx) {\n  var mod = (${safeCode});\n  if (!mod || typeof mod.on !== 'function') throw new Error('Lifecycle module thiếu hàm on()');\n  if (enabled) return mod.on(ctx);\n  if (typeof mod.off === 'function') return mod.off(ctx);\n  return true;\n}`;
+    }
+    if (f.callableName) {
+      return `function(enabled, ctx) {\n${safeCode}\n  if (typeof ${f.callableName} !== 'function') throw new Error('Không tìm thấy hàm ${f.callableName}');\n  return ${f.callableName}(enabled, ctx);\n}`;
+    }
+    return `function(enabled, ctx) {\n  if (!enabled) return true;\n${safeCode}\n}`;
+  }
+
+  function buildRealWebViewLoaderJS(analysis, funcs) {
+    const moduleEntries = funcs.map(f => {
+      return `    {\n      id: ${f.id},\n      name: ${JSON.stringify(f.name)},\n      file: ${JSON.stringify(f.fileName)},\n      exec: ${buildCompiledModuleSource(f)}\n    }`;
+    }).join(',\n');
+
+    return `/*!
+ * Mod Menu Injector Pro v3 — Real WebView Shadow DOM Runtime
+ * App: ${analysis.displayName} (${analysis.bundleId})
+ * Generated: ${new Date().toISOString()}
+ * Kiến trúc: Shadow DOM độc lập — không dùng fullscreen iframe nên không chặn chạm trên iOS WKWebView.
  */
-(function(){
+(function () {
   'use strict';
-  if (window.__mm_loader_done) return;
-  window.__mm_loader_done = true;
+  if (window.__MM_V3_LOADED__) return;
+  window.__MM_V3_LOADED__ = true;
 
-  var MENU_URL = '${menuFileName}';
+  var MODULES = [
+${moduleEntries}
+  ];
 
-  function injectMenu(){
-    // Nếu đã có menu thì thôi
-    if (document.getElementById('mm-fab')) return;
+  var runtimeState = {};   // id -> { on: bool, busy: bool, cleanup: fn|null }
+  var logs = [];
 
-    // Tạo iframe overlay chứa menu
-    var wrap = document.createElement('div');
-    wrap.id = 'mm-loader-wrap';
-    wrap.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:2147483645;';
-    var iframe = document.createElement('iframe');
-    iframe.src = MENU_URL;
-    iframe.style.cssText = 'width:100%;height:100%;border:0;background:transparent;pointer-events:none;';
-    iframe.setAttribute('allowtransparency','true');
-    wrap.appendChild(iframe);
-    document.body.appendChild(wrap);
+  function pushLog(level, msg) {
+    var ts = new Date().toTimeString().slice(0, 8);
+    logs.push({ ts: ts, level: level, msg: msg });
+    if (logs.length > 60) logs.shift();
+    if (level === 'err') console.error('[ModMenu v3]', msg);
+    else console.log('[ModMenu v3]', msg);
+    renderLogs();
+  }
 
-    // Cho phép iframe nhận click ở phần tử menu
-    iframe.onload = function(){
-      try {
-        iframe.style.pointerEvents = 'none';
-        var doc = iframe.contentDocument;
-        if (doc) {
-          // Cho phép tương tác trong iframe
-          iframe.style.pointerEvents = 'auto';
-          // Nhưng body iframe phải trong suốt và không chặn click ngoài
-          var s = doc.createElement('style');
-          s.textContent = 'html,body{background:transparent !important;pointer-events:none !important} #mm-fab,#mm-panel{pointer-events:auto !important}';
-          doc.head.appendChild(s);
+  var shadowRoot = null;
+  var logBoxEl = null;
+  var toastEl = null;
+  var toastTimer = null;
+
+  function showToast(msg, type) {
+    if (!toastEl) return;
+    toastEl.textContent = msg;
+    toastEl.className = 'mm-toast show ' + (type || 'ok');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(function () {
+      toastEl.classList.remove('show');
+    }, 2000);
+  }
+
+  function renderLogs() {
+    if (!logBoxEl) return;
+    logBoxEl.innerHTML = '';
+    if (!logs.length) {
+      logBoxEl.innerHTML = '<div class="mm-log-empty">Chưa có nhật ký thực thi</div>';
+      return;
+    }
+    for (var i = logs.length - 1; i >= 0; i--) {
+      var item = logs[i];
+      var row = document.createElement('div');
+      row.className = 'mm-log-row ' + item.level;
+      row.textContent = '[' + item.ts + '] ' + item.msg;
+      logBoxEl.appendChild(row);
+    }
+  }
+
+  function mountUI() {
+    if (!document.body || document.getElementById('__mm_v3_host')) return;
+
+    var host = document.createElement('div');
+    host.id = '__mm_v3_host';
+    host.style.cssText = 'position:fixed;inset:0;z-index:2147483647;pointer-events:none;background:transparent;';
+    document.body.appendChild(host);
+
+    shadowRoot = host.attachShadow ? host.attachShadow({ mode: 'open' }) : host;
+
+    var style = document.createElement('style');
+    style.textContent = [
+      '*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif}',
+      '.mm-fab{position:fixed;right:calc(env(safe-area-inset-right,0px) + 14px);bottom:calc(env(safe-area-inset-bottom,0px) + 86px);width:52px;height:52px;border-radius:50%;border:1px solid rgba(255,255,255,.22);background:linear-gradient(135deg,#4475ff,#244cd4);color:#fff;font-size:20px;font-weight:700;display:flex;align-items:center;justify-content:center;box-shadow:0 10px 26px rgba(15,32,96,.55);pointer-events:auto;touch-action:none;cursor:grab;user-select:none;-webkit-user-select:none;transition:transform .16s ease,box-shadow .16s ease}',
+      '.mm-fab.dragging{cursor:grabbing;transform:scale(1.06);transition:none}',
+      '.mm-fab:active{transform:scale(.94)}',
+      '.mm-panel{position:fixed;right:calc(env(safe-area-inset-right,0px) + 14px);bottom:calc(env(safe-area-inset-bottom,0px) + 148px);width:min(312px,calc(100vw - 28px));max-height:min(68vh,520px);display:none;flex-direction:column;background:rgba(14,18,29,.95);color:#e9edf7;border:1px solid rgba(92,118,184,.34);border-radius:16px;box-shadow:0 24px 64px rgba(0,0,0,.72);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);pointer-events:auto;overflow:hidden}',
+      '.mm-panel.open{display:flex;animation:mmPop .18s ease}',
+      '@keyframes mmPop{from{opacity:0;transform:translateY(8px) scale(.97)}to{opacity:1;transform:none}}',
+      '.mm-head{padding:12px 14px;border-bottom:1px solid rgba(255,255,255,.08);display:flex;justify-content:space-between;align-items:center;gap:8px}',
+      '.mm-title{font-size:13px;font-weight:700;letter-spacing:.3px}',
+      '.mm-sub{font-size:10.5px;color:#8a96b5;margin-top:1px}',
+      '.mm-head-btns{display:flex;gap:6px}',
+      '.mm-icon-btn{width:28px;height:28px;border-radius:8px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.06);color:#e9edf7;font-size:13px;cursor:pointer;display:flex;align-items:center;justify-content:center}',
+      '.mm-body{padding:10px 12px;overflow-y:auto;-webkit-overflow-scrolling:touch;display:flex;flex-direction:column;gap:7px}',
+      '.mm-row{width:100%;display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 11px;border-radius:11px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);color:#e9edf7;text-align:left;cursor:pointer;transition:.15s}',
+      '.mm-row.on{background:rgba(53,212,146,.13);border-color:rgba(53,212,146,.42)}',
+      '.mm-row.err{border-color:rgba(255,92,114,.5)}',
+      '.mm-row-name{font-size:13px;font-weight:600;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}',
+      '.mm-switch{min-width:44px;height:24px;border-radius:999px;background:#27314a;position:relative;transition:.18s;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:9.5px;font-weight:700;color:#8a96b5;letter-spacing:.4px}',
+      '.mm-row.on .mm-switch{background:#35d492;color:#052014}',
+      '.mm-row.busy .mm-switch{background:#f5b446;color:#1b1300}',
+      '.mm-logs{display:none;border-top:1px solid rgba(255,255,255,.08);background:rgba(6,8,14,.92);padding:8px 10px;max-height:130px;overflow-y:auto;font:11px/1.5 ui-monospace,monospace}',
+      '.mm-logs.show{display:block}',
+      '.mm-log-row{margin-bottom:3px;word-break:break-word;color:#9cb3e8}',
+      '.mm-log-row.ok{color:#35d492}.mm-log-row.err{color:#ff6b80}.mm-log-row.warn{color:#f5b446}',
+      '.mm-log-empty{color:#5e6985;text-align:center;padding:6px}',
+      '.mm-toast{position:fixed;left:50%;top:calc(env(safe-area-inset-top,14px) + 12px);transform:translateX(-50%) translateY(-80px);opacity:0;padding:8px 15px;border-radius:999px;font-size:12.5px;font-weight:600;pointer-events:none;transition:.22s;box-shadow:0 10px 28px rgba(0,0,0,.45);max-width:86vw;text-align:center}',
+      '.mm-toast.show{transform:translateX(-50%) translateY(0);opacity:1}',
+      '.mm-toast.ok{background:#35d492;color:#051e13}',
+      '.mm-toast.err{background:#ff5c72;color:#fff}',
+      '.mm-toast.warn{background:#f5b446;color:#1b1300}'
+    ].join('\n');
+    shadowRoot.appendChild(style);
+
+    var fab = document.createElement('button');
+    fab.className = 'mm-fab';
+    fab.type = 'button';
+    fab.setAttribute('aria-label', 'Mở Mod Menu');
+    fab.textContent = '☰';
+
+    var panel = document.createElement('div');
+    panel.className = 'mm-panel';
+    panel.innerHTML =
+      '<div class="mm-head">' +
+        '<div><div class="mm-title">Mod Menu v3</div><div class="mm-sub">' + MODULES.length + ' chức năng · Shadow DOM</div></div>' +
+        '<div class="mm-head-btns">' +
+          '<button type="button" class="mm-icon-btn" id="mmLogBtn" title="Xem log">≡</button>' +
+          '<button type="button" class="mm-icon-btn" id="mmCloseBtn" title="Đóng">✕</button>' +
+        '</div>' +
+      '</div>' +
+      '<div class="mm-body" id="mmBody"></div>' +
+      '<div class="mm-logs" id="mmLogs"></div>';
+
+    toastEl = document.createElement('div');
+    toastEl.className = 'mm-toast';
+
+    shadowRoot.appendChild(fab);
+    shadowRoot.appendChild(panel);
+    shadowRoot.appendChild(toastEl);
+
+    var bodyEl = shadowRoot.getElementById('mmBody');
+    logBoxEl = shadowRoot.getElementById('mmLogs');
+
+    // Dựng danh sách công tắc ON/OFF thực tế
+    if (!MODULES.length) {
+      bodyEl.innerHTML = '<div style="text-align:center;color:#7e8aa8;font-size:12px;padding:12px">Không có chức năng</div>';
+    } else {
+      MODULES.forEach(function (mod) {
+        runtimeState[mod.id] = { on: false, busy: false, cleanup: null };
+        var row = document.createElement('button');
+        row.type = 'button';
+        row.className = 'mm-row';
+        row.innerHTML =
+          '<span class="mm-row-name"></span>' +
+          '<span class="mm-switch">OFF</span>';
+        row.querySelector('.mm-row-name').textContent = mod.name;
+        var sw = row.querySelector('.mm-switch');
+
+        function syncRowUI() {
+          var st = runtimeState[mod.id];
+          row.classList.toggle('on', st.on);
+          row.classList.toggle('busy', st.busy);
+          sw.textContent = st.busy ? '...' : (st.on ? 'ON' : 'OFF');
         }
-      } catch(e){ console.warn('[ModMenu] iframe cross-origin?', e); }
-    };
-    console.log('[ModMenu] WebView loader active');
+
+        row.addEventListener('click', function () {
+          var st = runtimeState[mod.id];
+          if (st.busy) return;
+          row.classList.remove('err');
+
+          var targetOn = !st.on;
+          st.busy = true;
+          syncRowUI();
+
+          var ctx = {
+            log: function (m) { pushLog('info', '[' + mod.name + '] ' + m); },
+            toast: showToast
+          };
+
+          Promise.resolve().then(function () {
+            if (!targetOn) {
+              if (typeof st.cleanup === 'function') {
+                var cleanRes = st.cleanup();
+                st.cleanup = null;
+                return cleanRes;
+              }
+              return mod.exec(false, ctx);
+            }
+            return mod.exec(true, ctx);
+          }).then(function (result) {
+            st.busy = false;
+            if (targetOn) {
+              if (result === false) {
+                st.on = false;
+                row.classList.add('err');
+                pushLog('warn', 'Không thể bật "' + mod.name + '" (trả về false).');
+                showToast('Thất bại: ' + mod.name, 'warn');
+              } else {
+                st.on = true;
+                st.cleanup = typeof result === 'function' ? result : null;
+                pushLog('ok', 'Đã bật: ' + mod.name);
+                showToast('Bật: ' + mod.name, 'ok');
+              }
+            } else {
+              st.on = false;
+              pushLog('info', 'Đã tắt: ' + mod.name);
+              showToast('Tắt: ' + mod.name, 'warn');
+            }
+            syncRowUI();
+          }).catch(function (err) {
+            st.busy = false;
+            if (targetOn) st.on = false;
+            row.classList.add('err');
+            var msg = (err && err.message) ? err.message : String(err);
+            pushLog('err', 'Lỗi "' + mod.name + '": ' + msg);
+            showToast('Lỗi: ' + mod.name, 'err');
+            syncRowUI();
+          });
+        });
+
+        bodyEl.appendChild(row);
+      });
+    }
+
+    // Kéo nút FAB mượt trên iPhone (Touch + Mouse) & giữ trong vùng an toàn
+    var dragging = false, moved = false;
+    var startX = 0, startY = 0, origLeft = 0, origTop = 0;
+
+    function getPoint(e) {
+      return e.touches && e.touches[0] ? e.touches[0] : e;
+    }
+
+    function onDragStart(e) {
+      var pt = getPoint(e);
+      var rect = fab.getBoundingClientRect();
+      dragging = true;
+      moved = false;
+      startX = pt.clientX;
+      startY = pt.clientY;
+      origLeft = rect.left;
+      origTop = rect.top;
+      fab.classList.add('dragging');
+    }
+
+    function onDragMove(e) {
+      if (!dragging) return;
+      var pt = getPoint(e);
+      var dx = pt.clientX - startX;
+      var dy = pt.clientY - startY;
+      if (Math.abs(dx) > 6 || Math.abs(dy) > 6) moved = true;
+      if (!moved) return;
+      if (e.cancelable) e.preventDefault();
+      var margin = 10;
+      var maxLeft = window.innerWidth - fab.offsetWidth - margin;
+      var maxTop = window.innerHeight - fab.offsetHeight - margin;
+      var nx = Math.max(margin, Math.min(maxLeft, origLeft + dx));
+      var ny = Math.max(margin + 24, Math.min(maxTop - 16, origTop + dy));
+      fab.style.left = nx + 'px';
+      fab.style.top = ny + 'px';
+      fab.style.right = 'auto';
+      fab.style.bottom = 'auto';
+    }
+
+    function onDragEnd() {
+      if (!dragging) return;
+      dragging = false;
+      fab.classList.remove('dragging');
+      if (moved) {
+        // Tự hút nhẹ về cạnh trái hoặc phải gần nhất để tránh che trung tâm màn hình
+        var rect = fab.getBoundingClientRect();
+        var snapLeft = rect.left + rect.width / 2 < window.innerWidth / 2;
+        fab.style.left = snapLeft ? '12px' : (window.innerWidth - rect.width - 12) + 'px';
+      }
+    }
+
+    fab.addEventListener('touchstart', onDragStart, { passive: true });
+    window.addEventListener('touchmove', onDragMove, { passive: false });
+    window.addEventListener('touchend', onDragEnd);
+    fab.addEventListener('mousedown', onDragStart);
+    window.addEventListener('mousemove', onDragMove);
+    window.addEventListener('mouseup', onDragEnd);
+
+    fab.addEventListener('click', function () {
+      if (moved) { moved = false; return; }
+      panel.classList.toggle('open');
+      fab.textContent = panel.classList.contains('open') ? '✕' : '☰';
+    });
+
+    shadowRoot.getElementById('mmCloseBtn').addEventListener('click', function () {
+      panel.classList.remove('open');
+      fab.textContent = '☰';
+    });
+
+    shadowRoot.getElementById('mmLogBtn').addEventListener('click', function () {
+      logBoxEl.classList.toggle('show');
+      renderLogs();
+    });
+
+    if (window.__MM_V3_AUTO_OPEN__) {
+      panel.classList.add('open');
+      fab.textContent = '✕';
+    }
+
+    pushLog('ok', 'Menu sẵn sàng (' + MODULES.length + ' chức năng).');
   }
 
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', injectMenu);
+    document.addEventListener('DOMContentLoaded', mountUI, { once: true });
   } else {
-    injectMenu();
+    mountUI();
   }
 })();
 `;
-}
+  }
 
-// ===== SINH THEOS TEMPLATE (native) =====
-function buildTheosTemplate(bundleName) {
-  const funcs = parsedFuncs.map((f,i)=>`// ${i+1}. ${f.name}
-// TODO: implement native hook here
-`).join('\n');
-  return `# Mod Menu Theos Template — ${bundleName}
-# ============================================
-# Đây là SƯỜN dự án Theos. Tool web KHÔNG build dylib hộ được.
-# Bạn cần làm trên macOS/Linux:
-#
-# 1. Cài Theos:  bash -c "$(curl -fsSL https://raw.githubusercontent.com/theos/theos/master/bin/install-theos)"
-# 2. Copy thư mục này ra máy, chạy:  make package
-# 3. Dùng zsign để chèn + ký:
-#      zsign -k cert.p12 -p pass -m profile.mobileprovision \\
-#            -l .theos/obj/debug/menu.dylib -o out.ipa in.ipa
-#
-# Cấu trúc project:
-#   Makefile
-#   Tweak.xm
-#   ModMenuViewController.m (UI menu)
-#   control
+  function buildStandaloneMenuHTML(analysis) {
+    return `<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Mod Menu — ${escapeHtml(analysis.displayName)}</title>
+<style>
+  body{margin:0;background:#090b11;color:#e9edf7;font-family:-apple-system,sans-serif;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px;text-align:center}
+  .card{max-width:360px;background:#121723;border:1px solid #242c40;border-radius:14px;padding:18px}
+  h1{font-size:16px;margin-bottom:6px}
+  p{font-size:12.5px;color:#828da8;line-height:1.5}
+</style>
+</head>
+<body>
+  <div class="card">
+    <h1>Mod Menu v3 — ${escapeHtml(analysis.displayName)}</h1>
+    <p>Trang độc lập nạp cùng runtime <code>loader.js</code>. Khi chạy trong ứng dụng WebView, menu sẽ tự nổi bằng Shadow DOM mà không cần mở trang này.</p>
+  </div>
+  <script>window.__MM_V3_AUTO_OPEN__ = true;<\/script>
+  <script src="./loader.js"><\/script>
+</body>
+</html>`;
+  }
 
-# ===== Makefile =====
+  function buildTheosReference(analysis, funcs) {
+    const list = funcs.map(f => `// ${f.id}. ${f.name} (${f.fileName})`).join('\n');
+    return `Mod Menu Injector Pro v3 — Tài liệu tham khảo Native (Theos)
+App: ${analysis.displayName} (${analysis.bundleId})
+Loại phát hiện: ${analysis.kind}
+
+[GIỚI HẠN QUAN TRỌNG]
+Trình duyệt web KHÔNG thể biên dịch mã ARM64 (.dylib) và công cụ này KHÔNG tự động sửa Mach-O binary hay vượt qua cơ chế bảo vệ ứng dụng.
+Tệp này chỉ cung cấp khung dự án Theos chuẩn cho mục đích nghiên cứu/kiểm thử ứng dụng bạn có quyền chỉnh sửa.
+
+--- Makefile ---
 TARGET := iphone:clang:latest:14.0
 ARCHS := arm64
 include $(THEOS)/makefiles/common.mk
 
-TWEAK_NAME = ModMenu
-ModMenu_FILES = Tweak.xm ModMenuViewController.m
-ModMenu_CFLAGS = -fobjc-arc
-ModMenu_FRAMEWORKS = UIKit Foundation
+TWEAK_NAME = CustomTestMenu
+CustomTestMenu_FILES = Tweak.x
+CustomTestMenu_CFLAGS = -fobjc-arc
+CustomTestMenu_FRAMEWORKS = UIKit Foundation
 include $(THEOS_MAKE_PATH)/tweak.mk
 
-# ===== Tweak.xm (khung hook) =====
-#import <UIKit/UIKit.h>
-#import "ModMenuViewController.h"
-
-%hook SpringBoard
-- (void)applicationDidFinishLaunching:(id)app {
-    %orig;
-    // Khởi tạo menu khi SpringBoard khởi động
-    static dispatch_once_t once;
-    dispatch_once(&once, ^{
-        // Hook vào app cụ thể ở đây
-    });
-}
-%end
-
-// Chức năng cần implement (từ tool web):
-${funcs}
+--- Danh sách chức năng tham khảo ---
+${list}
 `;
-}
+  }
 
-// ===== CHÈN =====
-$('#run').onclick = async () => {
-  if (!ipaFile || !zip || !parsedFuncs.length) return;
-  $('#run').disabled = true; setState('Injecting');
-  log('Bắt đầu chèn (chế độ: ' + $('#mode').value + ')...', 'info');
-  try {
-    const mode = $('#mode').value;
-    const files = Object.keys(zip.files).filter(n => !zip.files[n].dir);
-    const appFile = files.find(n => /^Payload\/[^/]+\.app\//.test(n));
-    if(!appFile) throw new Error('Không tìm thấy Payload/*.app');
-    const bundlePath = appFile.match(/^(Payload\/[^/]+\.app)\//)[1];
-    const bundleName = bundlePath.split('/').pop().replace(/\.app$/, '');
-    $('#stBundle').textContent = bundleName;
-    log(`Bundle: ${bundleName}`, 'ok');
+  // ===== CHÈN LOADER AN TOÀN VÀO HTML (KỂ CẢ HTML KHÔNG CÓ </body>) =====
+  function injectScriptIntoHtml(htmlContent, relLoaderPath) {
+    const marker = 'data-mm-loader="v3"';
+    if (htmlContent.includes(marker) || htmlContent.includes('__MM_V3_LOADED__')) {
+      return { modified: false, reason: 'duplicate', content: htmlContent };
+    }
+    const scriptTag = `<script ${marker} src="${relLoaderPath}" defer><\/script>`;
 
-    const menuDir = `${bundlePath}/ModMenu`;
-    zip.folder(menuDir);
-    let written = 0;
+    let out = htmlContent;
+    if (/<\/body>/i.test(out)) {
+      out = out.replace(/<\/body>/i, `  ${scriptTag}\n</body>`);
+    } else if (/<\/html>/i.test(out)) {
+      out = out.replace(/<\/html>/i, `${scriptTag}\n</html>`);
+    } else if (/<head[^>]*>/i.test(out)) {
+      out = out.replace(/<head[^>]*>/i, m => `${m}\n  ${scriptTag}`);
+    } else {
+      out = out + `\n${scriptTag}\n`;
+    }
 
-    // 1. Luôn ghi menu HTML thật
-    const menuHtml = buildRealMenuHTML(bundleName);
-    zip.file(`${menuDir}/ModMenu.html`, menuHtml);
-    log('  + ModMenu.html (menu UI thật)', 'dim');
-    written++;
+    if (!out.includes(marker)) {
+      throw new Error('Không xác nhận được thẻ loader sau khi chèn HTML.');
+    }
+    return { modified: true, reason: 'injected', content: out };
+  }
 
-    // 2. Ghi từng chức năng dạng file riêng
-    parsedFuncs.forEach((f,i)=>{
-      const fn = `func_${String(i+1).padStart(2,'0')}_${sanitize(f.name)}.js`;
-      zip.file(`${menuDir}/${fn}`, f.code);
-      log(`  + ${fn}`, 'dim');
-      written++;
-    });
-
-    // 3. Manifest
-    const manifest = {
-      app: bundleName,
-      generator: 'ModMenuInjector-v2',
-      createdAt: new Date().toISOString(),
-      mode: mode,
-      functions: parsedFuncs.map((f,i)=>({id:i+1,name:f.name,file:`func_${String(i+1).padStart(2,'0')}_${sanitize(f.name)}.js`}))
-    };
-    zip.file(`${menuDir}/manifest.json`, JSON.stringify(manifest, null, 2));
-    written++;
-
-    // 4. Loader + auto-inject tùy mode
-    if (mode === 'webview') {
-      const loader = buildWebViewLoader('ModMenu/ModMenu.html');
-      zip.file(`${menuDir}/loader.js`, loader);
-      written++;
-      log('  + loader.js', 'dim');
-
-      // Tự động inject vào các file index.html / *.html trong www/
-      const htmlFiles = files.filter(n =>
-        n.includes('.app/www/') && n.endsWith('.html') && !n.includes('ModMenu/')
-      );
-      if (htmlFiles.length) {
-        log(`Tìm thấy ${htmlFiles.length} file HTML trong www/`, 'ok');
-        for (const hf of htmlFiles) {
-          try {
-            let content = await zip.file(hf).async('string');
-            if (content.includes('__mm_loader_done')) continue;
-            const depth = hf.replace(/^(Payload\/[^/]+\.app\/(www\/)?)/,'').split('/').length - 1;
-            const relPath = '../'.repeat(depth) + 'ModMenu/loader.js';
-            const tag = `<script src="${relPath}"><\/script>`;
-            content = content.replace(/<\/body>/i, tag + '\n</body>');
-            zip.file(hf, content);
-            log(`  ↳ inject vào ${hf}`, 'ok');
-            written++;
-          } catch(e){ log(`  lỗi inject ${hf}: ${e.message}`, 'err'); }
-        }
-      } else {
-        log('Không tìm thấy www/*.html — app có thể là native, không phải WebView.', 'warn');
-        log('Menu vẫn được chèn nhưng sẽ KHÔNG tự hiện. Dùng chế độ Native.', 'warn');
+  // ===== CƠ CHẾ SNAPSHOT & ROLLBACK NGUYÊN TỬ =====
+  async function recordAndWrite(zipObj, path, content, rollback) {
+    const existed = zipObj.file(path);
+    if (existed) {
+      if (!rollback.modified.has(path)) {
+        rollback.modified.set(path, await existed.async('uint8array'));
       }
+    } else {
+      rollback.added.push(path);
+    }
+    zipObj.file(path, content);
+  }
+
+  function performRollback(reason) {
+    if (!state.rollback || !state.workZip) return;
+    log('Đang thực hiện Rollback: ' + reason, 'warn');
+    for (const addedPath of state.rollback.added) {
+      state.workZip.remove(addedPath);
+    }
+    for (const [modPath, origBytes] of state.rollback.modified.entries()) {
+      state.workZip.file(modPath, origBytes);
+    }
+    state.rollback = null;
+    state.injected = false;
+    state.packagedBlob = null;
+    revokeOldUrl();
+    $('#manualWrap').classList.remove('show');
+    resetVerifyUI();
+    setPipe('Inject', 'warn', 'ĐÃ HOÀN TÁC', 'Đã khôi phục nguyên trạng bản sao IPA');
+    setPipe('Pack', '', 'CHƯA XUẤT', 'Chưa tạo tệp IPA mới');
+    setProgress(0, 'Đã hoàn tác');
+    log('Rollback hoàn tất — mọi thay đổi đã được hoàn nguyên.', 'ok');
+    updateActionButtons();
+  }
+
+  $('#rollbackBtn').onclick = () => performRollback('Người dùng yêu cầu hoàn tác');
+
+  // ===== THỰC HIỆN INJECT + KIỂM TRA 6/7 TIÊU CHÍ (TIÊU CHÍ 5 CHẠY KHI ĐÓNG GÓI) =====
+  $('#run').onclick = async () => {
+    if (!state.workZip || !state.analysis || !state.parsedFuncs.length) return;
+    if (state.parsedFuncs.some(f => !f.syntaxOk)) {
+      log('Không thể Inject: vẫn còn chức năng bị lỗi cú pháp JavaScript.', 'err');
+      return;
     }
 
-    if (mode === 'native') {
-      zip.file(`${menuDir}/theos_template.txt`, buildTheosTemplate(bundleName));
-      written++;
-      log('  + theos_template.txt (sườn dylib)', 'dim');
-      log('⚠️ Chế độ Native: tool KHÔNG build dylib hộ. Đọc theos_template.txt để build.', 'warn');
+    const mode = $('#mode').value;
+    const analysis = state.analysis;
+    const selectedEntries = analysis.entryPoints.filter(e => e.selected);
+
+    if (mode === 'webview' && !selectedEntries.length) {
+      log('Từ chối Inject WebView: không có entry point HTML nào được chọn hoặc ứng dụng không phải WebView.', 'err');
+      setPipe('Inject', 'err', 'KHÔNG TƯƠNG THÍCH', 'Không có HTML entry point cho chế độ WebView');
+      return;
     }
 
-    // 5. README
-    zip.file(`${menuDir}/README.txt`,
-`Mod Menu Injector v2 — ${bundleName}
-Generated: ${new Date().toISOString()}
-Mode: ${mode}
+    // Nếu đã inject trước đó, rollback sạch trước khi inject lượt mới để tránh rác
+    if (state.rollback) performRollback('Làm sạch lượt inject trước');
 
-=== KẾT QUẢ ===
-${mode === 'webview' ? `
-✅ Menu ĐÃ ĐƯỢC INJECT vào WebView.
-   Sau khi ký lại IPA và mở app, bạn sẽ thấy nút ☰ góc phải dưới.
-   Bấm vào → menu hiện với ${parsedFuncs.length} chức năng.
+    const rollback = { modified: new Map(), added: [] };
+    state.rollback = rollback;
+    state.injected = false;
+    resetVerifyUI();
 
-⚠️ CHỈ HOẠT ĐỘNG nếu app dùng WebView (Cordova/Capacitor/WKWebView).
-   Nếu là game Unity/native → dùng chế độ Native.
-` : mode === 'bundle' ? `
-📦 File menu đã nằm trong ModMenu/.
-   App PHẢI TỰ ĐỌC ModMenu/ModMenu.html thì mới hiện.
-   Thường chỉ dùng cho app do bạn tự phát triển.
-` : `
-🔧 Template Theos đã sinh.
-   Bạn cần build dylib trên macOS/Linux rồi dùng zsign chèn.
-   Tool web không build dylib được (cần compiler ARM64).
-`}
+    $('#run').disabled = true;
+    $('#export').disabled = true;
+    setPipe('Inject', 'active', 'ĐANG CHÈN', 'Đang tích hợp tài nguyên...');
+    setProgress(15, 'Chuẩn bị tài nguyên Mod Menu...');
+    log(`Bắt đầu Inject (Chế độ: ${mode}, Bundle: ${analysis.bundleId})...`, 'info');
 
-=== KÝ LẠI ===
-IPA xuất ra CHƯA KÝ. Dùng:
-  zsign -k cert.p12 -p pass -m profile.mobileprovision -o out.ipa in.ipa
-hoặc Sideloadly / AltStore / TrollStore.
-`);
-    written++;
+    try {
+      const menuDir = analysis.menuDir;
+      const modulesDir = `${menuDir}/modules`;
+      const loaderPath = `${menuDir}/loader.js`;
+      const menuHtmlPath = `${menuDir}/ModMenu.html`;
+      const manifestPath = `${menuDir}/manifest.json`;
+      const readmePath = `${menuDir}/README_SIGNING.txt`;
 
-    $('#stFiles').textContent = written;
-    log(`Đã ghi ${written} tệp vào ${menuDir}`, 'ok');
-    if (mode === 'webview') log('✅ Menu sẽ HIỆN THẬT sau khi ký (nếu app là WebView).', 'ok');
-    $('#export').disabled = false;
-    setState('Injected');
-  } catch(e) {
-    log('Lỗi chèn: ' + e.message, 'err');
-    setState('Error');
-  } finally {
-    $('#run').disabled = false;
+      // 1. Sinh mã và kiểm tra cú pháp toàn bộ loader.js trước khi ghi
+      const loaderJS = buildRealWebViewLoaderJS(analysis, state.parsedFuncs);
+      try {
+        new Function(loaderJS);
+        setVerifyItem('jsSyntax', 'PASS', `loader.js (${formatBytes(loaderJS.length)}) & ${state.parsedFuncs.length} module đạt kiểm cú pháp.`);
+      } catch (synErr) {
+        setVerifyItem('jsSyntax', 'FAIL', 'Lỗi cú pháp trong loader.js: ' + synErr.message);
+        throw new Error('Loader JS sinh ra không hợp lệ: ' + synErr.message);
+      }
+
+      setProgress(35, 'Ghi ModMenu.html, loader.js và các module...');
+      await recordAndWrite(state.workZip, loaderPath, loaderJS, rollback);
+      await recordAndWrite(state.workZip, menuHtmlPath, buildStandaloneMenuHTML(analysis), rollback);
+
+      for (const f of state.parsedFuncs) {
+        await recordAndWrite(state.workZip, `${modulesDir}/${f.fileName}`, f.code, rollback);
+      }
+
+      // 2. Ghi Manifest
+      const injectedTargets = [];
+      const manifestData = {
+        generator: 'ModMenuInjectorPro-v3',
+        createdAt: new Date().toISOString(),
+        mode,
+        app: {
+          bundleId: analysis.bundleId,
+          displayName: analysis.displayName,
+          version: analysis.version,
+          kind: analysis.kind
+        },
+        paths: {
+          menuDir: menuDir.replace(analysis.bundlePath + '/', ''),
+          loader: loaderPath.replace(analysis.bundlePath + '/', ''),
+          menuHtml: menuHtmlPath.replace(analysis.bundlePath + '/', '')
+        },
+        injectedHtml: [],
+        functions: state.parsedFuncs.map(f => ({
+          id: f.id,
+          name: f.name,
+          kind: f.kind,
+          file: `modules/${f.fileName}`
+        }))
+      };
+
+      // 3. Inject vào Entry Point HTML thực tế (chỉ khi mode === 'webview')
+      setProgress(60, 'Tích hợp loader vào Entry Point HTML...');
+      if (mode === 'webview') {
+        for (const ep of selectedEntries) {
+          const entryObj = state.workZip.file(ep.path);
+          if (!entryObj) throw new Error(`Không tìm thấy tệp HTML mục tiêu: ${ep.path}`);
+          const htmlOrig = await entryObj.async('string');
+          const relLoader = computeRelativePath(ep.path, loaderPath);
+          const result = injectScriptIntoHtml(htmlOrig, relLoader);
+
+          if (result.modified) {
+            await recordAndWrite(state.workZip, ep.path, result.content, rollback);
+            log(`Đã chèn loader (${relLoader}) vào ${ep.relFromApp}`, 'ok');
+          } else {
+            log(`Bỏ qua (đã có loader từ trước): ${ep.relFromApp}`, 'warn');
+          }
+          injectedTargets.push({ htmlPath: ep.path, relLoader });
+          manifestData.injectedHtml.push(ep.relFromApp);
+        }
+      } else if (mode === 'native') {
+        await recordAndWrite(state.workZip, `${menuDir}/theos_reference.txt`, buildTheosReference(analysis, state.parsedFuncs), rollback);
+        log('Đã xuất tài liệu tham khảo Theos (không sửa binary, không build dylib).', 'warn');
+      } else {
+        log('Chế độ Bundle Only: chỉ ghi tài nguyên menu, không chỉnh sửa file HTML.', 'warn');
+      }
+
+      await recordAndWrite(state.workZip, manifestPath, JSON.stringify(manifestData, null, 2), rollback);
+
+      const signingReadme = `Mod Menu Injector Pro v3 — Hướng dẫn ký lại IPA
+=================================================
+Ứng dụng: ${analysis.displayName} (${analysis.bundleId})
+Chế độ: ${mode}
+Thời điểm: ${new Date().toISOString()}
+
+TRẠNG THÁI CHỮ KÝ: CHƯA KÝ (UNSIGNED)
+Vì tệp bên trong Payload/*.app đã thay đổi, chữ ký Apple cũ không còn hợp lệ.
+Bạn BẮT BUỘC ký lại trước khi cài đặt lên thiết bị iOS:
+
+  zsign -k cert.p12 -p "PASSWORD" -m profile.mobileprovision -o signed.ipa output.ipa
+
+Hoặc dùng Sideloadly / AltStore / SideStore / TrollStore.
+`;
+      await recordAndWrite(state.workZip, readmePath, signingReadme, rollback);
+
+      // ===== KIỂM TRA HẬU INJECT (READ-BACK VERIFICATION) =====
+      setProgress(85, 'Đang chạy bộ kiểm tra sau Inject...');
+
+      // Check 1: Tệp menu thực sự tồn tại trong workZip
+      const missingFiles = [loaderPath, menuHtmlPath, manifestPath, ...state.parsedFuncs.map(f => `${modulesDir}/${f.fileName}`)]
+        .filter(p => !state.workZip.file(p));
+      if (missingFiles.length) {
+        setVerifyItem('menuFiles', 'FAIL', 'Thiếu tệp: ' + missingFiles.join(', '));
+        throw new Error('Kiểm tra hậu inject thất bại: thiếu tệp menu.');
+      }
+      setVerifyItem('menuFiles', 'PASS', `Đã xác nhận ${3 + state.parsedFuncs.length} tệp tại ${menuDir.replace(analysis.bundlePath, '.app')}`);
+
+      // Check 2 & 3: Loader trong HTML & đường dẫn tương đối hợp lệ
+      if (mode === 'webview') {
+        let verifiedHtmlCount = 0;
+        let pathErrors = [];
+        for (const t of injectedTargets) {
+          const readBack = await state.workZip.file(t.htmlPath).async('string');
+          if (!readBack.includes('data-mm-loader="v3"')) {
+            throw new Error(`Đọc lại ${t.htmlPath} không thấy thẻ loader.`);
+          }
+          const resolved = resolveRelativePath(t.htmlPath, t.relLoader);
+          if (!resolved || !state.workZip.file(resolved)) {
+            pathErrors.push(`${t.htmlPath} -> ${t.relLoader}`);
+          }
+          verifiedHtmlCount++;
+        }
+        // Kiểm tra thêm đường dẫn ./loader.js từ ModMenu.html
+        const resolvedStandalone = resolveRelativePath(menuHtmlPath, './loader.js');
+        if (!resolvedStandalone || !state.workZip.file(resolvedStandalone)) {
+          pathErrors.push('ModMenu.html -> ./loader.js');
+        }
+
+        if (verifiedHtmlCount === 0) {
+          setVerifyItem('entryInject', 'FAIL', 'Không có entry point HTML nào được chèn.');
+          throw new Error('Không thể tuyên bố WebView Inject thành công khi chưa chèn vào HTML nào.');
+        }
+        setVerifyItem('entryInject', 'PASS', `Đã xác nhận thẻ loader trong ${verifiedHtmlCount} tệp HTML.`);
+
+        if (pathErrors.length) {
+          setVerifyItem('relPaths', 'FAIL', 'Đường dẫn hỏng: ' + pathErrors.join('; '));
+          throw new Error('Kiểm tra đường dẫn tương đối thất bại.');
+        }
+        setVerifyItem('relPaths', 'PASS', 'Tất cả đường dẫn tương đối đều trỏ đúng tệp thực tế trong ZIP.');
+      } else {
+        setVerifyItem('entryInject', 'WARN', `Chế độ "${mode}" không chèn vào HTML — menu sẽ KHÔNG tự hiện.`);
+        const resolvedStandalone = resolveRelativePath(menuHtmlPath, './loader.js');
+        setVerifyItem('relPaths', resolvedStandalone && state.workZip.file(resolvedStandalone) ? 'PASS' : 'FAIL', 'ModMenu.html -> ./loader.js hợp lệ.');
+      }
+
+      // Check 6: Đọc lại Manifest và đối chiếu
+      const readManifest = JSON.parse(await state.workZip.file(manifestPath).async('string'));
+      const manifestMatch = Array.isArray(readManifest.functions) &&
+        readManifest.functions.length === state.parsedFuncs.length &&
+        readManifest.functions.every((mf, idx) => mf.name === state.parsedFuncs[idx].name);
+      if (!manifestMatch) {
+        setVerifyItem('manifestOk', 'FAIL', 'Manifest không khớp danh sách chức năng.');
+        throw new Error('Manifest không khớp.');
+      }
+      setVerifyItem('manifestOk', 'PASS', `Manifest khớp ${readManifest.functions.length} chức năng.`);
+
+      // Check 7: Hướng dẫn ký lại IPA
+      const hasReadme = Boolean(state.workZip.file(readmePath));
+      setVerifyItem('signGuide', hasReadme ? 'PASS' : 'FAIL', hasReadme ? 'Đã ghi README_SIGNING.txt và hiển thị hướng dẫn ký lại.' : 'Thiếu hướng dẫn ký lại.');
+
+      // Check 5 chờ bước đóng gói
+      setVerifyItem('zipValid', 'WARN', 'Chờ bước "Đóng gói & Xuất IPA" để kiểm tra giải nén lại.');
+
+      state.injected = true;
+      setProgress(100, 'Inject & kiểm tra hoàn tất');
+      if (mode === 'webview') {
+        setPipe('Inject', 'ok', 'INJECT THÀNH CÔNG', `Đã chèn vào ${injectedTargets.length} entry point HTML`);
+        log('Inject WebView hoàn tất và vượt qua kiểm tra hậu inject. Sẵn sàng đóng gói IPA.', 'ok');
+      } else {
+        setPipe('Inject', 'warn', 'CHỈ GHI TÀI NGUYÊN', `Chế độ ${mode}: không tự kích hoạt trong WebView`);
+        log(`Đã ghi tài nguyên ở chế độ "${mode}". Lưu ý: không phải WebView auto-inject.`, 'warn');
+      }
+      updateActionButtons();
+    } catch (e) {
+      log('Inject thất bại: ' + e.message, 'err');
+      performRollback('Tự động hoàn tác do lỗi trong quá trình Inject');
+      setPipe('Inject', 'err', 'THẤT BẠI (ĐÃ ROLLBACK)', e.message);
+    } finally {
+      $('#run').disabled = false;
+      updateActionButtons();
+    }
+  };
+
+  // ===== ĐÓNG GÓI, KIỂM TOÀN VẸN ZIP & TẢI FILE AN TOÀN SAFARI iOS =====
+  function triggerSafeDownload(url, filename) {
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    a.rel = 'noopener';
+    a.style.display = 'none';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
   }
-};
 
-// ===== XUẤT =====
-$('#export').onclick = async () => {
-  if(!zip) return;
-  $('#export').disabled = true; setState('Packaging');
-  log('Đang đóng gói IPA...', 'info');
-  $('#manualWrap').style.display='none';
-  try {
-    const blob = await zip.generateAsync({
-      type:'blob', compression:'DEFLATE', compressionOptions:{level:6},
-      onUpdate: p => { if(Math.round(p.percent)%25===0) log(`  ${p.percent.toFixed(0)}%`, 'dim'); }
-    });
-    const fname = (ipaFile.name||'app').replace(/\.[^.]+$/,'') + '-modmenu.ipa';
-    const url = URL.createObjectURL(blob);
-    try { triggerDownload(url, fname); log('Đã gửi lệnh tải: ' + fname, 'ok'); }
-    catch(e){ log('Auto-download lỗi: ' + e.message, 'warn'); }
-    setTimeout(() => { showManualDownload(blob, fname); setTimeout(()=>URL.revokeObjectURL(url), 30000); }, 800);
-    log('Nhớ ký lại trước khi cài.', 'warn');
-    setState('Done');
-  } catch(e) {
-    log('Lỗi đóng gói: ' + e.message, 'err');
-    setState('Error');
-  } finally {
-    $('#export').disabled = false;
-  }
-};
+  $('#export').onclick = async () => {
+    if (!state.workZip || !state.injected) return;
+    $('#export').disabled = true;
+    setPipe('Pack', 'active', 'ĐANG ĐÓNG GÓI', 'Đang tạo tệp ZIP/IPA mới...');
+    setProgress(5, 'Bắt đầu đóng gói IPA...');
+    log('Bắt đầu đóng gói IPA mới...', 'info');
+
+    try {
+      const compMode = $('#compress').value;
+      const zipOpts = compMode === 'deflate'
+        ? { type: 'blob', mimeType: 'application/octet-stream', compression: 'DEFLATE', compressionOptions: { level: 5 } }
+        : { type: 'blob', mimeType: 'application/octet-stream', compression: 'STORE' };
+
+      const blob = await state.workZip.generateAsync(zipOpts, meta => {
+        setProgress(5 + meta.percent * 0.7, `Đang đóng gói (${Math.round(meta.percent)}%)...`);
+      });
+
+      // Kiểm tra tính toàn vẹn ZIP sau đóng gói (Tiêu chí 5)
+      setProgress(82, 'Đang giải nén thử để kiểm toàn vẹn IPA...');
+      log(`Đã tạo tệp (${formatBytes(blob.size)}). Đang kiểm tra tính toàn vẹn ZIP...`, 'info');
+      const verifyZip = await JSZip.loadAsync(blob);
+      const checkLoaderPath = `${state.analysis.menuDir}/loader.js`;
+      const checkPlistPath = `${state.analysis.bundlePath}/Info.plist`;
+      const loaderOk = Boolean(verifyZip.file(checkLoaderPath));
+      const plistOk = !state.workZip.file(checkPlistPath) || Boolean(verifyZip.file(checkPlistPath));
+      if (!loaderOk || !plistOk) {
+        setVerifyItem('zipValid', 'FAIL', 'Giải nén lại IPA không thấy đủ tệp thiết yếu.');
+        throw new Error('Kiểm tra toàn vẹn ZIP thất bại.');
+      }
+      // Đọc thử nội dung loader từ IPA vừa đóng gói để chứng minh không hỏng CRC
+      const loaderRead = await verifyZip.file(checkLoaderPath).async('string');
+      if (!loaderRead.includes('__MM_V3_LOADED__')) {
+        setVerifyItem('zipValid', 'FAIL', 'Nội dung loader.js sau đóng gói bị sai lệch.');
+        throw new Error('Dữ liệu trong ZIP sau đóng gói bị hỏng.');
+      }
+
+      setVerifyItem('zipValid', 'PASS', `Giải nén kiểm tra thành công (${Object.keys(verifyZip.files).length} mục, ${formatBytes(blob.size)}).`);
+
+      const baseName = (state.originalFile.name || 'app').replace(/\.[^.]+$/, '');
+      const outName = `${baseName}-modmenu-v3-unsigned.ipa`;
+
+      revokeOldUrl();
+      state.packagedBlob = blob;
+      state.packagedName = outName;
+      state.objectUrl = URL.createObjectURL(blob);
+
+      // Hiện khu vực tải thủ công (luôn giữ ObjectURL sống cho Safari iOS)
+      const manualWrap = $('#manualWrap');
+      manualWrap.classList.add('show');
+      $('#manualDownloadBtn').textContent = `Tải thủ công: ${outName} (${formatBytes(blob.size)})`;
+
+      // Hỗ trợ Web Share API trên iOS Safari nếu trình duyệt cho phép chia sẻ file
+      const shareBtn = $('#shareBtn');
+      const testFile = new File([blob], outName, { type: 'application/octet-stream' });
+      if (navigator.canShare && navigator.canShare({ files: [testFile] })) {
+        shareBtn.style.display = 'inline-flex';
+        shareBtn.onclick = async () => {
+          try {
+            await navigator.share({ files: [testFile], title: outName });
+            log('Đã mở hộp thoại Chia sẻ / Lưu vào Tệp.', 'ok');
+          } catch (err) {
+            if (err.name !== 'AbortError') log('Lỗi chia sẻ: ' + err.message, 'warn');
+          }
+        };
+      } else {
+        shareBtn.style.display = 'none';
+      }
+
+      $('#manualDownloadBtn').onclick = () => {
+        if (state.objectUrl) triggerSafeDownload(state.objectUrl, state.packagedName);
+      };
+
+      // Gửi tải tự động (Safari iOS có thể chặn nếu mất user gesture sau async dài -> có nút thủ công ngay dưới)
+      try {
+        triggerSafeDownload(state.objectUrl, outName);
+      } catch (dlErr) {
+        log('Tự tải bị trình duyệt chặn — hãy bấm nút "Tải thủ công" bên trên.', 'warn');
+      }
+
+      setProgress(100, 'Đóng gói & kiểm toàn vẹn hoàn tất');
+      setPipe('Pack', 'ok', 'ĐÓNG GÓI THÀNH CÔNG', `${outName} (${formatBytes(blob.size)})`);
+      setPipe('Sign', 'warn', 'CHƯA KÝ IPA', 'Cần ký lại bằng zsign / Sideloadly / AltStore');
+      log(`Đóng gói thành công: ${outName}. LƯU Ý: IPA CHƯA ĐƯỢC KÝ, bắt buộc ký lại trước khi cài.`, 'ok');
+    } catch (e) {
+      log('Lỗi đóng gói IPA: ' + e.message, 'err');
+      setPipe('Pack', 'err', 'ĐÓNG GÓI LỖI', e.message);
+      setProgress(0, 'Lỗi đóng gói');
+    } finally {
+      $('#export').disabled = false;
+    }
+  };
+
+  $('#clearLog').onclick = () => { $('#log').innerHTML = ''; };
+  window.addEventListener('beforeunload', revokeOldUrl);
+
+  log('Mod Menu Injector Pro v3 sẵn sàng. Chọn tệp IPA để bắt đầu.', 'info');
+})();
 </script>
 </body>
 </html>
