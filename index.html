@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Mod Menu Injector Pro v3.1 — Real WebView Injector</title>
+<title>Mod Menu Injector Pro v3.2 — Real WebView Injector</title>
 <script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
 <style>
   *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
@@ -250,8 +250,8 @@
 <div class="wrap">
   <header>
     <div class="brand">
-      <h1>Mod Menu Injector Pro <span class="ver-pill">v3.1 REAL WEBVIEW</span></h1>
-      <div class="sub">Phân tích cấu trúc IPA/WebView, kiểm lỗi JS, tích hợp Shadow DOM Menu thật vào entry point và kiểm toàn vẹn ZIP.</div>
+      <h1>Mod Menu Injector Pro <span class="ver-pill">v3.2 SAFARI FIX</span></h1>
+      <div class="sub">Tích hợp Shadow DOM Menu vào WebView thực tế, lọc bỏ HTML từ SDK quảng cáo và kiểm toàn vẹn ZIP siêu nhẹ không tràn RAM Safari iOS.</div>
     </div>
     <div class="scope-note">
       <b>Phạm vi hợp lệ:</b> Chỉ dùng cho ứng dụng WebView bạn sở hữu hoặc có quyền kiểm thử. Không sửa Mach-O binary, không bypass DRM hay bảo vệ hệ thống.
@@ -314,7 +314,7 @@
           <span class="panel-meta" id="metaEntries">0 tệp</span>
         </div>
         <div class="entry-box" id="entryList">
-          <div class="empty">Chưa phát hiện file HTML</div>
+          <div class="empty">Chưa phát hiện file HTML WebView chính</div>
         </div>
       </div>
     </section>
@@ -367,7 +367,7 @@ Lưu ý:
         <label for="compress">Đóng gói ZIP:</label>
         <select id="compress">
           <option value="fast">Tối ưu RAM / Safari iOS (STORE)</option>
-          <option value="deflate">Nén chuẩn (DEFLATE mức 5)</option>
+          <option value="deflate">Nén nhỏ dung lượng (DEFLATE mức 3)</option>
         </select>
       </div>
 
@@ -436,6 +436,7 @@ Lưu ý:
     parsedFuncs: [],         // Danh sách module đã kiểm cú pháp
     rollback: null,          // Snapshot để hoàn tác nguyên tử
     injected: false,         // Đã inject và qua kiểm tra 1-4, 6-7
+    injectedFiles: [],       // Danh sách đường dẫn đã ghi để kiểm chứng trong Central Directory
     packagedBlob: null,      // Blob IPA sau đóng gói
     packagedName: '',
     objectUrl: null,         // Quản lý vòng đời ObjectURL tránh rò rỉ RAM
@@ -489,7 +490,7 @@ Lưu ý:
     { key: 'entryInject', label: '2. Loader đã tích hợp đúng vào Entry Point HTML' },
     { key: 'relPaths',    label: '3. Đường dẫn tài nguyên tương đối hợp lệ trong ZIP' },
     { key: 'jsSyntax',    label: '4. Toàn bộ JavaScript không có lỗi cú pháp' },
-    { key: 'zipValid',    label: '5. Tệp IPA sau đóng gói giải nén kiểm toàn vẹn thành công' },
+    { key: 'zipValid',    label: '5. Kiểm tra cấu trúc ZIP & Central Directory sau đóng gói' },
     { key: 'manifestOk',  label: '6. Manifest phản ánh chính xác danh sách chức năng' },
     { key: 'signGuide',   label: '7. Đã nhúng hướng dẫn ký lại IPA (README_SIGNING.txt)' }
   ];
@@ -557,6 +558,89 @@ Lưu ý:
       }
     }
     return stack.join('/');
+  }
+
+  // ===== KIỂM TRA TOÀN VẸN ZIP SIÊU NHẸ BẰNG BLOB.SLICE() (KHÔNG TRÀN RAM SAFARI iOS) =====
+  async function verifyZipBlobLightweight(blob, requiredPaths) {
+    if (!blob || blob.size < 22) {
+      throw new Error('Tệp IPA xuất ra rỗng hoặc không đầy đủ.');
+    }
+
+    // 1. Đọc 4 byte đầu: Local File Header magic (PK\x03\x04)
+    const head = new Uint8Array(await blob.slice(0, 4).arrayBuffer());
+    if (!(head[0] === 0x50 && head[1] === 0x4B && head[2] === 0x03 && head[3] === 0x04)) {
+      throw new Error('Header ZIP sau đóng gói không hợp lệ.');
+    }
+
+    // 2. Chỉ đọc tối đa 65.557 byte cuối để tìm End of Central Directory (PK\x05\x06)
+    const tailSize = Math.min(blob.size, 65557);
+    const tailBuf = await blob.slice(blob.size - tailSize, blob.size).arrayBuffer();
+    const tail = new Uint8Array(tailBuf);
+    const tailView = new DataView(tailBuf);
+
+    let eocdPos = -1;
+    for (let i = tail.length - 22; i >= 0; i--) {
+      if (tail[i] === 0x50 && tail[i + 1] === 0x4B && tail[i + 2] === 0x05 && tail[i + 3] === 0x06) {
+        const commentLen = tailView.getUint16(i + 20, true);
+        if (i + 22 + commentLen === tail.length) {
+          eocdPos = i;
+          break;
+        }
+      }
+    }
+    if (eocdPos < 0) {
+      throw new Error('Không tìm thấy End of Central Directory (tệp ZIP bị cắt cụt).');
+    }
+
+    const totalEntries = tailView.getUint16(eocdPos + 10, true);
+    const cdSize = tailView.getUint32(eocdPos + 12, true);
+    const cdOffset = tailView.getUint32(eocdPos + 16, true);
+
+    if (cdOffset === 0xFFFFFFFF || cdSize === 0xFFFFFFFF) {
+      return { entriesCount: totalEntries, verifiedCount: 0, cdBytesRead: tailSize, zip64: true };
+    }
+    if (cdOffset + cdSize > blob.size) {
+      throw new Error('Central Directory vượt quá kích thước tệp IPA.');
+    }
+
+    // 3. Chỉ đọc đúng vùng Central Directory (thường 50KB - 500KB) để kiểm tra mục lục tệp
+    const cdBuf = await blob.slice(cdOffset, cdOffset + cdSize).arrayBuffer();
+    const cdBytes = new Uint8Array(cdBuf);
+    const cdView = new DataView(cdBuf);
+    const decoder = new TextDecoder('utf-8');
+
+    const found = new Map();
+    let p = 0;
+    let parsedEntries = 0;
+    while (p + 46 <= cdBytes.length) {
+      if (cdView.getUint32(p, true) !== 0x02014b50) {
+        throw new Error('Cấu trúc Central Directory bị hỏng tại offset ' + p);
+      }
+      const uncompSize = cdView.getUint32(p + 24, true);
+      const nameLen = cdView.getUint16(p + 28, true);
+      const extraLen = cdView.getUint16(p + 30, true);
+      const commentLen = cdView.getUint16(p + 32, true);
+      const name = decoder.decode(cdBytes.subarray(p + 46, p + 46 + nameLen));
+      found.set(name, uncompSize);
+      parsedEntries++;
+      p += 46 + nameLen + extraLen + commentLen;
+    }
+
+    const missing = requiredPaths.filter(rp => !found.has(rp));
+    if (missing.length) {
+      throw new Error('Thiếu tệp trong Central Directory: ' + missing.slice(0, 3).join(', '));
+    }
+    const emptyFiles = requiredPaths.filter(rp => (found.get(rp) || 0) === 0);
+    if (emptyFiles.length) {
+      throw new Error('Tệp bị rỗng sau đóng gói: ' + emptyFiles.slice(0, 3).join(', '));
+    }
+
+    return {
+      entriesCount: parsedEntries || totalEntries,
+      verifiedCount: requiredPaths.length,
+      cdBytesRead: tailSize + cdSize,
+      zip64: false
+    };
   }
 
   // ===== GIẢI MÃ INFO.PLIST (HỖ TRỢ CẢ BPLIST00 NHỊ PHÂN & XML PLIST) =====
@@ -699,7 +783,7 @@ Lưu ý:
     throw new Error('Không nhận diện được định dạng Info.plist');
   }
 
-  // ===== PHÂN TÍCH CẤU TRÚC IPA & TƯƠNG THÍCH WEBVIEW =====
+  // ===== PHÂN TÍCH CẤU TRÚC IPA & TƯƠNG THÍCH WEBVIEW (LỌC BỎ HTML SDK QUẢNG CÁO) =====
   async function analyzeIPA(zipObj) {
     const allFiles = Object.keys(zipObj.files).filter(n => !zipObj.files[n].dir);
     const appMatchFile = allFiles.find(n => /^Payload\/[^/]+\.app\//.test(n));
@@ -711,7 +795,6 @@ Lưu ý:
     const prefix = bundlePath + '/';
     const appFiles = allFiles.filter(n => n.startsWith(prefix));
 
-    // Đọc Info.plist
     let plist = {};
     const plistEntry = zipObj.file(prefix + 'Info.plist');
     if (plistEntry) {
@@ -726,7 +809,6 @@ Lưu ý:
       log('Cảnh báo: Không tìm thấy Info.plist trong bundle.', 'warn');
     }
 
-    // Quét dấu hiệu các framework / engine
     const has = fn => appFiles.some(fn);
     const isCordova =
       has(f => f.endsWith('/www/cordova.js')) ||
@@ -745,16 +827,24 @@ Lưu ý:
       has(f => f.startsWith(prefix + 'Data/Managed/')) ||
       has(f => f === prefix + 'Data/globalgamemanagers');
 
-    // Tìm tất cả file HTML trong app (bỏ qua __modmenu và các framework hệ thống)
+    // Lọc HTML thực của app, loại bỏ HTML nằm trong *.bundle / *.framework / *.lproj (SDK quảng cáo, pháp lý...)
+    const skippedSdkHtml = [];
     const htmlFiles = appFiles.filter(f => {
       const rel = f.slice(prefix.length);
       if (!/\.html?$/i.test(rel)) return false;
       if (rel.includes('__modmenu/') || rel.includes('ModMenu/')) return false;
       if (/^Frameworks\/|^PlugIns\/|^Watch\/|^_CodeSignature\//.test(rel)) return false;
+      if (/(^|\/)[^/]+\.(bundle|framework|lproj)\//i.test(rel)) {
+        skippedSdkHtml.push(rel);
+        return false;
+      }
       return true;
     });
 
-    // Tìm Web Root chuẩn
+    if (skippedSdkHtml.length) {
+      log(`Đã loại trừ ${skippedSdkHtml.length} tệp HTML phụ thuộc SDK/Bundle (ví dụ: ${skippedSdkHtml[0]}) để tránh nhận diện nhầm.`, 'dim');
+    }
+
     const candidateRoots = [
       prefix + 'www',
       prefix + 'public',
@@ -768,8 +858,7 @@ Lưu ý:
 
     let webRoot = null;
     for (const root of candidateRoots) {
-      const hasHtmlInside = htmlFiles.some(h => h.startsWith(root + '/'));
-      if (hasHtmlInside) {
+      if (htmlFiles.some(h => h.startsWith(root + '/'))) {
         webRoot = root;
         break;
       }
@@ -779,7 +868,6 @@ Lưu ý:
       webRoot = dirname(sorted[0]);
     }
 
-    // Xếp hạng entry points (ưu tiên index.html ở gốc webRoot)
     const entryPoints = htmlFiles
       .map(f => {
         const relFromRoot = webRoot && f.startsWith(webRoot + '/')
@@ -826,7 +914,7 @@ Lưu ý:
       kind = 'WKWebView';
       compatible = true;
       compatLevel = 'ok';
-      compatMessage = `Tương thích WebView: Tìm thấy ${entryPoints.length} tệp HTML nội bộ tại "${webRoot.slice(prefix.length) || '/'}". Lưu ý: nếu đây là game native, các file HTML có thể chỉ thuộc SDK quảng cáo hoặc trang chính sách — hãy kiểm tra kỹ danh sách Entry Points bên dưới.`;
+      compatMessage = `Tương thích WebView: Tìm thấy ${entryPoints.length} tệp HTML nội bộ tại "${webRoot.slice(prefix.length) || '/'}". Menu sẽ hiển thị khi ứng dụng nạp các trang HTML này qua WKWebView.`;
     } else if (isUnity) {
       kind = 'Unity';
       compatible = false;
@@ -836,7 +924,7 @@ Lưu ý:
       kind = 'Native iOS';
       compatible = false;
       compatLevel = 'warn';
-      compatMessage = 'Cảnh báo: Ứng dụng Native iOS (không tìm thấy HTML WebView nội bộ). Chế độ WebView Inject không thể bảo đảm hoạt động và không sửa file thực thi Mach-O.';
+      compatMessage = `Cảnh báo: Ứng dụng Native iOS (không có WebView chính${skippedSdkHtml.length ? `; chỉ có ${skippedSdkHtml.length} tệp HTML phụ của SDK/Bundle đã bị loại trừ` : ''}). Chế độ WebView Inject không thể bảo đảm hoạt động và công cụ không sửa file thực thi Mach-O.`;
     } else {
       kind = 'Không xác định';
       compatible = false;
@@ -862,6 +950,7 @@ Lưu ý:
       webRoot,
       menuDir,
       entryPoints,
+      skippedSdkHtmlCount: skippedSdkHtml.length,
       totalFiles: appFiles.length
     };
   }
@@ -881,7 +970,7 @@ Lưu ý:
     const list = $('#entryList');
     $('#metaEntries').textContent = `${a.entryPoints.length} tệp`;
     if (!a.entryPoints.length) {
-      list.innerHTML = '<div class="empty">Không có tệp HTML nào trong bundle để chèn loader</div>';
+      list.innerHTML = `<div class="empty">Không có tệp HTML WebView chính${a.skippedSdkHtmlCount ? ` (đã lọc bỏ ${a.skippedSdkHtmlCount} tệp HTML thuộc SDK/Bundle)` : ''}</div>`;
     } else {
       list.innerHTML = a.entryPoints.map((ep, idx) => `
         <label class="entry-item">
@@ -938,6 +1027,7 @@ Lưu ý:
     state.analysis = null;
     state.rollback = null;
     state.injected = false;
+    state.injectedFiles = [];
     state.packagedBlob = null;
     $('#manualWrap').classList.remove('show');
     $('#run').disabled = true;
@@ -959,9 +1049,10 @@ Lưu ý:
     setProgress(10, 'Đọc header ZIP...');
     log(`Đã chọn tệp: ${file.name} (${formatBytes(file.size)})`, 'info');
 
-    if (file.size > 150 * 1024 * 1024) {
+    // Luôn ưu tiên STORE trên thiết bị di động / IPA lớn để tránh tràn RAM Safari iOS
+    if (file.size > 100 * 1024 * 1024) {
       $('#compress').value = 'fast';
-      log('IPA lớn hơn 150 MB: đã tự chọn chế độ đóng gói STORE để giảm nguy cơ tràn RAM trên Safari iOS.', 'warn');
+      log('IPA lớn hơn 100 MB: giữ chế độ đóng gói STORE để tối ưu RAM trên Safari iOS.', 'warn');
     }
 
     try {
@@ -1003,34 +1094,16 @@ Lưu ý:
   // ===== FUNCTION ENGINE: PARSER LEXICAL + KIỂM TRA CÚ PHÁP AN TOÀN =====
   function findBalancedBlockEnd(src, openBraceIndex) {
     let depth = 0;
-    let stateMode = 'normal'; // normal | sq | dq | tpl | lineC | blockC
+    let stateMode = 'normal';
     for (let i = openBraceIndex; i < src.length; i++) {
       const ch = src[i];
       const next = src[i + 1];
 
-      if (stateMode === 'lineC') {
-        if (ch === '\n') stateMode = 'normal';
-        continue;
-      }
-      if (stateMode === 'blockC') {
-        if (ch === '*' && next === '/') { stateMode = 'normal'; i++; }
-        continue;
-      }
-      if (stateMode === 'sq') {
-        if (ch === '\\') { i++; continue; }
-        if (ch === "'") stateMode = 'normal';
-        continue;
-      }
-      if (stateMode === 'dq') {
-        if (ch === '\\') { i++; continue; }
-        if (ch === '"') stateMode = 'normal';
-        continue;
-      }
-      if (stateMode === 'tpl') {
-        if (ch === '\\') { i++; continue; }
-        if (ch === '`') stateMode = 'normal';
-        continue;
-      }
+      if (stateMode === 'lineC') { if (ch === '\n') stateMode = 'normal'; continue; }
+      if (stateMode === 'blockC') { if (ch === '*' && next === '/') { stateMode = 'normal'; i++; } continue; }
+      if (stateMode === 'sq') { if (ch === '\\') { i++; continue; } if (ch === "'") stateMode = 'normal'; continue; }
+      if (stateMode === 'dq') { if (ch === '\\') { i++; continue; } if (ch === '"') stateMode = 'normal'; continue; }
+      if (stateMode === 'tpl') { if (ch === '\\') { i++; continue; } if (ch === '`') stateMode = 'normal'; continue; }
 
       if (ch === '/' && next === '/') { stateMode = 'lineC'; i++; continue; }
       if (ch === '/' && next === '*') { stateMode = 'blockC'; i++; continue; }
@@ -1059,7 +1132,6 @@ Lưu ý:
     return { kind: 'script', callableName: null };
   }
 
-  // Kiểm tra cú pháp JS thuần túy bằng biên dịch Function — KHÔNG thực thi code
   function validateJsSyntax(code, kind) {
     try {
       if (kind === 'lifecycle') {
@@ -1078,7 +1150,6 @@ Lưu ý:
     if (!trimmed) return [];
     const rawItems = [];
 
-    // 1. Định dạng JSON { functions: [...] } hoặc [...]
     if (trimmed.startsWith('{') || trimmed.startsWith('[')) {
       try {
         const parsed = JSON.parse(trimmed);
@@ -1097,7 +1168,6 @@ Lưu ý:
       } catch (_) {}
     }
 
-    // 2. Định dạng tiêu đề === Chức năng: Tên ===
     const reHeader = /^=+\s*(?:Chức năng|Function|Func|Module)\s*[:\-]\s*(.+?)\s*=+$/gim;
     const markers = [];
     let m;
@@ -1113,7 +1183,6 @@ Lưu ý:
       if (rawItems.length) return finalizeParsedItems(rawItems);
     }
 
-    // 3. Định dạng chú thích // @func: Tên
     const reTag = /^[ \t]*(?:\/\/|#)\s*@(?:func|function|chucnang|chức năng|fn|module)\s*:?\s*(.+)$/i;
     const lines = src.split('\n');
     let cur = null;
@@ -1129,7 +1198,6 @@ Lưu ý:
     if (cur && cur.code.trim()) rawItems.push({ name: cur.name, code: cur.code.trim() });
     if (rawItems.length) return finalizeParsedItems(rawItems);
 
-    // 4. Tách tự động các function / async function / arrow function cấp ngoài cùng
     const reDecl = /(?:^|\n)[ \t]*(?:(?:async\s+)?function\s*\*?\s+([A-Za-z_$][\w$]*)\s*\([^)]*\)\s*\{|(?:const|let|var)\s+([A-Za-z_$][\w$]*)\s*=\s*(?:async\s*)?(?:function\s*\([^)]*\)\s*\{|\([^)]*\)\s*=>\s*\{|[A-Za-z_$][\w$]*\s*=>\s*\{))/g;
     let md;
     let searchFrom = 0;
@@ -1150,7 +1218,6 @@ Lưu ý:
     }
     if (rawItems.length) return finalizeParsedItems(rawItems);
 
-    // 5. Fallback: 1 module duy nhất
     return finalizeParsedItems([{ name: 'CustomModule', code: trimmed }]);
   }
 
@@ -1305,10 +1372,9 @@ function inspectWebViewEnv() {
     }).join(',\n');
 
     return `/*!
- * Mod Menu Injector Pro v3.1 — Real WebView Shadow DOM Runtime
+ * Mod Menu Injector Pro v3.2 — Real WebView Shadow DOM Runtime
  * App: ${safeAppTitle} (${safeBundleId})
  * Generated: ${new Date().toISOString()}
- * Kiến trúc: Shadow DOM độc lập — không dùng fullscreen iframe nên không chặn chạm trên iOS WKWebView.
  */
 (function () {
   'use strict';
@@ -1319,7 +1385,7 @@ function inspectWebViewEnv() {
 ${moduleEntries}
   ];
 
-  var runtimeState = {};   // id -> { on: bool, busy: bool, cleanup: fn|null }
+  var runtimeState = {};
   var logs = [];
 
   function pushLog(level, msg) {
@@ -1417,7 +1483,7 @@ ${moduleEntries}
     panel.className = 'mm-panel';
     panel.innerHTML =
       '<div class="mm-head">' +
-        '<div><div class="mm-title">Mod Menu v3.1</div><div class="mm-sub">' + MODULES.length + ' chức năng · Shadow DOM</div></div>' +
+        '<div><div class="mm-title">Mod Menu v3.2</div><div class="mm-sub">' + MODULES.length + ' chức năng · Shadow DOM</div></div>' +
         '<div class="mm-head-btns">' +
           '<button type="button" class="mm-icon-btn" id="mmLogBtn" title="Xem log">≡</button>' +
           '<button type="button" class="mm-icon-btn" id="mmCloseBtn" title="Đóng">✕</button>' +
@@ -1444,9 +1510,7 @@ ${moduleEntries}
         var row = document.createElement('button');
         row.type = 'button';
         row.className = 'mm-row';
-        row.innerHTML =
-          '<span class="mm-row-name"></span>' +
-          '<span class="mm-switch">OFF</span>';
+        row.innerHTML = '<span class="mm-row-name"></span><span class="mm-switch">OFF</span>';
         row.querySelector('.mm-row-name').textContent = mod.name;
         var sw = row.querySelector('.mm-switch');
 
@@ -1516,23 +1580,17 @@ ${moduleEntries}
       });
     }
 
-    // Kéo nút FAB mượt trên iPhone (Touch + Mouse) & giữ trong vùng an toàn
     var dragging = false, moved = false;
     var startX = 0, startY = 0, origLeft = 0, origTop = 0;
 
-    function getPoint(e) {
-      return e.touches && e.touches[0] ? e.touches[0] : e;
-    }
+    function getPoint(e) { return e.touches && e.touches[0] ? e.touches[0] : e; }
 
     function onDragStart(e) {
       var pt = getPoint(e);
       var rect = fab.getBoundingClientRect();
-      dragging = true;
-      moved = false;
-      startX = pt.clientX;
-      startY = pt.clientY;
-      origLeft = rect.left;
-      origTop = rect.top;
+      dragging = true; moved = false;
+      startX = pt.clientX; startY = pt.clientY;
+      origLeft = rect.left; origTop = rect.top;
       fab.classList.add('dragging');
     }
 
@@ -1622,7 +1680,7 @@ ${moduleEntries}
 </head>
 <body>
   <div class="card">
-    <h1>Mod Menu v3.1 — ${escapeHtml(analysis.displayName)}</h1>
+    <h1>Mod Menu v3.2 — ${escapeHtml(analysis.displayName)}</h1>
     <p>Trang độc lập nạp cùng runtime <code>loader.js</code>. Khi chạy trong ứng dụng WebView, menu sẽ tự nổi bằng Shadow DOM mà không cần mở trang này.</p>
   </div>
   <script>window.__MM_V3_AUTO_OPEN__ = true;<\/script>
@@ -1633,7 +1691,7 @@ ${moduleEntries}
 
   function buildTheosReference(analysis, funcs) {
     const list = funcs.map(f => `// ${f.id}. ${f.name} (${f.fileName})`).join('\n');
-    return `Mod Menu Injector Pro v3.1 — Tài liệu tham khảo Native (Theos)
+    return `Mod Menu Injector Pro v3.2 — Tài liệu tham khảo Native (Theos)
 App: ${analysis.displayName} (${analysis.bundleId})
 Loại phát hiện: ${analysis.kind}
 
@@ -1657,7 +1715,7 @@ ${list}
 `;
   }
 
-  // ===== CHÈN LOADER AN TOÀN VÀO HTML (KỂ CẢ HTML KHÔNG CÓ </body> & ĐƯỜNG DẪN CÓ $) =====
+  // ===== CHÈN LOADER AN TOÀN VÀO HTML =====
   function injectScriptIntoHtml(htmlContent, relLoaderPath) {
     const marker = 'data-mm-loader="v3"';
     if (htmlContent.includes(marker) || htmlContent.includes('__MM_V3_LOADED__')) {
@@ -1706,6 +1764,7 @@ ${list}
     }
     state.rollback = null;
     state.injected = false;
+    state.injectedFiles = [];
     state.packagedBlob = null;
     revokeOldUrl();
     $('#manualWrap').classList.remove('show');
@@ -1732,8 +1791,8 @@ ${list}
     const selectedEntries = analysis.entryPoints.filter(e => e.selected);
 
     if (mode === 'webview' && !selectedEntries.length) {
-      log('Từ chối Inject WebView: không có entry point HTML nào được chọn hoặc ứng dụng không phải WebView.', 'err');
-      setPipe('Inject', 'err', 'KHÔNG TƯƠNG THÍCH', 'Không có HTML entry point cho chế độ WebView');
+      log('Từ chối Inject WebView: ứng dụng này không có tệp HTML WebView chính (không phải Cordova/Capacitor/WKWebView).', 'err');
+      setPipe('Inject', 'err', 'KHÔNG TƯƠNG THÍCH', 'Chế độ WebView không áp dụng cho app Native/Unity');
       return;
     }
 
@@ -1742,6 +1801,7 @@ ${list}
     const rollback = { modified: new Map(), added: [] };
     state.rollback = rollback;
     state.injected = false;
+    state.injectedFiles = [];
     resetVerifyUI();
 
     $('#run').disabled = true;
@@ -1758,7 +1818,6 @@ ${list}
       const manifestPath = `${menuDir}/manifest.json`;
       const readmePath = `${menuDir}/README_SIGNING.txt`;
 
-      // 1. Sinh mã và kiểm tra cú pháp toàn bộ loader.js trước khi ghi
       const loaderJS = buildRealWebViewLoaderJS(analysis, state.parsedFuncs);
       try {
         new Function(loaderJS);
@@ -1772,14 +1831,16 @@ ${list}
       await recordAndWrite(state.workZip, loaderPath, loaderJS, rollback);
       await recordAndWrite(state.workZip, menuHtmlPath, buildStandaloneMenuHTML(analysis), rollback);
 
+      const expectedPaths = [loaderPath, menuHtmlPath, manifestPath, readmePath];
       for (const f of state.parsedFuncs) {
-        await recordAndWrite(state.workZip, `${modulesDir}/${f.fileName}`, f.code, rollback);
+        const modPath = `${modulesDir}/${f.fileName}`;
+        await recordAndWrite(state.workZip, modPath, f.code, rollback);
+        expectedPaths.push(modPath);
       }
 
-      // 2. Chuẩn bị Manifest
       const injectedTargets = [];
       const manifestData = {
-        generator: 'ModMenuInjectorPro-v3.1',
+        generator: 'ModMenuInjectorPro-v3.2',
         createdAt: new Date().toISOString(),
         mode,
         app: {
@@ -1802,7 +1863,6 @@ ${list}
         }))
       };
 
-      // 3. Inject vào Entry Point HTML thực tế (chỉ khi mode === 'webview')
       setProgress(60, 'Tích hợp loader vào Entry Point HTML...');
       if (mode === 'webview') {
         for (const ep of selectedEntries) {
@@ -1820,9 +1880,12 @@ ${list}
           }
           injectedTargets.push({ htmlPath: ep.path, relLoader });
           manifestData.injectedHtml.push(ep.relFromApp);
+          expectedPaths.push(ep.path);
         }
       } else if (mode === 'native') {
-        await recordAndWrite(state.workZip, `${menuDir}/theos_reference.txt`, buildTheosReference(analysis, state.parsedFuncs), rollback);
+        const theosPath = `${menuDir}/theos_reference.txt`;
+        await recordAndWrite(state.workZip, theosPath, buildTheosReference(analysis, state.parsedFuncs), rollback);
+        expectedPaths.push(theosPath);
         log('Đã xuất tài liệu tham khảo Theos (không sửa binary, không build dylib).', 'warn');
       } else {
         log('Chế độ Bundle Only: chỉ ghi tài nguyên menu, không chỉnh sửa file HTML.', 'warn');
@@ -1830,7 +1893,7 @@ ${list}
 
       await recordAndWrite(state.workZip, manifestPath, JSON.stringify(manifestData, null, 2), rollback);
 
-      const signingReadme = `Mod Menu Injector Pro v3.1 — Hướng dẫn ký lại IPA
+      const signingReadme = `Mod Menu Injector Pro v3.2 — Hướng dẫn ký lại IPA
 ===================================================
 Ứng dụng: ${analysis.displayName} (${analysis.bundleId})
 Chế độ: ${mode}
@@ -1846,20 +1909,18 @@ Hoặc dùng Sideloadly / AltStore / SideStore / TrollStore.
 `;
       await recordAndWrite(state.workZip, readmePath, signingReadme, rollback);
 
-      // ===== KIỂM TRA HẬU INJECT (READ-BACK VERIFICATION) =====
       setProgress(85, 'Đang chạy bộ kiểm tra sau Inject...');
 
-      const missingFiles = [loaderPath, menuHtmlPath, manifestPath, ...state.parsedFuncs.map(f => `${modulesDir}/${f.fileName}`)]
-        .filter(p => !state.workZip.file(p));
+      const missingFiles = expectedPaths.filter(p => !state.workZip.file(p));
       if (missingFiles.length) {
         setVerifyItem('menuFiles', 'FAIL', 'Thiếu tệp: ' + missingFiles.join(', '));
         throw new Error('Kiểm tra hậu inject thất bại: thiếu tệp menu.');
       }
-      setVerifyItem('menuFiles', 'PASS', `Đã xác nhận ${3 + state.parsedFuncs.length} tệp tại ${menuDir.replace(analysis.bundlePath, '.app')}`);
+      setVerifyItem('menuFiles', 'PASS', `Đã xác nhận ${expectedPaths.length} tệp mục tiêu trong gói làm việc.`);
 
       if (mode === 'webview') {
         let verifiedHtmlCount = 0;
-        let pathErrors = [];
+        const pathErrors = [];
         for (const t of injectedTargets) {
           const readBack = await state.workZip.file(t.htmlPath).async('string');
           if (!readBack.includes('data-mm-loader="v3"')) {
@@ -1905,9 +1966,10 @@ Hoặc dùng Sideloadly / AltStore / SideStore / TrollStore.
 
       const hasReadme = Boolean(state.workZip.file(readmePath));
       setVerifyItem('signGuide', hasReadme ? 'PASS' : 'FAIL', hasReadme ? 'Đã ghi README_SIGNING.txt và hiển thị hướng dẫn ký lại.' : 'Thiếu hướng dẫn ký lại.');
-      setVerifyItem('zipValid', 'WARN', 'Chờ bước "Đóng gói & Xuất IPA" để kiểm tra giải nén lại.');
+      setVerifyItem('zipValid', 'WARN', 'Chờ bước "Đóng gói & Xuất IPA" để kiểm tra Central Directory.');
 
       state.injected = true;
+      state.injectedFiles = expectedPaths;
       setProgress(100, 'Inject & kiểm tra hoàn tất');
       if (mode === 'webview') {
         setPipe('Inject', 'ok', 'INJECT THÀNH CÔNG', `Đã chèn vào ${injectedTargets.length} entry point HTML`);
@@ -1927,7 +1989,7 @@ Hoặc dùng Sideloadly / AltStore / SideStore / TrollStore.
     }
   };
 
-  // ===== ĐÓNG GÓI, KIỂM TOÀN VẸN ZIP & TẢI FILE AN TOÀN SAFARI iOS =====
+  // ===== ĐÓNG GÓI, KIỂM TOÀN VẸN SIÊU NHẸ & TẢI FILE AN TOÀN SAFARI iOS =====
   function triggerSafeDownload(url, filename) {
     const a = document.createElement('a');
     a.href = url;
@@ -1942,6 +2004,12 @@ Hoặc dùng Sideloadly / AltStore / SideStore / TrollStore.
   $('#export').onclick = async () => {
     if (!state.workZip || !state.injected) return;
     $('#export').disabled = true;
+
+    // Giải phóng Blob cũ trước khi đóng gói mới để tối ưu RAM Safari iOS
+    revokeOldUrl();
+    state.packagedBlob = null;
+    $('#manualWrap').classList.remove('show');
+
     setPipe('Pack', 'active', 'ĐANG ĐÓNG GÓI', 'Đang tạo tệp ZIP/IPA mới...');
     setProgress(5, 'Bắt đầu đóng gói IPA...');
     log('Bắt đầu đóng gói IPA mới...', 'info');
@@ -1949,36 +2017,31 @@ Hoặc dùng Sideloadly / AltStore / SideStore / TrollStore.
     try {
       const compMode = $('#compress').value;
       const zipOpts = compMode === 'deflate'
-        ? { type: 'blob', mimeType: 'application/octet-stream', compression: 'DEFLATE', compressionOptions: { level: 5 } }
+        ? { type: 'blob', mimeType: 'application/octet-stream', compression: 'DEFLATE', compressionOptions: { level: 3 } }
         : { type: 'blob', mimeType: 'application/octet-stream', compression: 'STORE' };
 
       const blob = await state.workZip.generateAsync(zipOpts, meta => {
-        setProgress(5 + meta.percent * 0.7, `Đang đóng gói (${Math.round(meta.percent)}%)...`);
+        setProgress(5 + meta.percent * 0.78, `Đang đóng gói (${Math.round(meta.percent)}%)...`);
       });
 
-      setProgress(82, 'Đang giải nén thử để kiểm toàn vẹn IPA...');
-      log(`Đã tạo tệp (${formatBytes(blob.size)}). Đang kiểm tra tính toàn vẹn ZIP...`, 'info');
-      const verifyZip = await JSZip.loadAsync(blob);
-      const checkLoaderPath = `${state.analysis.menuDir}/loader.js`;
-      const checkPlistPath = `${state.analysis.bundlePath}/Info.plist`;
-      const loaderOk = Boolean(verifyZip.file(checkLoaderPath));
-      const plistOk = !state.workZip.file(checkPlistPath) || Boolean(verifyZip.file(checkPlistPath));
-      if (!loaderOk || !plistOk) {
-        setVerifyItem('zipValid', 'FAIL', 'Giải nén lại IPA không thấy đủ tệp thiết yếu.');
-        throw new Error('Kiểm tra toàn vẹn ZIP thất bại.');
-      }
-      const loaderRead = await verifyZip.file(checkLoaderPath).async('string');
-      if (!loaderRead.includes('__MM_V3_LOADED__')) {
-        setVerifyItem('zipValid', 'FAIL', 'Nội dung loader.js sau đóng gói bị sai lệch.');
-        throw new Error('Dữ liệu trong ZIP sau đóng gói bị hỏng.');
-      }
+      setProgress(88, 'Đang kiểm tra cấu trúc ZIP (Central Directory)...');
+      log(`Đã tạo tệp (${formatBytes(blob.size)}). Đang kiểm tra Central Directory (siêu nhẹ, không nạp lại toàn bộ vào RAM)...`, 'info');
 
-      setVerifyItem('zipValid', 'PASS', `Giải nén kiểm tra thành công (${Object.keys(verifyZip.files).length} mục, ${formatBytes(blob.size)}).`);
+      const requiredCheck = [...state.injectedFiles];
+      const plistPath = `${state.analysis.bundlePath}/Info.plist`;
+      if (state.workZip.file(plistPath)) requiredCheck.push(plistPath);
+
+      const zipCheck = await verifyZipBlobLightweight(blob, requiredCheck);
+      setVerifyItem(
+        'zipValid',
+        'PASS',
+        `ZIP hợp lệ: ${zipCheck.entriesCount} mục, xác nhận ${zipCheck.verifiedCount} tệp thiết yếu (chỉ đọc ${formatBytes(zipCheck.cdBytesRead)}).`
+      );
+      log(`Kiểm tra toàn vẹn ZIP thành công (${zipCheck.entriesCount} mục, RAM đọc chỉ ${formatBytes(zipCheck.cdBytesRead)}).`, 'ok');
 
       const baseName = (state.originalFile.name || 'app').replace(/\.[^.]+$/, '');
       const outName = `${baseName}-modmenu-v3-unsigned.ipa`;
 
-      revokeOldUrl();
       state.packagedBlob = blob;
       state.packagedName = outName;
       state.objectUrl = URL.createObjectURL(blob);
@@ -1990,17 +2053,19 @@ Hoặc dùng Sideloadly / AltStore / SideStore / TrollStore.
       const shareBtn = $('#shareBtn');
       shareBtn.style.display = 'none';
       try {
-        const testFile = new File([blob], outName, { type: 'application/octet-stream' });
-        if (navigator.canShare && navigator.canShare({ files: [testFile] })) {
-          shareBtn.style.display = 'inline-flex';
-          shareBtn.onclick = async () => {
-            try {
-              await navigator.share({ files: [testFile], title: outName });
-              log('Đã mở hộp thoại Chia sẻ / Lưu vào Tệp.', 'ok');
-            } catch (err) {
-              if (err.name !== 'AbortError') log('Lỗi chia sẻ: ' + err.message, 'warn');
-            }
-          };
+        if (navigator.canShare && blob.size < 180 * 1024 * 1024) {
+          const testFile = new File([blob], outName, { type: 'application/octet-stream' });
+          if (navigator.canShare({ files: [testFile] })) {
+            shareBtn.style.display = 'inline-flex';
+            shareBtn.onclick = async () => {
+              try {
+                await navigator.share({ files: [testFile], title: outName });
+                log('Đã mở hộp thoại Chia sẻ / Lưu vào Tệp.', 'ok');
+              } catch (err) {
+                if (err.name !== 'AbortError') log('Lỗi chia sẻ: ' + err.message, 'warn');
+              }
+            };
+          }
         }
       } catch (_) {
         shareBtn.style.display = 'none';
@@ -2022,6 +2087,7 @@ Hoặc dùng Sideloadly / AltStore / SideStore / TrollStore.
       log(`Đóng gói thành công: ${outName}. LƯU Ý: IPA CHƯA ĐƯỢC KÝ, bắt buộc ký lại trước khi cài.`, 'ok');
     } catch (e) {
       log('Lỗi đóng gói IPA: ' + e.message, 'err');
+      setVerifyItem('zipValid', 'FAIL', e.message);
       setPipe('Pack', 'err', 'ĐÓNG GÓI LỖI', e.message);
       setProgress(0, 'Lỗi đóng gói');
     } finally {
@@ -2035,7 +2101,7 @@ Hoặc dùng Sideloadly / AltStore / SideStore / TrollStore.
   if (!JSZip) {
     log('Cảnh báo: Không tải được thư viện JSZip từ CDN. Hãy kiểm tra mạng internet.', 'err');
   } else {
-    log('Mod Menu Injector Pro v3.1 sẵn sàng. Chọn tệp IPA để bắt đầu.', 'info');
+    log('Mod Menu Injector Pro v3.2 sẵn sàng. Chọn tệp IPA để bắt đầu.', 'info');
   }
 })();
 </script>
